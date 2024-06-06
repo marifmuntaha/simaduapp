@@ -1,0 +1,19 @@
+version: "4.30"
+services:
+  backend:
+    build:
+      context: '.'
+      dockerfile: Dockerfile
+      args:
+        - PORT=${PORT}
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+    volumes:
+      - ${PROJECT_ROOT}/backend/:/var/www/html/
+    container_name: backend
+volumes:
+  data:
