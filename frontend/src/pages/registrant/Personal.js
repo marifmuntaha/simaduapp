@@ -5,10 +5,9 @@ import {setDateForPicker} from "../../utils/Utils";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import {actionType, Dispatch} from "../../reducer";
-import {UserContext} from "../user/UserContext";
 
 const Personal = (props) => {
-    const user = useContext(UserContext)
+    const [user, setUser] = useState([]);
     const [formData, setFormData] = useState({
         step: 1,
         id: 0,

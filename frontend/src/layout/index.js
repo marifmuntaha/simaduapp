@@ -21,7 +21,6 @@ const Layout = ({title, ...props}) => {
                     </AppWrap>
                 </AppMain>
             </AppRoot>
-
         </Suspense>
     );
 };

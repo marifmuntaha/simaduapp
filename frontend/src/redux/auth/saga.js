@@ -25,8 +25,8 @@ function* login({payload: {username, password}}): SagaIterator {
 function* logout(): SagaIterator {
     try {
         yield call(logoutApi)
-        api.setLoggedInUser(null)
-        setAuthorization(null)
+        api.setLoggedInUser()
+        setAuthorization()
         yield put(authApiResponseSuccess(AuthActionTypes.LOGOUT_USER, {}))
     } catch (error) {
         yield put(authApiResponseError(AuthActionTypes.LOGOUT_USER, error))

@@ -41,11 +41,12 @@
 // export default Router;
 import React from "react";
 import PrivateRoute from "./PrivateRoutes";
-import Login from "../pages/auth/Login";
 import {Route} from "react-router-dom";
-import {AuthProvider} from "../context/auth/AuthContext";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
+const User = React.lazy(() => import("../pages/user"));
+const Login = React.lazy(() => import("../pages/auth/Login"));
+const Logout = React.lazy(() => import("../pages/auth/Logout"));
 
 export const protectedRoutes = [
     {
@@ -54,17 +55,25 @@ export const protectedRoutes = [
         element: <Dashboard/>,
         route: PrivateRoute,
     },
+    {
+        path: '/pengguna',
+        name: 'Pengguna',
+        element: <User/>,
+        route: PrivateRoute,
+    },
 ]
 
 export const publicRoutes = [
     {
         path: '/auth/masuk',
         name: 'Masuk',
-        element: (
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
-        ),
+        element: <Login/>,
+        route: Route,
+    },
+    {
+        path: '/auth/keluar',
+        name: 'Keluar',
+        element: <Logout/>,
         route: Route,
     },
 ]

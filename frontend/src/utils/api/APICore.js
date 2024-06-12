@@ -51,6 +51,7 @@ const getUserFromCookie = () => {
     const user = sessionStorage.getItem(AUTH_SESSION_KEY)
     return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null
 }
+
 class APICore {
     /**
      * Fetches data from given url
@@ -78,9 +79,9 @@ class APICore {
                     .map((key) => key + '=' + params[key])
                     .join('&')
                 : ''
-            response = axios.get(`${url}?${queryString}`, { responseType: 'blob' })
+            response = axios.get(`${url}?${queryString}`, {responseType: 'blob'})
         } else {
-            response = axios.get(`${url}`, { responseType: 'blob' })
+            response = axios.get(`${url}`, {responseType: 'blob'})
         }
         return response
     }
@@ -183,10 +184,9 @@ class APICore {
     }
 
     setLoggedInUser = (session) => {
-        if (session) sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session))
-        else {
-            sessionStorage.removeItem(AUTH_SESSION_KEY)
-        }
+        session
+            ? sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session))
+            : sessionStorage.removeItem(AUTH_SESSION_KEY)
     }
     /**
      * Returns the logged-in user
@@ -198,8 +198,8 @@ class APICore {
     setUserInSession = (modifiedUser) => {
         const userInfo = sessionStorage.getItem(AUTH_SESSION_KEY)
         if (userInfo) {
-            const { token, user } = JSON.parse(userInfo)
-            this.setLoggedInUser({ token, ...user, ...modifiedUser })
+            const {token, user} = JSON.parse(userInfo)
+            this.setLoggedInUser({token, ...user, ...modifiedUser})
         }
     }
 }
@@ -209,10 +209,10 @@ Check if token available in session
 */
 const user = getUserFromCookie()
 if (user) {
-    const { token } = user
+    const {token} = user
     if (token) {
         setAuthorization(token)
     }
 }
 
-export { APICore, setAuthorization }
+export {APICore, setAuthorization}

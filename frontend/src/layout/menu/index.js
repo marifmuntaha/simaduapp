@@ -1,13 +1,20 @@
-import React, {useContext, useEffect, useState} from "react";
-import menuAdmin from "./MenuAdmin";
-import menuMember from "./MenuMember";
+import React, {Suspense, useEffect, useState} from "react";
 import {NavLink, Link} from "react-router-dom";
 import {Icon} from "../../components";
 import classNames from "classnames";
-import {UserContext} from "../../pages/user/UserContext";
+import {APICore} from "../../utils/api/APICore";
+import {rootMenu} from "./rootMenu";
+import {operatorMenu} from "./operatorMenu";
 
 let menu = (user) => {
-    return user.role === 1 ? menuAdmin : menuMember
+    switch (user.role) {
+        case 1 :
+            return rootMenu
+        case 2 :
+            return operatorMenu
+        default :
+            return rootMenu
+    }
 }
 const MenuHeading = ({heading}) => {
     return (
@@ -146,42 +153,44 @@ const MenuItem = ({icon, link, text, sub, subPanel, panel, newTab, mobileView, s
         "active current-page": currentUrl === process.env.PUBLIC_URL + link,
     });
     return (
-        <li className={menuItemClass} onClick={(e) => toggleActionSidebar(e)}>
-            {newTab ? (
-                <Link
-                    to={`${process.env.PUBLIC_URL + link}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="nk-menu-link"
-                >
-                    {icon ? (
-                        <span className="nk-menu-icon">
+        <Suspense fallback={<div/>}>
+            <li className={menuItemClass} onClick={(e) => toggleActionSidebar(e)}>
+                {newTab ? (
+                    <Link
+                        to={`${process.env.PUBLIC_URL + link}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="nk-menu-link"
+                    >
+                        {icon ? (
+                            <span className="nk-menu-icon">
               <Icon name={icon}/>
             </span>
-                    ) : null}
-                    <span className="nk-menu-text">{text}</span>
-                </Link>
-            ) : (
-                <NavLink
-                    to={`${process.env.PUBLIC_URL + link}`}
-                    className={`nk-menu-link${sub ? " nk-menu-toggle" : ""}`}
-                    onClick={sub ? menuToggle : null}
-                >
-                    {icon ? (
-                        <span className="nk-menu-icon">
+                        ) : null}
+                        <span className="nk-menu-text">{text}</span>
+                    </Link>
+                ) : (
+                    <NavLink
+                        to={`${process.env.PUBLIC_URL + link}`}
+                        className={`nk-menu-link${sub ? " nk-menu-toggle" : ""}`}
+                        onClick={sub ? menuToggle : null}
+                    >
+                        {icon ? (
+                            <span className="nk-menu-icon">
               <Icon name={icon}/>
             </span>
-                    ) : null}
-                    <span className="nk-menu-text">{text}</span>
-                    {badge && <span className="nk-menu-badge">{badge}</span>}
-                </NavLink>
-            )}
-            {sub ? (
-                <div className="nk-menu-wrap">
-                    <MenuSub sub={sub} sidebarToggle={sidebarToggle} mobileView={mobileView}/>
-                </div>
-            ) : null}
-        </li>
+                        ) : null}
+                        <span className="nk-menu-text">{text}</span>
+                        {badge && <span className="nk-menu-badge">{badge}</span>}
+                    </NavLink>
+                )}
+                {sub ? (
+                    <div className="nk-menu-wrap">
+                        <MenuSub sub={sub} sidebarToggle={sidebarToggle} mobileView={mobileView}/>
+                    </div>
+                ) : null}
+            </li>
+        </Suspense>
     );
 };
 
@@ -200,8 +209,8 @@ const PanelItem = ({icon, link, text, subPanel, index, data, setMenuData, ...pro
                 >
                     {icon ? (
                         <span className="nk-menu-icon">
-              <Icon name={icon}/>
-            </span>
+                            <Icon name={icon}/>
+                        </span>
                     ) : null}
                     <span className="nk-menu-text">{text}</span>
                     <span className="nk-menu-badge">HOT</span>
@@ -264,7 +273,8 @@ const MenuSub = ({icon, link, text, sub, sidebarToggle, mobileView, ...props}) =
 };
 
 const Menu = ({sidebarToggle, mobileView}) => {
-    const user = useContext(UserContext);
+    const api = new APICore();
+    const user = api.getLoggedInUser()
     const [data, setMenuData] = useState(menu(user));
     useEffect(() => {
         data.forEach((item, index) => {
@@ -278,39 +288,41 @@ const Menu = ({sidebarToggle, mobileView}) => {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <ul className="nk-menu">
-            {data.map((item, index) =>
-                item.heading ? (
-                    <MenuHeading heading={item.heading} key={item.heading}/>
-                ) : item.panel ? (
-                    <PanelItem
-                        key={item.text}
-                        link={item.link}
-                        icon={item.icon}
-                        text={item.text}
-                        index={index}
-                        panel={item.panel}
-                        subPanel={item.subPanel}
-                        data={data}
-                        setMenuData={setMenuData}
-                        sidebarToggle={sidebarToggle}
-                    />
-                ) : (
-                    <MenuItem
-                        key={item.text}
-                        link={item.link}
-                        icon={item.icon}
-                        text={item.text}
-                        sub={item.subMenu}
-                        badge={item.badge}
-                        panel={item.panel}
-                        subPanel={item.subPanel}
-                        sidebarToggle={sidebarToggle}
-                        mobileView={mobileView}
-                    />
-                )
-            )}
-        </ul>
+        <Suspense fallback={<div/>}>
+            <ul className="nk-menu">
+                {data.map((item, index) =>
+                    item.heading ? (
+                        <MenuHeading heading={item.heading} key={item.heading}/>
+                    ) : item.panel ? (
+                        <PanelItem
+                            key={item.text}
+                            link={item.link}
+                            icon={item.icon}
+                            text={item.text}
+                            index={index}
+                            panel={item.panel}
+                            subPanel={item.subPanel}
+                            data={data}
+                            setMenuData={setMenuData}
+                            sidebarToggle={sidebarToggle}
+                        />
+                    ) : (
+                        <MenuItem
+                            key={item.text}
+                            link={item.link}
+                            icon={item.icon}
+                            text={item.text}
+                            sub={item.subMenu}
+                            badge={item.badge}
+                            panel={item.panel}
+                            subPanel={item.subPanel}
+                            sidebarToggle={sidebarToggle}
+                            mobileView={mobileView}
+                        />
+                    )
+                )}
+            </ul>
+        </Suspense>
     );
 };
 

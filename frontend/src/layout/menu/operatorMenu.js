@@ -1,4 +1,4 @@
-const menuAdmin = [
+export const operatorMenu = [
     {
         icon: "monitor",
         text: "Dashboard",
@@ -64,5 +64,4 @@ const menuAdmin = [
         active: "false",
         link: "/pengaturan",
     },
-];
-export default menuAdmin;
+]

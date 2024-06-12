@@ -1,6 +1,6 @@
-const menuMember = [
+export const memberMenu = [
     {
-        icon: "desktop",
+        icon: "monitor",
         text: "Dashboard",
         link: "/",
     },
@@ -31,4 +31,3 @@ const menuMember = [
     },
 
 ];
-export default menuMember;
