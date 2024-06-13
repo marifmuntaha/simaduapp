@@ -6,7 +6,6 @@ import AppRoot from "./global/AppRoot";
 import AppMain from "./global/AppMain";
 import AppWrap from "./global/AppWrap";
 import Sidebar from "./sidebar";
-import {ToastContainer} from "react-toastify";
 
 const Layout = ({title, ...props}) => {
     return (
@@ -18,7 +17,6 @@ const Layout = ({title, ...props}) => {
                     <AppWrap>
                         <Header fixed/>
                         {props.children}
-                        <ToastContainer/>
                         <Footer/>
                     </AppWrap>
                 </AppMain>

@@ -1,4 +1,4 @@
-import {UserActionTypes} from "./constants";
+import {LadderActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     user: false,
@@ -9,69 +9,69 @@ const INITIAL_STATE = {
     },
     error: false,
 }
-const User = (state = INITIAL_STATE, action): any => {
+const Ladder = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case UserActionTypes.API_RESPONSE_SUCCESS: {
+        case LadderActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case UserActionTypes.GET_USER:
+                case LadderActionTypes.GET_LADDER:
                     return {
                         ...state,
-                        users: action.payload.data,
+                        ladders: action.payload.data,
                         loading: false,
                     }
-                case UserActionTypes.STORE_USER:
+                case LadderActionTypes.STORE_LADDER:
                     return {
                         ...state,
                         loading: false,
-                        user: action.payload.data.user,
+                        ladder: action.payload.data.ladder,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case UserActionTypes.UPDATE_USER:
+                case LadderActionTypes.UPDATE_LADDER:
                     return {
                         ...state,
                         loading: false,
-                        user: action.payload.data.user,
+                        ladder: action.payload.data.ladder,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case UserActionTypes.DESTROY_USER:
+                case LadderActionTypes.DESTROY_LADDER:
                     return {
                         ...state,
-                        user: action.payload.data,
+                        ladder: action.payload.data,
                         loading: false,
                     }
                 default:
                     return {...state}
             }
         }
-        case UserActionTypes.API_RESPONSE_ERROR: {
+        case LadderActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case UserActionTypes.GET_USER:
+                case LadderActionTypes.GET_LADDER:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case UserActionTypes.STORE_USER:
-                    return {
-                        ...state,
-                        loading: false,
-                        error: action.payload.error,
-
-                    }
-                case UserActionTypes.UPDATE_USER:
+                case LadderActionTypes.STORE_LADDER:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
 
                     }
-                case UserActionTypes.DESTROY_USER:
+                case LadderActionTypes.UPDATE_LADDER:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case LadderActionTypes.DESTROY_LADDER:
                     return {
                         ...state,
                         loading: false,
@@ -81,12 +81,12 @@ const User = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case UserActionTypes.GET_USER:
+        case LadderActionTypes.GET_LADDER:
             return {
                 ...state,
                 loading: true,
             }
-        case UserActionTypes.ADD_USER:
+        case LadderActionTypes.ADD_LADDER:
             return {
                 ...state,
                 loading: false,
@@ -95,32 +95,32 @@ const User = (state = INITIAL_STATE, action): any => {
                     edit: false,
                 }
             }
-        case UserActionTypes.STORE_USER:
+        case LadderActionTypes.STORE_LADDER:
             return {
                 ...state,
                 loading: true,
             }
-        case UserActionTypes.SET_USER:
+        case LadderActionTypes.SET_LADDER:
             return {
                 ...state,
                 loading: false,
-                user: action.payload.user,
+                ladder: action.payload.ladder,
                 modal: {
                     add: false,
                     edit: action.payload.modal,
                 }
             }
-        case UserActionTypes.UPDATE_USER:
+        case LadderActionTypes.UPDATE_LADDER:
             return {
                 ...state,
                 loading: true,
             }
-        case UserActionTypes.DESTROY_USER:
+        case LadderActionTypes.DESTROY_LADDER:
             return {
                 ...state,
                 loading: action.payload,
             }
-        case UserActionTypes.RESET:
+        case LadderActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
@@ -136,4 +136,4 @@ const User = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default User;
+export default Ladder;

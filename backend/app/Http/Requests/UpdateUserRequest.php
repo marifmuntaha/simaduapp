@@ -24,9 +24,9 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'fullname' => 'required|string',
-            'email' => 'required|string|email|unique:users,email',
-            'username' => 'required|string|unique:users,username',
-            'password' => 'required|string',
+            'email' => 'required|string|email',
+            'username' => 'required|string',
+            'password' => 'nullable|string',
             'role' => 'required|string',
             'phone' => 'required|string',
             'image' => 'nullable|string',

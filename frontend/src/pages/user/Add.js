@@ -7,8 +7,8 @@ import {addUser, storeUser} from "../../redux/user/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
-    const {loading, modal, success} = user
+    const selector = useSelector((state) => state.user);
+    const {loading, modal} = selector
     const roleOption = [
         {value: 1, label: 'Administrator'},
         {value: 2, label: 'Kepala Madrasah'},
@@ -42,9 +42,10 @@ const Add = () => {
         reset
     } = useForm();
     const toggle = () => {
-        dispatch(addUser(false));
         reset();
+        dispatch(addUser(false));
     }
+
     return (
         <>
             <Modal isOpen={modal.add} toggle={toggle}>

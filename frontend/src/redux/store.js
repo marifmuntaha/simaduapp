@@ -6,6 +6,7 @@ import Auth from './auth/reducers'
 // saga
 import rootSaga from './sagas'
 import User from "./user/reducers";
+import Ladder from "./ladder/reducers";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -16,6 +17,7 @@ export const store = configureStore({
     reducer: {
         auth: Auth,
         user: User,
+        ladder: Ladder,
     },
 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware),

@@ -10,6 +10,10 @@ export const rootMenu = [
         active: false,
         subMenu: [
             {
+                text: "Jenjang",
+                link: "/master/jenjang",
+            },
+            {
                 text: "Profil Madrasah",
                 link: "/master/madrasah",
             },

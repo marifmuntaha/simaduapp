@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {actionType, Dispatch} from "../../reducer";
-import {Col, Row, RSelect, toastError} from "../../components";
+import {Col, Row, RSelect} from "../../components";
 import {useDispatch, useSelector} from "react-redux";
-import {setUser} from "../../redux/user/actions";
+import {setUser, updateUser} from "../../redux/user/actions";
 import {Controller, useForm} from "react-hook-form";
 
 const Edit = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.user)
-    const {loading, error, modal, user} = selector;
+    const {loading, modal, user} = selector;
     const roleOption = [
         {value: 1, label: 'Administrator'},
         {value: 2, label: 'Kepala Madrasah'},
@@ -22,6 +21,18 @@ const Edit = () => {
         {value: 9, label: 'Orang Tua'}
     ];
     const onSubmit = () => {
+        dispatch(updateUser({
+            formData: getValues([
+                'id',
+                'fullname',
+                'email',
+                'username',
+                'password',
+                'role',
+                'phone',
+                'image'
+            ])
+        }))
     }
     const {
         register,
@@ -29,24 +40,18 @@ const Edit = () => {
         formState: {errors},
         setValue,
         getValues,
-        control
+        control,
+        reset
     } = useForm()
-
     const toggle = () => {
         dispatch(setUser({}, false))
-        setValue('fullname', '');
-        setValue('email', '');
-        setValue('username', '');
-        setValue('password', '');
-        setValue('repassword', '');
-        setValue('role', '');
-        setValue('phone', '');
-        setValue('image', '');
+        reset()
     }
     useEffect(() => {
-        setValue('fullname', user ? user.fullname : '');
-        setValue('email', user ? user.email : '');
-    }, [user]);
+        user && Object.entries(user).map((user) => {
+            return setValue(user[0], user[1])
+        });
+    }, [setValue, user])
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>
@@ -109,7 +114,7 @@ const Edit = () => {
                                             type="password"
                                             id="password"
                                             placeholder="Ex. *********"
-                                            {...register('password', {required: true})}
+                                            {...register('password', {required: false})}
                                         />
                                         {errors.password && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
@@ -125,7 +130,7 @@ const Edit = () => {
                                             id="repassword"
                                             placeholder="Ex. *********"
                                             {...register('repassword', {
-                                                required: true,
+                                                required: false,
                                                 validate: (val) => {
                                                     if (getValues('password') !== val) {
                                                         return 'Sandi tidak sama.'
@@ -154,7 +159,7 @@ const Edit = () => {
                                                 <RSelect
                                                     inputRef={ref}
                                                     options={roleOption}
-                                                    value={roleOption.find((c) => c.value === value)}
+                                                    value={roleOption.find((c) => c.value === parseInt(value))}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Hak Akses"
                                                 />

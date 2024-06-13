@@ -4,6 +4,7 @@ import LayoutNoSidebar from "../layout/NoSidebar"
 import {protectedRoutes, publicRoutes} from ".";
 import Layout from "../layout";
 import {APICore} from "../utils/api/APICore";
+import {ToastContainer} from "react-toastify";
 
 const AllRoutes = (props) => {
     const api = new APICore();
@@ -46,6 +47,7 @@ const AllRoutes = (props) => {
                     ))}
                 </Route>
             </Routes>
+            <ToastContainer/>
         </React.Fragment>
     )
 }

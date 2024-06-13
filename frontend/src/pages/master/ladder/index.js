@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import Head from "../../layout/head";
-import Content from "../../layout/content";
+import Head from "../../../layout/head";
+import Content from "../../../layout/content";
 import {
     BackTo,
     BlockBetween,
@@ -9,51 +9,36 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable, toastError
-} from "../../components";
+    ReactDataTable,
+    toastError
+} from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
-import Add from "./Add";
 import {useDispatch, useSelector} from "react-redux";
-import {addUser, destroyUsers, getUsers, resetUser, setUser} from "../../redux/user/actions";
+import {addLadder, destroyLadders, getLadders, resetLadder, setLadder} from "../../../redux/ladder/actions";
+import Add from "./Add";
 import Edit from "./Edit";
-import {Role} from "../../utils/Utils";
 
-const User = () => {
+const Ladder = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.user)
-    const {loading, users, error} = selector;
+    const selector = useSelector((state) => state.ladder)
+    const {loading, ladders, error} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
             name: "Nama",
-            selector: (row) => row.fullname,
+            selector: (row) => row.name,
             sortable: false,
             hide: "sm",
         },
         {
-            name: "Alamat Email",
-            selector: (row) => row.email,
+            name: "Singkatan",
+            selector: (row) => row.alias,
             sortable: false,
         },
         {
-            name: "Nama Pengguna",
-            selector: (row) => row.username,
+            name: "Diskripsi",
+            selector: (row) => row.description,
             sortable: false,
-        },
-        {
-            name: "Hak Akses",
-            selector: (row) => row.role,
-            sortable: false,
-            hide: "sm",
-            cell: (row) => (
-                Role(row.role)
-            )
-        },
-        {
-            name: "Nomor Telepon",
-            selector: (row) => row.phone,
-            sortable: false,
-            hide: "sm"
         },
         {
             name: "Aksi",
@@ -65,14 +50,14 @@ const User = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            dispatch(setUser(row, true));
+                            dispatch(setLadder(row, true));
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyUsers(row.id));
+                            dispatch(destroyLadders(row.id));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -82,13 +67,13 @@ const User = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getUsers());
-    }, [dispatch]);
+        dispatch(getLadders())
+    }, [dispatch])
     return (
         <>
-            {error && toastError(error) && dispatch(resetUser())}
-            <Head title="Data Pengguna"/>
-            <Content>
+            {error && toastError(error) && dispatch(resetLadder())}
+            <Head title="Data Jenjang"/>
+            <Content page="component">
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
                         <BackTo link="/" icon="arrow-left">
@@ -99,7 +84,7 @@ const User = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Pengguna</BlockTitle>
+                            <BlockTitle tag="h4">Data Jenjang</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -117,7 +102,7 @@ const User = () => {
                                     <ul className="nk-block-tools g-3">
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addUser(true))}
+                                            onClick={() => dispatch(addLadder(true))}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -131,7 +116,7 @@ const User = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={users} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={ladders} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add/>
                 <Edit/>
@@ -139,4 +124,4 @@ const User = () => {
         </>
     )
 }
-export default User
+export default Ladder;

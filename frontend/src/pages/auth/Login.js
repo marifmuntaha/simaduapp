@@ -121,7 +121,6 @@ const Login = () => {
                         </div>
                     </Form>
                 </PreviewCard>
-                <ToastContainer/>
             </Block>
             <AuthFooter/>
         </>

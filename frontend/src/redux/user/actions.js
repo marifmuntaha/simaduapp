@@ -12,7 +12,7 @@ export const userApiResponseError = (actionType, error) => ({
 
 export const getUsers = (params) => ({
     type: UserActionTypes.GET_USER,
-    payload: params,
+    payload: {params},
 });
 
 export const addUser = (modal) => ({
@@ -30,9 +30,14 @@ export const setUser = (user, modal) => ({
     payload: {user, modal},
 })
 
+export const updateUser = ({formData: [id, fullname, email, username, password, role, phone, image]}) => ({
+    type: UserActionTypes.UPDATE_USER,
+    payload: {id, fullname, email, username, password, role, phone, image},
+})
+
 export const destroyUsers = (params) => ({
     type: UserActionTypes.DESTROY_USER,
-    payload: params,
+    payload: {params},
 });
 
 export const resetUser = () => ({

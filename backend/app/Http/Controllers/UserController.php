@@ -50,7 +50,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         try {
-            return $user->fill($request->all())->save()
+            return $user->update(array_filter($request->all()))
                 ? response([
                     'success' => true,
                     'message' => 'Pengguna berhasil diubah',
