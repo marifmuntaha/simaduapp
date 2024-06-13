@@ -1,14 +1,15 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../components";
-import {Controller, useForm} from "react-hook-form";
+import {actionType, Dispatch} from "../../reducer";
+import {Col, Row, RSelect, toastError} from "../../components";
 import {useDispatch, useSelector} from "react-redux";
-import {addUser, storeUser} from "../../redux/user/actions";
+import {setUser} from "../../redux/user/actions";
+import {Controller, useForm} from "react-hook-form";
 
-const Add = () => {
+const Edit = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
-    const {loading, modal, success} = user
+    const selector = useSelector((state) => state.user)
+    const {loading, error, modal, user} = selector;
     const roleOption = [
         {value: 1, label: 'Administrator'},
         {value: 2, label: 'Kepala Madrasah'},
@@ -21,33 +22,34 @@ const Add = () => {
         {value: 9, label: 'Orang Tua'}
     ];
     const onSubmit = () => {
-        dispatch(storeUser({
-            formData: getValues([
-                'fullname',
-                'email',
-                'username',
-                'password',
-                'role',
-                'phone',
-                'image'
-            ])
-        }));
     }
     const {
         register,
         handleSubmit,
         formState: {errors},
+        setValue,
         getValues,
-        control,
-        reset
-    } = useForm();
+        control
+    } = useForm()
+
     const toggle = () => {
-        dispatch(addUser(false));
-        reset();
+        dispatch(setUser({}, false))
+        setValue('fullname', '');
+        setValue('email', '');
+        setValue('username', '');
+        setValue('password', '');
+        setValue('repassword', '');
+        setValue('role', '');
+        setValue('phone', '');
+        setValue('image', '');
     }
+    useEffect(() => {
+        setValue('fullname', user ? user.fullname : '');
+        setValue('email', user ? user.email : '');
+    }, [user]);
     return (
         <>
-            <Modal isOpen={modal.add} toggle={toggle}>
+            <Modal isOpen={modal.edit} toggle={toggle}>
                 <ModalHeader>TAMBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
@@ -145,12 +147,9 @@ const Add = () => {
                                         Hak Akses
                                     </label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
-                                            className="form-control"
                                             name="role"
-                                            rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
@@ -205,4 +204,4 @@ const Add = () => {
         </>
     )
 }
-export default Add;
+export default Edit;

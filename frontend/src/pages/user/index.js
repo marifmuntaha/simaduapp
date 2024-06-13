@@ -9,26 +9,20 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable
+    ReactDataTable, toastError
 } from "../../components";
-import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
+import {Button, ButtonGroup, Spinner} from "reactstrap";
 import Add from "./Add";
 import {useDispatch, useSelector} from "react-redux";
-import {getUsers} from "../../redux/user/actions";
-// import Edit from "./Edit";
+import {addUser, destroyUsers, getUsers, resetUser, setUser} from "../../redux/user/actions";
+import Edit from "./Edit";
+import {Role} from "../../utils/Utils";
 
 const User = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user)
+    const selector = useSelector((state) => state.user)
+    const {loading, users, error, success} = selector;
     const [sm, updateSm] = useState(false);
-    const [modal, setModal] = useState({
-        add: false,
-        edit: false
-    });
-    const [majors, setMajors] = useState([]);
-    const [major, setMajor] = useState({});
-    const [reload, setReload] = useState(true);
-    const [loading, setLoading] = useState(0);
     const Columns = [
         {
             name: "Nama",
@@ -37,35 +31,30 @@ const User = () => {
             hide: "sm",
         },
         {
-            name: "Singkatan",
-            selector: (row) => row.alias,
+            name: "Alamat Email",
+            selector: (row) => row.email,
             sortable: false,
         },
         {
-            name: "Diskripsi",
-            selector: (row) => row.desc,
+            name: "Nama Pengguna",
+            selector: (row) => row.username,
             sortable: false,
-            hide: "sm",
         },
         {
-            name: "Boarding",
-            selector: (row) => row.boarding,
+            name: "Hak Akses",
+            selector: (row) => row.role,
             sortable: false,
             hide: "sm",
-            cell: (row) => parseInt(row.boarding) === 1 ? 'YA' : 'TIDAK'
+            cell: (row) => (
+                Role(row.role)
+            )
         },
-        // {
-        //     name: "Program",
-        //     selector: (row) => row.program,
-        //     sortable: false,
-        //     hide: "sm",
-        //     cell: (row) => {
-        //         let program = JSON.parse(row.program);
-        //         return program.map((item) => {
-        //             return <Badge className="badge-dot me-2" color="success">{item.label}</Badge>
-        //         })
-        //     }
-        // },
+        {
+            name: "Nomor Telepon",
+            selector: (row) => row.phone,
+            sortable: false,
+            hide: "sm"
+        },
         {
             name: "Aksi",
             selector: (row) => row.id,
@@ -76,21 +65,13 @@ const User = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            setMajor(row);
-                            setModal({
-                                add: false,
-                                edit: true
-                            });
+                            dispatch(setUser(row, true));
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
-                        // onClick={() => Dispatch(actionType.MAJOR_DELETE, {
-                        //     id: row.id,
-                        //     setLoading: setLoading,
-                        //     setReload: setReload
-                        // })}
+                        onClick={() => dispatch(destroyUsers(row.id))}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
                     </Button>
@@ -100,59 +81,61 @@ const User = () => {
     ];
     useEffect(() => {
         dispatch(getUsers());
-    }, [dispatch])
-    return <>
-        <Head title="Data Pengguna"/>
-        <Content page="component">
-            <BlockHead size="lg" wide="sm">
-                <BlockHeadContent>
-                    <BackTo link="/" icon="arrow-left">
-                        DASHBOARD
-                    </BackTo>
-                </BlockHeadContent>
-            </BlockHead>
-            <BlockHead>
-                <BlockBetween>
+    }, [dispatch]);
+    return (
+        <>
+            {error && toastError(error) && dispatch(resetUser())}
+            {success && dispatch(getUsers())}
+            <Head title="Data Pengguna"/>
+            <Content page="component">
+                <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
-                        <BlockTitle tag="h4">Data Pengguna</BlockTitle>
-                        <p>
-                            Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
-                            react dashlite.
-                        </p>
+                        <BackTo link="/" icon="arrow-left">
+                            DASHBOARD
+                        </BackTo>
                     </BlockHeadContent>
-                    <BlockHeadContent>
-                        <div className="toggle-wrap nk-block-tools-toggle">
-                            <Button
-                                className={`btn-icon btn-trigger toggle-expand me-n1 ${sm ? "active" : ""}`}
-                                onClick={() => updateSm(!sm)}
-                            >
-                                <Icon name="menu-alt-r"></Icon>
-                            </Button>
-                            <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
-                                <ul className="nk-block-tools g-3">
-                                    <li
-                                        className="nk-block-tools-opt"
-                                        onClick={() => setModal({
-                                            ...modal, add: true,
-                                        })}
-                                    >
-                                        <Button color="secondary">
-                                            <Icon name="plus"/>
-                                            <span>Tambah</span>
-                                        </Button>
-                                    </li>
-                                </ul>
+                </BlockHead>
+                <BlockHead>
+                    <BlockBetween>
+                        <BlockHeadContent>
+                            <BlockTitle tag="h4">Data Pengguna</BlockTitle>
+                            <p>
+                                Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
+                                react dashlite.
+                            </p>
+                        </BlockHeadContent>
+                        <BlockHeadContent>
+                            <div className="toggle-wrap nk-block-tools-toggle">
+                                <Button
+                                    className={`btn-icon btn-trigger toggle-expand me-n1 ${sm ? "active" : ""}`}
+                                    onClick={() => updateSm(!sm)}
+                                >
+                                    <Icon name="menu-alt-r"></Icon>
+                                </Button>
+                                <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
+                                    <ul className="nk-block-tools g-3">
+                                        <li
+                                            className="nk-block-tools-opt"
+                                            onClick={() => dispatch(addUser(true))}
+                                        >
+                                            <Button color="secondary">
+                                                <Icon name="plus"/>
+                                                <span>Tambah</span>
+                                            </Button>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </BlockHeadContent>
-                </BlockBetween>
-            </BlockHead>
-            <PreviewCard>
-                <ReactDataTable data={user.users} columns={Columns} pagination className="nk-tb-list" onLoad={reload}/>
-            </PreviewCard>
-            <Add open={modal.add} setOpen={setModal} setReload={setReload}/>
-            {/*<Edit open={modal.edit} setOpen={setModal} setReload={setReload} major={major}/>*/}
-        </Content>
-    </>
+                        </BlockHeadContent>
+                    </BlockBetween>
+                </BlockHead>
+                <PreviewCard>
+                    <ReactDataTable data={users} columns={Columns} pagination className="nk-tb-list"/>
+                </PreviewCard>
+                <Add/>
+                <Edit/>
+            </Content>
+        </>
+    )
 }
 export default User

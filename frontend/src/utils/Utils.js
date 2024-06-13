@@ -156,3 +156,28 @@ export const Currency = (number) => {
         minimumFractionDigits: 0,
     }).format(number);
 }
+
+export const Role = (role) => {
+    switch (role) {
+        case '1':
+            return "Administrator"
+        case '2':
+            return "Kepala Madrasah"
+        case '3':
+            return "Wakil Kepala"
+        case '4':
+            return "Guru"
+        case '5':
+            return "Operator"
+        case '6':
+            return "Bendahara"
+        case '7':
+            return "Teller"
+        case '8':
+            return "Siswa"
+        case '9':
+            return "Orang Tua"
+        default:
+            return "NN"
+    }
+}
