@@ -32,7 +32,7 @@ const User = () => {
     const Columns = [
         {
             name: "Nama",
-            selector: (row) => row.name,
+            selector: (row) => row.fullname,
             sortable: false,
             hide: "sm",
         },
@@ -54,18 +54,18 @@ const User = () => {
             hide: "sm",
             cell: (row) => parseInt(row.boarding) === 1 ? 'YA' : 'TIDAK'
         },
-        {
-            name: "Program",
-            selector: (row) => row.program,
-            sortable: false,
-            hide: "sm",
-            cell: (row) => {
-                let program = JSON.parse(row.program);
-                return program.map((item) => {
-                    return <Badge className="badge-dot me-2" color="success">{item.label}</Badge>
-                })
-            }
-        },
+        // {
+        //     name: "Program",
+        //     selector: (row) => row.program,
+        //     sortable: false,
+        //     hide: "sm",
+        //     cell: (row) => {
+        //         let program = JSON.parse(row.program);
+        //         return program.map((item) => {
+        //             return <Badge className="badge-dot me-2" color="success">{item.label}</Badge>
+        //         })
+        //     }
+        // },
         {
             name: "Aksi",
             selector: (row) => row.id,
@@ -99,8 +99,7 @@ const User = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getUsers({id: '1'}));
-        console.log(user)
+        dispatch(getUsers());
     }, [dispatch])
     return <>
         <Head title="Data Pengguna"/>
@@ -149,7 +148,7 @@ const User = () => {
                 </BlockBetween>
             </BlockHead>
             <PreviewCard>
-                <ReactDataTable data={[]} columns={Columns} pagination className="nk-tb-list" onLoad={reload}/>
+                <ReactDataTable data={user.users} columns={Columns} pagination className="nk-tb-list" onLoad={reload}/>
             </PreviewCard>
             <Add open={modal.add} setOpen={setModal} setReload={setReload}/>
             {/*<Edit open={modal.edit} setOpen={setModal} setReload={setReload} major={major}/>*/}

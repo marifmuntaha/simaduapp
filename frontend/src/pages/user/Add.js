@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect} from "../../components";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 
 const Add = ({open, setOpen, setReload}) => {
     const [formData, setFormData] = useState({
@@ -13,18 +13,9 @@ const Add = ({open, setOpen, setReload}) => {
     });
     const [loading, setLoading] = useState(false);
     const [boardingSelected, setBoardingSelected] = useState([]);
-    const boardingOption = [
-        {value: 1, label: 'YA'},
-        {value: 2, label: 'TIDAK'},
-    ]
+
     const [programSelected, setProgramSelected] = useState([]);
-    const programOption = [
-        {value: 1, label: 'Tahfidz'},
-        {value: 2, label: 'Kitab'},
-    ]
-    const handleFormInput = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
-    }
+
     const toggle = () => {
         setOpen({
             add: false,
@@ -59,20 +50,24 @@ const Add = ({open, setOpen, setReload}) => {
         register,
         handleSubmit,
         formState: {errors},
-        getValues
-    } = useForm()
+        getValues,
+        control
+    } = useForm();
 
+    useEffect(() => {
+        console.log(getValues('role'))
+    }, [getValues])
     return (
         <>
             <Modal isOpen={open} toggle={toggle}>
                 <ModalHeader>TAMBAH</ModalHeader>
                 <ModalBody>
-                    <form className="form-validate is-alter">
+                    <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
                             <Col className="col-md-12">
                                 <div className="form-group">
+                                    <Label htmlFor="fullname" className="form-label">Nama Lengkap</Label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="fullname" className="form-label">Nama Lengkap</Label>
                                         <input
                                             className="form-control"
                                             type="text"
@@ -80,66 +75,87 @@ const Add = ({open, setOpen, setReload}) => {
                                             placeholder="Ex. Arif Muntaha"
                                             {...register('fullname', {required: true})}
                                         />
+                                        {errors.fullname && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
+                                    <Label htmlFor="username" className="form-label">Nama Pengguna</Label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="username" className="form-label">
-                                            Nama Pengguna
-                                        </Label>
+
                                         <input
                                             className="form-control"
                                             type="text"
                                             id="username"
                                             placeholder="Ex. marifmuntaha"
+                                            {...register('email', {
+                                                required: true,
+                                                pattern: {
+                                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                    message: "Alamat email tidak valid.",
+                                                },
+                                            })}
                                         />
+                                        {errors.email && errors.email.type === "required" && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.email && errors.email.type === "pattern" && (
+                                            <span className="invalid">{errors.email.message}</span>
+                                        )}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
+                                    <Label htmlFor="email" className="form-label">Alamat Email</Label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="email" className="form-label">
-                                            Alamat Email
-                                        </Label>
                                         <input
                                             className="form-control"
                                             type="email"
                                             id="email"
                                             placeholder="Ex. marifmuntaha@gmail.com"
+                                            {...register('email', {required: true})}
                                         />
+                                        {errors.username && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
+                                    <Label htmlFor="password" className="form-label">Kata Sandi</Label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="password" className="form-label">
-                                            Kata Sandi
-                                        </Label>
                                         <input
                                             className="form-control"
                                             type="password"
                                             id="password"
                                             placeholder="Ex. *********"
+                                            {...register('password', {required: true})}
                                         />
+                                        {errors.password && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
+                                    <Label htmlFor="repassword" className="form-label">Ulangi Sandi</Label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="repassword" className="form-label">
-                                            Ulangi Sandi
-                                        </Label>
                                         <input
                                             className="form-control"
                                             type="password"
                                             id="repassword"
                                             placeholder="Ex. *********"
+                                            {...register('repassword', {
+                                                required: true,
+                                                validate: (val) => {
+                                                    if (getValues('password') !== val){
+                                                        return 'Sandi tidak sama.'
+                                                    }
+                                                }
+                                            })}
                                         />
+                                        {errors.repassword && errors.repassword.type === "required" && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.repassword && errors.repassword.type === "validate" && (
+                                            <span className="invalid">{errors.repassword.message}</span>
+                                        )}
                                     </div>
                                 </div>
                             </Col>
@@ -149,15 +165,20 @@ const Add = ({open, setOpen, setReload}) => {
                                         Hak Akses
                                     </label>
                                     <div className="form-control-wrap">
-                                        <RSelect
-                                            options={roleOption}
-                                            onChange={(e) => {
-                                                setFormData({...formData, boarding: e.value});
-                                                setBoardingSelected(e);
-                                            }}
-                                            value={boardingSelected}
-                                            placeholder="Pilih Hak Akses"
-                                        />
+                                        <div className="form-control-select">
+                                        <Controller
+                                            control={control}
+                                            name="role"
+                                            render={({ field: {onChange, value, ref, name}}) => (
+                                            <RSelect
+                                                inputRef={ref}
+                                                options={roleOption}
+                                                value={roleOption.find((c) => c.value === value)}
+                                                onChange={(val) => onChange(val.value)}
+                                                placeholder="Pilih Hak Akses"
+                                            />
+                                        )}/>
+                                        </div>
                                     </div>
                                 </div>
                             </Col>

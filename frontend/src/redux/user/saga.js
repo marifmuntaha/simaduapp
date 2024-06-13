@@ -8,7 +8,7 @@ import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
 function* get(params): SagaIterator {
     try {
-        const response = yield call(getApi, params)
+        const response = yield call(getApi, params.payload)
         const data = response && response.data.result
         yield put(userApiResponseSuccess(UserActionTypes.GET_USER, data))
     } catch (error){
