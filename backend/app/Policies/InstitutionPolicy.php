@@ -29,7 +29,7 @@ class InstitutionPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->role == 1;
     }
 
     /**
@@ -37,7 +37,7 @@ class InstitutionPolicy
      */
     public function update(User $user, Institution $institution): bool
     {
-        //
+        return $user->role == 1;
     }
 
     /**
@@ -45,7 +45,7 @@ class InstitutionPolicy
      */
     public function delete(User $user, Institution $institution): bool
     {
-        //
+        return $user->role == 1;
     }
 
     /**
@@ -53,7 +53,7 @@ class InstitutionPolicy
      */
     public function restore(User $user, Institution $institution): bool
     {
-        //
+        return $user->role == 1;
     }
 
     /**
@@ -61,6 +61,6 @@ class InstitutionPolicy
      */
     public function forceDelete(User $user, Institution $institution): bool
     {
-        //
+        return $user->role == 1;
     }
 }

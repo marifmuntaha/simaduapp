@@ -12,16 +12,16 @@ import {
     ReactDataTable,
     toastError
 } from "../../../components";
-import {Button, ButtonGroup, Spinner} from "reactstrap";
+import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, destroyLadders, getLadders, resetLadder, setLadder} from "../../../redux/ladder/actions";
+import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/year/actions";
 import Add from "./Add";
 import Edit from "./Edit";
 
-const Ladder = () => {
+const Year = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.ladder)
-    const {loading, ladders, error} = selector;
+    const selector = useSelector((state) => state.year)
+    const {loading, years, error} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -31,14 +31,17 @@ const Ladder = () => {
             hide: "sm",
         },
         {
-            name: "Singkatan",
-            selector: (row) => row.alias,
-            sortable: false,
-        },
-        {
             name: "Diskripsi",
             selector: (row) => row.description,
             sortable: false,
+        },
+        {
+            name: "Aktif",
+            selector: (row) => row.active,
+            sortable: false,
+            cell: row => (
+                row.active === 0 ? <Badge className="badge-dot" color="danger">Tidak</Badge> : <Badge className="badge-dot" color="success">Aktif</Badge>
+            )
         },
         {
             name: "Aksi",
@@ -50,14 +53,14 @@ const Ladder = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            dispatch(setLadder(row, true));
+                            dispatch(setYear(row, true));
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyLadders(row.id));
+                            dispatch(destroyYear(row.id));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -67,13 +70,13 @@ const Ladder = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getLadders());
-        dispatch(resetLadder());
+        dispatch(getYears());
+        dispatch(resetYear());
     }, [dispatch])
     return (
         <>
-            {error && toastError(error) && dispatch(resetLadder())}
-            <Head title="Data Jenjang"/>
+            {error && toastError(error) && dispatch(resetYear())}
+            <Head title="Tahun Pelajaran"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
@@ -85,7 +88,7 @@ const Ladder = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Jenjang</BlockTitle>
+                            <BlockTitle tag="h4">Tahun Pelajaran</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -103,7 +106,7 @@ const Ladder = () => {
                                     <ul className="nk-block-tools g-3">
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addLadder(true))}
+                                            onClick={() => dispatch(addYear(true))}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -117,7 +120,7 @@ const Ladder = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={ladders} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={years} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add/>
                 <Edit/>
@@ -125,4 +128,4 @@ const Ladder = () => {
         </>
     )
 }
-export default Ladder;
+export default Year;

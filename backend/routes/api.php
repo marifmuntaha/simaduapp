@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\LadderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
@@ -18,5 +19,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('ladder', LadderController::class);
         Route::apiResource('year', YearController::class);
     });
+    Route::apiResource('institution', InstitutionController::class);
     Route::apiResource('user', UserController::class);
 });

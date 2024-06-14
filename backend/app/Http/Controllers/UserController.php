@@ -14,6 +14,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = new User();
+        $users = $request->has('role') ? $users->whereRole($request->role) : $users;
         return response([
             'success' => true,
             'message' => null,

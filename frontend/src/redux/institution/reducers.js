@@ -1,4 +1,4 @@
-import {LadderActionTypes} from "./constants";
+import {InstitutionActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     user: false,
@@ -9,69 +9,69 @@ const INITIAL_STATE = {
     },
     error: false,
 }
-const Ladder = (state = INITIAL_STATE, action): any => {
+const Institution = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case LadderActionTypes.API_RESPONSE_SUCCESS: {
+        case InstitutionActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case LadderActionTypes.GET_LADDER:
+                case InstitutionActionTypes.GET_INSTITUTION:
                     return {
                         ...state,
-                        ladders: action.payload.data,
+                        institutions: action.payload.data,
                         loading: false,
                     }
-                case LadderActionTypes.STORE_LADDER:
+                case InstitutionActionTypes.STORE_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
+                        institution: action.payload.data.institution,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case LadderActionTypes.UPDATE_LADDER:
+                case InstitutionActionTypes.UPDATE_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
+                        institution: action.payload.data.institution,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case LadderActionTypes.DESTROY_LADDER:
+                case InstitutionActionTypes.DESTROY_INSTITUTION:
                     return {
                         ...state,
-                        ladder: action.payload.data,
+                        institution: action.payload.data,
                         loading: false,
                     }
                 default:
                     return {...state}
             }
         }
-        case LadderActionTypes.API_RESPONSE_ERROR: {
+        case InstitutionActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case LadderActionTypes.GET_LADDER:
+                case InstitutionActionTypes.GET_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case LadderActionTypes.STORE_LADDER:
-                    return {
-                        ...state,
-                        loading: false,
-                        error: action.payload.error,
-
-                    }
-                case LadderActionTypes.UPDATE_LADDER:
+                case InstitutionActionTypes.STORE_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
 
                     }
-                case LadderActionTypes.DESTROY_LADDER:
+                case InstitutionActionTypes.UPDATE_INSTITUTION:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case InstitutionActionTypes.DESTROY_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
@@ -81,12 +81,12 @@ const Ladder = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case LadderActionTypes.GET_LADDER:
+        case InstitutionActionTypes.GET_INSTITUTION:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.ADD_LADDER:
+        case InstitutionActionTypes.ADD_INSTITUTION:
             return {
                 ...state,
                 loading: false,
@@ -95,37 +95,37 @@ const Ladder = (state = INITIAL_STATE, action): any => {
                     edit: false,
                 }
             }
-        case LadderActionTypes.STORE_LADDER:
+        case InstitutionActionTypes.STORE_INSTITUTION:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.SET_LADDER:
+        case InstitutionActionTypes.SET_INSTITUTION:
             return {
                 ...state,
                 loading: false,
-                ladder: action.payload.ladder,
+                institution: action.payload.institution,
                 modal: {
                     add: false,
                     edit: action.payload.modal,
                 }
             }
-        case LadderActionTypes.UPDATE_LADDER:
+        case InstitutionActionTypes.UPDATE_INSTITUTION:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.DESTROY_LADDER:
+        case InstitutionActionTypes.DESTROY_INSTITUTION:
             return {
                 ...state,
                 loading: action.payload,
             }
-        case LadderActionTypes.RESET:
+        case InstitutionActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
-                ladder: false,
-                ladders: [],
+                institution: false,
+                institutions: [],
                 modal : {
                     add: false,
                     edit: false,
@@ -136,4 +136,4 @@ const Ladder = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default Ladder;
+export default Institution;

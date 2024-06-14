@@ -4,7 +4,10 @@ import {Route} from "react-router-dom";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
 const Ladder = React.lazy(() => import('../pages/master/ladder'))
+const Year = React.lazy(() => import('../pages/master/year'))
 const User = React.lazy(() => import("../pages/user"));
+const Institution = React.lazy(() => import('../pages/institution'))
+
 const Login = React.lazy(() => import("../pages/auth/Login"));
 const Logout = React.lazy(() => import("../pages/auth/Logout"));
 const Error404 = React.lazy(() => import('../pages/error/Error404'))
@@ -21,6 +24,18 @@ export const protectedRoutes = [
         path: '/master/jenjang',
         name: 'Jenjang',
         element: <Ladder/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/master/tahun-pelajaran',
+        name: 'Tahun Pelajaran',
+        element: <Year/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/institusi',
+        name: 'Data Institusi',
+        element: <Institution/>,
         route: PrivateRoute,
     },
     {

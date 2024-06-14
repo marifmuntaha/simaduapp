@@ -1,57 +1,56 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row} from "../../../components";
+import {Col, Row, RSelect} from "../../../components";
+import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "react-hook-form";
-import {setLadder, updateLadder} from "../../../redux/ladder/actions";
+import {addYear, storeYear} from "../../../redux/year/actions";
 
-const Edit = () => {
+const Add = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.ladder)
-    const {loading, modal, ladder} = selector;
+    const selector = useSelector((state) => state.year);
+    const {loading, modal} = selector
+    const activeOption = [
+        {value: 0, label: 'Tidak'},
+        {value: 1, label: 'Aktif'}
+    ]
     const onSubmit = () => {
-        dispatch(updateLadder({
+        dispatch(storeYear({
             formData: getValues([
-                'id',
                 'name',
-                'alias',
                 'description',
+                'active'
             ])
-        }))
+        }));
     }
     const {
         register,
         handleSubmit,
         formState: {errors},
-        setValue,
         getValues,
-        reset
-    } = useForm()
+        reset,
+        control
+    } = useForm();
     const toggle = () => {
-        dispatch(setLadder({}, false))
-        reset()
+        reset();
+        dispatch(addYear(false));
     }
-    useEffect(() => {
-        ladder && Object.entries(ladder).map((ladder) => {
-            return setValue(ladder[0], ladder[1])
-        });
-    }, [setValue, ladder])
+
     return (
         <>
-            <Modal isOpen={modal.edit} toggle={toggle}>
-                <ModalHeader>UBAH</ModalHeader>
+            <Modal isOpen={modal.add} toggle={toggle}>
+                <ModalHeader>TAMBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="name" className="form-label">Nama</Label>
+                                    <Label htmlFor="fullname" className="form-label">Nama</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
                                             id="name"
-                                            placeholder="Ex. Arif Muntaha"
+                                            placeholder="Ex. 2023/2024"
                                             {...register('name', {required: true})}
                                         />
                                         {errors.name && <span className="invalid">Kolom tidak boleh kosong.</span>}
@@ -60,32 +59,41 @@ const Edit = () => {
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="alias" className="form-label">Singkatan</Label>
+                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
                                     <div className="form-control-wrap">
 
                                         <input
                                             className="form-control"
                                             type="text"
-                                            id="alias"
-                                            placeholder="Ex. marifmuntaha"
-                                            {...register('alias', {required: true})}
+                                            id="description"
+                                            placeholder="Ex. Tahun Pelajaran 2023/2024"
+                                            {...register('description', {required: false})}
                                         />
-                                        {errors.alias && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
+                                    <label className="form-label" htmlFor="user">
+                                        Status
+                                    </label>
                                     <div className="form-control-wrap">
-                                        <input
+                                        <Controller
+                                            control={control}
                                             className="form-control"
-                                            type="text"
-                                            id="description"
-                                            placeholder="Ex. marifmuntaha@gmail.com"
-                                            {...register('description', {required: false})}
-                                        />
-                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                            name="active"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={activeOption}
+                                                    value={activeOption.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Status"
+                                                />
+                                            )}/>
+                                        {errors.active && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -101,4 +109,4 @@ const Edit = () => {
         </>
     )
 }
-export default Edit;
+export default Add;

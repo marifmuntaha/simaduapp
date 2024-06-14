@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInstitutionRequest;
 use App\Http\Requests\UpdateInstitutionRequest;
+use App\Http\Resources\InstitutionResource;
 use App\Models\Institution;
+use Exception;
 
 class InstitutionController extends Controller
 {
@@ -13,15 +15,12 @@ class InstitutionController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $institutions = new Institution();
+        return response([
+            'success' => true,
+            'message' => null,
+            'result' => InstitutionResource::collection($institutions->get())
+        ]);
     }
 
     /**
@@ -29,7 +28,20 @@ class InstitutionController extends Controller
      */
     public function store(StoreInstitutionRequest $request)
     {
-        //
+        try {
+            return ($institution = Institution::create($request->all()))
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Lembaga Berhasil Disimpan',
+                    'result' => new InstitutionResource($institution)
+                ], 201) : throw new Exception('Data Lembaga Gagal Disimpan');
+        } catch (Exception $exception){
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], 422);
+        }
     }
 
     /**
@@ -37,15 +49,11 @@ class InstitutionController extends Controller
      */
     public function show(Institution $institution)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Institution $institution)
-    {
-        //
+        return response([
+            'success' => true,
+            'message' => null,
+            'result' => new InstitutionResource($institution)
+        ]);
     }
 
     /**
@@ -53,7 +61,20 @@ class InstitutionController extends Controller
      */
     public function update(UpdateInstitutionRequest $request, Institution $institution)
     {
-        //
+        try {
+            return $institution->update(array_filter($request->all()))
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Lembaga Berhasil Diupdate',
+                    'result' => new InstitutionResource($institution)
+                ]) : throw new Exception('Data Lembaga Gagal Diupdate');
+        } catch (Exception $exception){
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], 422);
+        }
     }
 
     /**
@@ -61,6 +82,19 @@ class InstitutionController extends Controller
      */
     public function destroy(Institution $institution)
     {
-        //
+        try {
+            return $institution->delete()
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Lembaga Berhasil Dihapus',
+                    'result' => new InstitutionResource($institution)
+                ]) : throw new Exception('Data Lembaga Gagal Dihapus');
+        } catch (Exception $exception){
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], 422);
+        }
     }
 }

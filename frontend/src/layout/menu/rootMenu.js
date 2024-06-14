@@ -14,8 +14,8 @@ export const rootMenu = [
                 link: "/master/jenjang",
             },
             {
-                text: "Profil Madrasah",
-                link: "/master/madrasah",
+                text: "Tahun Pelajaran",
+                link: "/master/tahun-pelajaran",
             },
             {
                 text: "Rekening",
@@ -28,8 +28,14 @@ export const rootMenu = [
         ],
     },
     {
+        icon: "building",
+        text: "Data Institusi",
+        active: "false",
+        link: "/institusi",
+    },
+    {
         icon: "users",
-        text: "Pengguna",
+        text: "Data Pengguna",
         active: "false",
         link: "/pengguna",
     },

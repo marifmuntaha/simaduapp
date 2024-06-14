@@ -14,6 +14,19 @@ class LadderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $resource = [];
+        if ($request->has('type')) {
+            switch ($request->type) {
+                case 'select':
+                    $resource = [
+                        'value' => $this->id,
+                        'label' => $this->name
+                    ];
+                default:
+            }
+        } else {
+            $resource = parent::toArray($request);
+        }
+        return $resource;
     }
 }

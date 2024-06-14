@@ -9,5 +9,5 @@ export const LadderActionTypes = {
     UPDATE_LADDER: '@@ladder/UPDATE_LADDER',
     DESTROY_LADDER: '@@ladder/DESTROY_LADDER',
 
-    RESET: '@@user/RESET',
+    RESET: '@@ladder/RESET',
 }

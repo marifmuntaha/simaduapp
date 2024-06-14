@@ -1,4 +1,4 @@
-import {LadderActionTypes} from "./constants";
+import {YearActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     user: false,
@@ -9,69 +9,69 @@ const INITIAL_STATE = {
     },
     error: false,
 }
-const Ladder = (state = INITIAL_STATE, action): any => {
+const Year = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case LadderActionTypes.API_RESPONSE_SUCCESS: {
+        case YearActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case LadderActionTypes.GET_LADDER:
+                case YearActionTypes.GET_YEAR:
                     return {
                         ...state,
-                        ladders: action.payload.data,
+                        years: action.payload.data,
                         loading: false,
                     }
-                case LadderActionTypes.STORE_LADDER:
+                case YearActionTypes.STORE_YEAR:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
+                        year: action.payload.data.year,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case LadderActionTypes.UPDATE_LADDER:
+                case YearActionTypes.UPDATE_YEAR:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
+                        year: action.payload.data.year,
                         modal: {
                             add: false,
                             edit: false,
                         }
                     }
-                case LadderActionTypes.DESTROY_LADDER:
+                case YearActionTypes.DESTROY_YEAR:
                     return {
                         ...state,
-                        ladder: action.payload.data,
+                        year: action.payload.data,
                         loading: false,
                     }
                 default:
                     return {...state}
             }
         }
-        case LadderActionTypes.API_RESPONSE_ERROR: {
+        case YearActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case LadderActionTypes.GET_LADDER:
+                case YearActionTypes.GET_YEAR:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case LadderActionTypes.STORE_LADDER:
-                    return {
-                        ...state,
-                        loading: false,
-                        error: action.payload.error,
-
-                    }
-                case LadderActionTypes.UPDATE_LADDER:
+                case YearActionTypes.STORE_YEAR:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
 
                     }
-                case LadderActionTypes.DESTROY_LADDER:
+                case YearActionTypes.UPDATE_YEAR:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case YearActionTypes.DESTROY_YEAR:
                     return {
                         ...state,
                         loading: false,
@@ -81,12 +81,12 @@ const Ladder = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case LadderActionTypes.GET_LADDER:
+        case YearActionTypes.GET_YEAR:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.ADD_LADDER:
+        case YearActionTypes.ADD_YEAR:
             return {
                 ...state,
                 loading: false,
@@ -95,37 +95,37 @@ const Ladder = (state = INITIAL_STATE, action): any => {
                     edit: false,
                 }
             }
-        case LadderActionTypes.STORE_LADDER:
+        case YearActionTypes.STORE_YEAR:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.SET_LADDER:
+        case YearActionTypes.SET_YEAR:
             return {
                 ...state,
                 loading: false,
-                ladder: action.payload.ladder,
+                year: action.payload.year,
                 modal: {
                     add: false,
                     edit: action.payload.modal,
                 }
             }
-        case LadderActionTypes.UPDATE_LADDER:
+        case YearActionTypes.UPDATE_YEAR:
             return {
                 ...state,
                 loading: true,
             }
-        case LadderActionTypes.DESTROY_LADDER:
+        case YearActionTypes.DESTROY_YEAR:
             return {
                 ...state,
                 loading: action.payload,
             }
-        case LadderActionTypes.RESET:
+        case YearActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
-                ladder: false,
-                ladders: [],
+                year: false,
+                years: [],
                 modal : {
                     add: false,
                     edit: false,
@@ -136,4 +136,4 @@ const Ladder = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default Ladder;
+export default Year;
