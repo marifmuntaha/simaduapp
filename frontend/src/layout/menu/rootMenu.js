@@ -18,8 +18,8 @@ export const rootMenu = [
                 link: "/master/tahun-pelajaran",
             },
             {
-                text: "Rekening",
-                link: "/master/rekening",
+                text: "Tingkatan",
+                link: "/master/tingkatan",
             },
             {
                 text: "Grup",

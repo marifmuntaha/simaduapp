@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\LadderController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\MajorController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +19,8 @@ Route::group(['prefix' => 'auth'], function (){
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'master'], function (){
         Route::apiResource('ladder', LadderController::class);
+        Route::apiResource('level', LevelController::class);
+        Route::apiResource('major', MajorController::class);
         Route::apiResource('year', YearController::class);
     });
     Route::apiResource('institution', InstitutionController::class);

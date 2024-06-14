@@ -4,6 +4,7 @@ import {Route} from "react-router-dom";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
 const Ladder = React.lazy(() => import('../pages/master/ladder'))
+const Level = React.lazy(() => import('../pages/master/level'))
 const Year = React.lazy(() => import('../pages/master/year'))
 const User = React.lazy(() => import("../pages/user"));
 const Institution = React.lazy(() => import('../pages/institution'))
@@ -30,6 +31,12 @@ export const protectedRoutes = [
         path: '/master/tahun-pelajaran',
         name: 'Tahun Pelajaran',
         element: <Year/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/master/tingkatan',
+        name: 'Tingkatan',
+        element: <Level/>,
         route: PrivateRoute,
     },
     {

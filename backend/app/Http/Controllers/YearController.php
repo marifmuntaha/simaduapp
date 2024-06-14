@@ -62,7 +62,7 @@ class YearController extends Controller
     public function update(UpdateYearRequest $request, Year $year)
     {
         try {
-            return $year->fill($request->all())->save()
+            return $year->update(array_filter($request->all()))
                 ? response([
                     'success' => true,
                     'message' => 'Tahun Pelajaran berhasil diperbarui',
@@ -82,6 +82,19 @@ class YearController extends Controller
      */
     public function destroy(Year $year)
     {
-        //
+        try {
+            return $year->delete()
+                ? response([
+                    'success' => true,
+                    'message' => 'Tahun Pelajaran Berhasil Dihapus',
+                    'result' => new YearResource($year),
+                ]) : throw new Exception("Terjadi kesalahan saat menghapus data");
+        } catch (Exception $exception){
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null,
+            ], 422);
+        }
     }
 }

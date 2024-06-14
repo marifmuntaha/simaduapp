@@ -4,7 +4,8 @@ import userSaga from "./user/saga";
 import ladderSaga from "./ladder/saga";
 import institutionSaga from "./institution/saga";
 import yearSaga from "./year/saga";
+import levelSaga from "./level/saga";
 
 export default function* rootSaga(){
-    yield all([authSaga(), userSaga(), ladderSaga(), yearSaga(), institutionSaga()])
+    yield all([authSaga(), userSaga(), ladderSaga(), levelSaga(), yearSaga(), institutionSaga()])
 }

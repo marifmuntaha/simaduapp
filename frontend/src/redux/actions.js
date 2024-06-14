@@ -1,5 +1,6 @@
 export * from './auth/actions'
 export * from './user/actions'
 export * from './ladder/actions'
+export * from './level/actions'
 export * from './year/actions'
 export * from './institution/actions'

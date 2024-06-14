@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import Head from "../../layout/head";
-import Content from "../../layout/content";
+import Head from "../../../layout/head";
+import Content from "../../../layout/content";
 import {
     BackTo,
     BlockBetween,
@@ -9,59 +9,36 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable, toastError
-} from "../../components";
+    ReactDataTable,
+    toastError
+} from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
-import Add from "./Add";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    addInstitution,
-    destroyInstitution,
-    getInstitutions,
-    resetInstitution,
-    setInstitution
-} from "../../redux/institution/actions";
+import {addLevel, destroyLevel, getLevels, resetLevel, setLevel} from "../../../redux/level/actions";
+import Add from "./Add";
 import Edit from "./Edit";
 
-const Institution = () => {
+const Level = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.institution)
-    const {loading, institutions, error} = selector;
+    const selector = useSelector((state) => state.level)
+    const {loading, levels, error} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
             name: "Jenjang",
-            selector: (row) => row.ladder && row.ladder.name,
+            selector: (row) => row.ladder && row.ladder.alias,
             sortable: false,
             hide: "sm",
         },
         {
-            name: "Nama Madrasah",
+            name: "Nama",
             selector: (row) => row.name,
             sortable: false,
         },
         {
-            name: "NSM",
-            selector: (row) => row.nsm,
+            name: "Alias",
+            selector: (row) => row.alias,
             sortable: false,
-        },
-        {
-            name: "NPSN",
-            selector: (row) => row.npsn,
-            sortable: false,
-            hide: "sm",
-        },
-        {
-            name: "Kepala Madrasah",
-            selector: (row) => row.headmaster,
-            sortable: false,
-            hide: "sm"
-        },
-        {
-            name: "Operator",
-            selector: (row) => row.user && row.user.fullname,
-            sortable: false,
-            hide: "sm",
         },
         {
             name: "Aksi",
@@ -73,14 +50,14 @@ const Institution = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            dispatch(setInstitution(row, true));
+                            dispatch(setLevel(row, true));
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyInstitution(row.id));
+                            dispatch(destroyLevel(row.id));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -90,13 +67,14 @@ const Institution = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getInstitutions({with: ['ladder', 'user']}));
-    }, [dispatch]);
+        dispatch(getLevels({with: 'ladder'}));
+        dispatch(resetLevel());
+    }, [dispatch])
     return (
         <>
-            {error && toastError(error) && dispatch(resetInstitution())}
-            <Head title="Data Institutusi"/>
-            <Content>
+            {error && toastError(error) && dispatch(resetLevel())}
+            <Head title="Data Tingkat"/>
+            <Content page="component">
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
                         <BackTo link="/" icon="arrow-left">
@@ -107,7 +85,7 @@ const Institution = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Institusi</BlockTitle>
+                            <BlockTitle tag="h4">Data Tingkat</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -125,7 +103,7 @@ const Institution = () => {
                                     <ul className="nk-block-tools g-3">
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addInstitution(true))}
+                                            onClick={() => dispatch(addLevel(true))}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -139,7 +117,7 @@ const Institution = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={institutions} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={levels} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add/>
                 <Edit/>
@@ -147,4 +125,4 @@ const Institution = () => {
         </>
     )
 }
-export default Institution
+export default Level;

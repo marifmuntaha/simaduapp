@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateYearRequest extends FormRequest
+class StoreMajorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,9 @@ class UpdateYearRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'ladder' => 'required',
             'name' => 'required|string',
+            'alias' => 'required|string',
             'description' => 'nullable|string',
         ];
     }
@@ -31,7 +33,9 @@ class UpdateYearRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Nama Tahun',
+            'ladder' => 'Jenjang',
+            'name' => 'Nama',
+            'alias' => 'Singkatan',
             'description' => 'Diskripsi',
         ];
     }
