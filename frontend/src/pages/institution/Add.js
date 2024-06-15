@@ -5,7 +5,7 @@ import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {addInstitution, resetInstitution, storeInstitution} from "../../redux/institution/actions";
 import {getUsers} from "../../redux/user/actions";
-import {getLadders} from "../../redux/ladder/actions";
+import {getLadders} from "../../redux/master/ladder/actions";
 
 const Add = () => {
     const dispatch = useDispatch();

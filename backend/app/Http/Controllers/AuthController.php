@@ -11,8 +11,13 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        $auth = match ($request->type) {
+            1 => Auth::guard('root'),
+            2 => Auth::guard('employee'),
+            default => Auth::guard('web'),
+        };
         try {
-            return Auth::attempt($request->only('username', 'password'))
+            return $auth->attempt($request->only('username', 'password'))
                 ? response([
                     'status' => true,
                     'message' => 'Berhasil masuk, anda akan dialihkan dalam 2 detik',

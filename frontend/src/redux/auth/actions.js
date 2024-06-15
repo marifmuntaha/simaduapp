@@ -2,17 +2,17 @@ import {AuthActionTypes} from "./constants";
 
 export const authApiResponseSuccess = (actionType, data) => ({
     type: AuthActionTypes.API_RESPONSE_SUCCESS,
-    payload: { actionType, data }
+    payload: {actionType, data}
 });
 
 export const authApiResponseError = (actionType, error) => ({
     type: AuthActionTypes.API_RESPONSE_ERROR,
-    payload: { actionType, error },
+    payload: {actionType, error},
 });
 
-export const loginUser = (username, password) => ({
+export const loginUser = ({formData: [type, username, password]}) => ({
     type: AuthActionTypes.LOGIN_USER,
-    payload: { username, password },
+    payload: {type, username, password},
 })
 
 export const logoutUser = () => ({
@@ -20,7 +20,7 @@ export const logoutUser = () => ({
     payload: {},
 })
 
-export const resetAuth = ()=> ({
+export const resetAuth = () => ({
     type: AuthActionTypes.RESET,
     payload: {},
 })

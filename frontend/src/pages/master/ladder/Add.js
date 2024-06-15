@@ -3,7 +3,7 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row} from "../../../components";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, storeLadder} from "../../../redux/ladder/actions";
+import {addLadder, storeLadder} from "../../../redux/master/ladder/actions";
 
 const Add = () => {
     const dispatch = useDispatch();

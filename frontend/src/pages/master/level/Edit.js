@@ -3,8 +3,8 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {setLevel, updateLevel} from "../../../redux/level/actions";
-import {getLadders} from "../../../redux/ladder/actions";
+import {setLevel, updateLevel} from "../../../redux/master/level/actions";
+import {getLadders} from "../../../redux/master/ladder/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();

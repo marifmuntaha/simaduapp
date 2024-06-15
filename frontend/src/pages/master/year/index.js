@@ -14,7 +14,7 @@ import {
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/year/actions";
+import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/master/year/actions";
 import Add from "./Add";
 import Edit from "./Edit";
 

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getUsers} from "../../redux/user/actions";
 import {Controller, useForm} from "react-hook-form";
 import {addInstitution, resetInstitution, updateInstitution} from "../../redux/institution/actions";
-import {getLadders} from "../../redux/ladder/actions";
+import {getLadders} from "../../redux/master/ladder/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();

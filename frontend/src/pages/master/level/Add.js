@@ -3,8 +3,8 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, getLadders, storeLadder} from "../../../redux/ladder/actions";
-import {resetLevel, storeLevel} from "../../../redux/level/actions";
+import {getLadders} from "../../../redux/master/ladder/actions";
+import {addLevel, resetLevel, storeLevel} from "../../../redux/master/level/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Add = () => {
     } = useForm();
     const toggle = () => {
         reset();
-        dispatch(addLadder(false));
+        dispatch(addLevel(false));
     }
     useEffect(() => {
         dispatch(getLadders({type: 'select'}));

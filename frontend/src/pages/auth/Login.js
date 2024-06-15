@@ -11,28 +11,28 @@ import {
     BlockTitle,
     Button,
     Icon,
-    PreviewCard,
+    PreviewCard, RSelect,
 } from "../../components";
 import {Alert, Form, Spinner} from "reactstrap";
 import {Link, Navigate, useLocation} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser, resetAuth} from "../../redux/actions";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 
 const Login = () => {
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
     const [passState, setPassState] = useState(false);
     const handleFormSubmit = () => {
-        dispatch(loginUser(getValues('username'), getValues('password')))
+        dispatch(loginUser({formData: getValues(['type', 'username', 'password'])}));
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        getValues
-    } = useForm({});
+    const {register, handleSubmit, formState: {errors}, getValues, control} = useForm();
+    const typeOptions = [
+        {value: 1, label: 'Administrator'},
+        {value: 2, label: 'Guru & Karyawan'},
+        {value: 3, label: 'Siswa'},
+        {value: 4, label: 'Orangtua'},
+    ]
     const location = useLocation()
     const redirectUrl = location?.search?.slice(6) || '/'
     useEffect(() => {
@@ -69,6 +69,29 @@ const Login = () => {
                     <Form
                         className="form-validate is-alter"
                         onSubmit={handleSubmit(handleFormSubmit)}>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="type">
+                                Hak Akses
+                            </label>
+                            <div className="form-control-wrap">
+                                <input type="hidden" className="form-control"/>
+                                <Controller
+                                    control={control}
+                                    className="form-control"
+                                    name="type"
+                                    rules={{required: true}}
+                                    render={({field: {onChange, value, ref}}) => (
+                                        <RSelect
+                                            inputRef={ref}
+                                            options={typeOptions}
+                                            value={typeOptions.find((c) => c.value === value)}
+                                            onChange={(val) => onChange(val.value)}
+                                            placeholder="Pilih Hak Akses"
+                                        />
+                                    )}/>
+                                {errors.type && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                            </div>
+                        </div>
                         <div className="form-group">
                             <div className="form-label-group">
                                 <label className="form-label" htmlFor="username">Nama Pengguna</label>

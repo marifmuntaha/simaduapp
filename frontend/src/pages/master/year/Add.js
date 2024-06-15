@@ -3,7 +3,7 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addYear, storeYear} from "../../../redux/year/actions";
+import {addYear, storeYear} from "../../../redux/master/year/actions";
 
 const Add = () => {
     const dispatch = useDispatch();

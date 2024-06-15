@@ -27,7 +27,16 @@ class InstitutionResource extends JsonResource
             'logo' => $this->logo,
             'creator' => $this->creator,
             'updater' => $this->updater,
+            'withLadderAlias' => $this->ladders->alias .' '. $this['name']
         ];
+        if ($request->has('type')){
+            if ($request->type == 'select'){
+                $resource = [
+                    'value' => $this['id'],
+                    'label' => $this->ladders->alias .' '.$this['name'],
+                ];
+            }
+        }
         if ($request->has('with')){
             $with = explode(',', $request->with);
             $with = count($with) > 1 ? $with : [$request->with];

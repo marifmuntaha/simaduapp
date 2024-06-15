@@ -16,12 +16,16 @@ Route::group(['prefix' => 'auth'], function (){
     Route::post('logout', AuthController::class. '@logout')->middleware('auth:sanctum');
 });
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => ['auth:root', 'auth:employee']], function () {
     Route::group(['prefix' => 'master'], function (){
         Route::apiResource('ladder', LadderController::class);
         Route::apiResource('level', LevelController::class);
         Route::apiResource('major', MajorController::class);
         Route::apiResource('year', YearController::class);
+    });
+    Route::group(['prefix' => 'institute'], function (){
+        Route::apiResource('program', \App\Http\Controllers\ProgramController::class);
+        Route::apiResource('classroom', \App\Http\Controllers\ClassroomController::class);
     });
     Route::apiResource('institution', InstitutionController::class);
     Route::apiResource('user', UserController::class);

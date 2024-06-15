@@ -2,7 +2,7 @@
 import {SagaIterator} from "redux-saga";
 import {ladderApiResponseError, ladderApiResponseSuccess} from "./actions";
 import {LadderActionTypes} from "./constants";
-import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../utils/api/ladder'
+import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../../utils/api/master/ladder'
 import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
 function* get({payload: {params}}): SagaIterator {

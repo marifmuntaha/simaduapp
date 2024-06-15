@@ -1,11 +1,23 @@
 import { all } from 'redux-saga/effects'
 import authSaga from './auth/saga'
 import userSaga from "./user/saga";
-import ladderSaga from "./ladder/saga";
+import ladderSaga from "./master/ladder/saga";
 import institutionSaga from "./institution/saga";
-import yearSaga from "./year/saga";
-import levelSaga from "./level/saga";
+import yearSaga from "./master/year/saga";
+import levelSaga from "./master/level/saga";
+import majorSaga from "./master/major/saga";
+import programSaga from "./institute/program/saga";
+import classroomSaga from "./institute/classroom/saga";
 
 export default function* rootSaga(){
-    yield all([authSaga(), userSaga(), ladderSaga(), levelSaga(), yearSaga(), institutionSaga()])
+    yield all([
+        authSaga(),
+        classroomSaga(),
+        majorSaga(),
+        ladderSaga(),
+        levelSaga(),
+        programSaga(),
+        yearSaga(),
+        institutionSaga(),
+        userSaga()])
 }

@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLevelRequest;
 use App\Http\Requests\UpdateLevelRequest;
 use App\Http\Resources\LevelResource;
+use App\Models\Institution;
 use App\Models\Level;
 use Exception;
+use Illuminate\Http\Request;
 
 class LevelController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $levels = new Level();
+        $levels = $request->has('institution') ? $levels->whereLadder(Institution::find($request->institution)->ladder) : $levels;
         return response([
             'success' => true,
             'message' => null,

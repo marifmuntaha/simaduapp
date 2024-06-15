@@ -22,8 +22,8 @@ export const rootMenu = [
                 link: "/master/tingkatan",
             },
             {
-                text: "Grup",
-                link: "/master/grup",
+                text: "Jurusan",
+                link: "/master/jurusan",
             },
         ],
     },
@@ -32,6 +32,48 @@ export const rootMenu = [
         text: "Data Institusi",
         active: "false",
         link: "/institusi",
+    },
+    {
+        icon: "panel",
+        text: "Lembaga",
+        active: false,
+        subMenu: [
+            {
+                text: "Program",
+                link: "/lembaga/program",
+            },
+            {
+                text: "Rombel",
+                link: "/lembaga/rombel",
+            },
+        ],
+    },
+    {
+        icon: "users",
+        text: "Siswa",
+        active: false,
+        subMenu: [
+            {
+                text: "Data Siswa",
+                link: "/siswa/data",
+            },
+            {
+                text: "Riwayat Siswa",
+                link: "/siswa/riwayat",
+            },
+            {
+                text: "Pindah Kelas",
+                link: "/siswa/pindah-kelas",
+            },
+            {
+                text: "Naik Kelas",
+                link: "/siswa/naik-kelas",
+            },
+            {
+                text: "Alumni",
+                link: "/siswa/alumni",
+            },
+        ],
     },
     {
         icon: "users",

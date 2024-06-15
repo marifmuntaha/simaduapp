@@ -1,9 +1,9 @@
-import { APICore } from './APICore'
+import {APICore} from './APICore'
 
 const api = new APICore()
 
 // account
-function login(params: { username: string; password: string }) {
+function login(params: { type: string, username: string; password: string }) {
     const baseUrl = '/auth/login/'
     return api.create(`${baseUrl}`, params)
 }
@@ -23,4 +23,4 @@ function forgotPassword(params: { username: string }) {
     return api.create(`${baseUrl}`, params)
 }
 
-export { login, logout, signup, forgotPassword }
+export {login, logout, signup, forgotPassword}

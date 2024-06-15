@@ -3,11 +3,16 @@ import PrivateRoute from "./PrivateRoutes";
 import {Route} from "react-router-dom";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
+const Major = React.lazy(() => import("../pages/master/major"));
 const Ladder = React.lazy(() => import('../pages/master/ladder'))
 const Level = React.lazy(() => import('../pages/master/level'))
 const Year = React.lazy(() => import('../pages/master/year'))
 const User = React.lazy(() => import("../pages/user"));
+
 const Institution = React.lazy(() => import('../pages/institution'))
+
+const Program = React.lazy(() => import('../pages/institute/program'));
+const CLassroom = React.lazy(() => import('../pages/institute/classroom'));
 
 const Login = React.lazy(() => import("../pages/auth/Login"));
 const Logout = React.lazy(() => import("../pages/auth/Logout"));
@@ -28,6 +33,12 @@ export const protectedRoutes = [
         route: PrivateRoute,
     },
     {
+        path: '/master/jurusan',
+        name: 'Jurusan',
+        element: <Major/>,
+        route: PrivateRoute,
+    },
+    {
         path: '/master/tahun-pelajaran',
         name: 'Tahun Pelajaran',
         element: <Year/>,
@@ -43,6 +54,18 @@ export const protectedRoutes = [
         path: '/institusi',
         name: 'Data Institusi',
         element: <Institution/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/lembaga/program',
+        name: 'Program',
+        element: <Program/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/lembaga/rombel',
+        name: 'Rombel',
+        element: <CLassroom/>,
         route: PrivateRoute,
     },
     {

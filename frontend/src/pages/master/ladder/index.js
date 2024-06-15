@@ -14,7 +14,7 @@ import {
 } from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, destroyLadders, getLadders, resetLadder, setLadder} from "../../../redux/ladder/actions";
+import {addLadder, destroyLadders, getLadders, resetLadder, setLadder} from "../../../redux/master/ladder/actions";
 import Add from "./Add";
 import Edit from "./Edit";
 

@@ -3,7 +3,7 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {setYear, updateYear} from "../../../redux/year/actions";
+import {setYear, updateYear} from "../../../redux/master/year/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();
@@ -64,7 +64,7 @@ const Edit = () => {
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="description" className="form-label">Singkatan</Label>
+                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
                                     <div className="form-control-wrap">
 
                                         <input

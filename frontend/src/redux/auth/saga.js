@@ -1,4 +1,3 @@
-
 import {SagaIterator} from "redux-saga";
 import {authApiResponseError, authApiResponseSuccess} from "./actions";
 import {AuthActionTypes} from "./constants";
@@ -8,14 +7,14 @@ import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
 const api = new APICore()
 
-function* login({payload: {username, password}}): SagaIterator {
+function* login({payload: {type, username, password}}): SagaIterator {
     try {
-        const response = yield call(loginApi, { username, password })
+        const response = yield call(loginApi, {type, username, password})
         const user = response && response.data.result
         api.setLoggedInUser(user)
         setAuthorization(user['token'])
         yield put(authApiResponseSuccess(AuthActionTypes.LOGIN_USER, user))
-    } catch (error){
+    } catch (error) {
         yield put(authApiResponseError(AuthActionTypes.LOGIN_USER, error))
         api.setLoggedInUser(null)
         setAuthorization(null)
@@ -41,7 +40,7 @@ export function* watchLogout() {
     yield takeEvery(AuthActionTypes.LOGOUT_USER, logout);
 }
 
-function* authSaga(){
+function* authSaga() {
     yield all([fork(watchLoginUser), fork(watchLogout)])
 }
 

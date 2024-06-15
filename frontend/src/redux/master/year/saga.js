@@ -2,7 +2,7 @@
 import {SagaIterator} from "redux-saga";
 import {yearApiResponseError, yearApiResponseSuccess} from "./actions";
 import {YearActionTypes} from "./constants";
-import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../utils/api/year'
+import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../../utils/api/master/year'
 import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
 function* get({payload: {params}}): SagaIterator {
