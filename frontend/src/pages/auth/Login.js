@@ -28,10 +28,10 @@ const Login = () => {
     }
     const {register, handleSubmit, formState: {errors}, getValues, control} = useForm();
     const typeOptions = [
-        {value: 1, label: 'Administrator'},
-        {value: 2, label: 'Guru & Karyawan'},
-        {value: 3, label: 'Siswa'},
-        {value: 4, label: 'Orangtua'},
+        {value: 'root', label: 'Administrator'},
+        {value: 'employee', label: 'Guru & Karyawan'},
+        {value: 'student', label: 'Siswa'},
+        {value: 'parent', label: 'Orangtua'},
     ]
     const location = useLocation()
     const redirectUrl = location?.search?.slice(6) || '/'
