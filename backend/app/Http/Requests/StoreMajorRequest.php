@@ -23,7 +23,7 @@ class StoreMajorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ladder' => 'required',
+            'ladder_id' => 'required',
             'name' => 'required|string',
             'alias' => 'required|string',
             'description' => 'nullable|string',
@@ -33,7 +33,7 @@ class StoreMajorRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ladder' => 'Jenjang',
+            'ladder_id' => 'Jenjang',
             'name' => 'Nama',
             'alias' => 'Singkatan',
             'description' => 'Diskripsi',

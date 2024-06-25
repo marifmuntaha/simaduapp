@@ -7,12 +7,12 @@ function get(params){
     return api.get(baseUrl, params)
 }
 
-function store(params: {user: number, ladder: number, name: string, alias: string, nsm: string, npsn: string, headmaster: string, logo: string}){
+function store(params: {user_id: number, ladder_id: number, name: string, alias: string, nsm: string, npsn: string, headmaster: string, logo: string}){
     const baseUrl = '/institution';
     return api.create(baseUrl, params)
 }
 
-function update(params: {id: string, fullname: string, email: string, username: string, password: string, role: string, phone: string, image: string}){
+function update(params: {id: string, user_id: number, ladder_id: number, name: string, alias: string, nsm: string, npsn: string, headmaster: string, logo: string}){
     const baseUrl = `/institution/${params.id}`;
     return api.update(baseUrl, params)
 }

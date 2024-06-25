@@ -7,15 +7,17 @@ use App\Http\Requests\UpdateYearRequest;
 use App\Http\Resources\YearResource;
 use App\Models\Year;
 use Exception;
+use Illuminate\Http\Request;
 
 class YearController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $years = new Year();
+        $years = $request->has('institution_id') ? $years->whereInstitutionId($request->input('institution_id')): $years;
         return response([
             'success' => true,
             'message' => null,

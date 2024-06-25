@@ -10,7 +10,7 @@ let menu = (user) => {
     switch (user.role) {
         case 1 :
             return rootMenu
-        case 2 :
+        case '5' :
             return operatorMenu
         default :
             return rootMenu

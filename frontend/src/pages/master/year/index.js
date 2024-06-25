@@ -10,18 +10,20 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable,
-    toastError
+    toastError, toastSuccess
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/master/year/actions";
 import Add from "./Add";
 import Edit from "./Edit";
+import {getInstitutions} from "../../../redux/institution/actions";
+import {APICore} from "../../../utils/api/APICore";
 
 const Year = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.year)
-    const {loading, years, error} = selector;
+    const {loading, years, error, success, loadData} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -69,13 +71,16 @@ const Year = () => {
             )
         },
     ];
+    const api = new APICore();
+    const user = api.getLoggedInUser();
     useEffect(() => {
-        dispatch(getYears());
-        dispatch(resetYear());
-    }, [dispatch])
+        loadData && dispatch(getYears({institution_id: user.institution.id}))
+        // success && toastSuccess(success);
+        // error && toastError(error);
+        // (success || loadData) && dispatch(getInstitutions({type: 'select'})) && ));
+    }, [dispatch, success, error, loadData]);
     return (
         <>
-            {error && toastError(error) && dispatch(resetYear())}
             <Head title="Tahun Pelajaran"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
@@ -122,8 +127,8 @@ const Year = () => {
                 <PreviewCard>
                     <ReactDataTable data={years} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add/>
-                <Edit/>
+                {/*<Add user={user}/>*/}
+                {/*<Edit user={user}/>*/}
             </Content>
         </>
     )

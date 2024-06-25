@@ -3,13 +3,12 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {getLadders} from "../../../redux/master/ladder/actions";
-import {addMajor, resetMajor, storeMajor} from "../../../redux/master/major/actions";
+import {addMajor, storeMajor} from "../../../redux/master/major/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
     const majorSelector = useSelector((state) => state.major);
-    const { loading, modal } = majorSelector
+    const { loading, modal, success } = majorSelector
     const ladderSelector = useSelector((state) => state.ladder);
     const { ladders } = ladderSelector
     const onSubmit = () => {
@@ -35,9 +34,10 @@ const Add = () => {
         dispatch(addMajor(false));
     }
     useEffect(() => {
-        dispatch(getLadders({type: 'select'}));
-        dispatch(resetMajor());
-    }, [dispatch]);
+        success &&
+        dispatch(addMajor(false));
+        reset();
+    }, [success, reset, dispatch]);
     return (
         <>
             <Modal isOpen={modal.add} toggle={toggle}>

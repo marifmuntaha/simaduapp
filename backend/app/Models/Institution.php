@@ -9,8 +9,7 @@ class Institution extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user',
-        'ladder',
+        'ladder_id',
         'name',
         'alias',
         'nsm',
@@ -21,21 +20,28 @@ class Institution extends Model
         'updater'
     ];
 
-    public function users() : object
+    public function user() : object
     {
-        return $this->hasOne(
+        return $this->belongsToMany(
             User::class,
-            'id',
-            'user'
+            'institution_user',
+            'institution_id',
+            'user_id'
         );
     }
 
-    public function ladders(): object
+    public function ladder(): object
     {
         return $this->hasOne(
             Ladder::class,
             'id',
-            'ladder'
+            'ladder_id'
         );
     }
+
+    public function year(): object
+    {
+        return $this->hasMany(Year::class, 'institution_id', 'id');
+    }
+
 }

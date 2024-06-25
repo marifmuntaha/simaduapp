@@ -1,14 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addYear, storeYear} from "../../../redux/master/year/actions";
+import {addYear, resetYear, storeYear} from "../../../redux/master/year/actions";
 
-const Add = () => {
+const Add = ({user}) => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.year);
-    const {loading, modal} = selector
+    const yearSelector = useSelector((state) => state.year);
+    const {loading, modal, success} = yearSelector;
+    const institutionSelector = useSelector((state) => state.institution);
+    const {institutions} = institutionSelector;
     const activeOption = [
         {value: 0, label: 'Tidak'},
         {value: 1, label: 'Aktif'}
@@ -16,24 +18,26 @@ const Add = () => {
     const onSubmit = () => {
         dispatch(storeYear({
             formData: getValues([
+                'institution_id',
                 'name',
                 'description',
                 'active'
             ])
         }));
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        getValues,
-        reset,
-        control
-    } = useForm();
+    const {register, handleSubmit, formState: {errors}, getValues, setValue, reset, control} = useForm();
     const toggle = () => {
         reset();
         dispatch(addYear(false));
     }
+
+    useEffect(() => {
+        success && dispatch(addYear(false)) && reset();
+    }, [success, reset, dispatch]);
+
+    useEffect(() => {
+        user.role !== 1 && setValue('institution_id', user.institution.id)
+    }, [user, setValue]);
 
     return (
         <>
@@ -42,6 +46,33 @@ const Add = () => {
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
+                            {user.role === 1 && (
+                                <Col className="col-md-12">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="institution_id">
+                                            Lembaga
+                                        </label>
+                                        <div className="form-control-wrap">
+                                            <input type="hidden" className="form-control"/>
+                                            <Controller
+                                                control={control}
+                                                className="form-control"
+                                                name="institution_id"
+                                                rules={{required: true}}
+                                                render={({field: {onChange, value, ref}}) => (
+                                                    <RSelect
+                                                        inputRef={ref}
+                                                        options={institutions}
+                                                        value={institutions.find((c) => c.value === value)}
+                                                        onChange={(val) => onChange(val.value)}
+                                                        placeholder="Pilih Jenjang"
+                                                    />
+                                                )}/>
+                                            {errors.institution_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        </div>
+                                    </div>
+                                </Col>
+                            )}
                             <Col className="col-md-12">
                                 <div className="form-group">
                                     <Label htmlFor="fullname" className="form-label">Nama</Label>
@@ -61,7 +92,6 @@ const Add = () => {
                                 <div className="form-group">
                                     <Label htmlFor="description" className="form-label">Diskripsi</Label>
                                     <div className="form-control-wrap">
-
                                         <input
                                             className="form-control"
                                             type="text"
@@ -79,6 +109,7 @@ const Add = () => {
                                         Status
                                     </label>
                                     <div className="form-control-wrap">
+                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
                                             className="form-control"

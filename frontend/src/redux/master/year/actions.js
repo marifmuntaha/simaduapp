@@ -20,9 +20,9 @@ export const addYear = (modal) => ({
     payload: {modal}
 })
 
-export const storeYear = ({formData: [name, description, active]}) => ({
+export const storeYear = ({formData: [institution_id, name, description, active]}) => ({
     type: YearActionTypes.STORE_YEAR,
-    payload: {name, description, active},
+    payload: {institution_id, name, description, active},
 })
 
 export const setYear = (year, modal) => ({
@@ -30,9 +30,9 @@ export const setYear = (year, modal) => ({
     payload: {year, modal},
 })
 
-export const updateYear = ({formData: [id, name, description, active]}) => ({
+export const updateYear = ({formData: [id, institution_id, name, description, active]}) => ({
     type: YearActionTypes.UPDATE_YEAR,
-    payload: {id, name, description, active},
+    payload: {id, institution_id, name, description, active},
 })
 
 export const destroyYear = (params) => ({
@@ -40,7 +40,7 @@ export const destroyYear = (params) => ({
     payload: {params},
 });
 
-export const resetYear = () => ({
+export const resetYear = (params) => ({
     type: YearActionTypes.RESET,
-    payload: {}
+    payload: {params}
 })

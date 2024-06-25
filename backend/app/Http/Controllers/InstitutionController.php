@@ -7,15 +7,19 @@ use App\Http\Requests\UpdateInstitutionRequest;
 use App\Http\Resources\InstitutionResource;
 use App\Models\Institution;
 use Exception;
+use Illuminate\Http\Request;
 
 class InstitutionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $institutions = new Institution();
+        $institutions = $request->has('user_id') ? $institutions->whereHas('user', function ($user) use ($request){
+            $user->where('user_id', $request->input('user_id'));
+        }) : $institutions;
         return response([
             'success' => true,
             'message' => null,
@@ -29,13 +33,13 @@ class InstitutionController extends Controller
     public function store(StoreInstitutionRequest $request)
     {
         try {
-            return ($institution = Institution::create($request->all()))
+            return ($institution = Institution::create($request->except('user_id'))) && $institution->user()->sync($request->input('user_id'))
                 ? response([
                     'success' => true,
                     'message' => 'Data Lembaga Berhasil Disimpan',
                     'result' => new InstitutionResource($institution)
                 ], 201) : throw new Exception('Data Lembaga Gagal Disimpan');
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             return response([
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -62,13 +66,13 @@ class InstitutionController extends Controller
     public function update(UpdateInstitutionRequest $request, Institution $institution)
     {
         try {
-            return $institution->update(array_filter($request->all()))
+            return $institution->update(array_filter($request->except('user_id'))) && $institution->user()->sync($request->input('user_id'))
                 ? response([
                     'success' => true,
                     'message' => 'Data Lembaga Berhasil Diupdate',
                     'result' => new InstitutionResource($institution)
                 ]) : throw new Exception('Data Lembaga Gagal Diupdate');
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             return response([
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -83,13 +87,13 @@ class InstitutionController extends Controller
     public function destroy(Institution $institution)
     {
         try {
-            return $institution->delete()
+            return $institution->user()->detach($institution->user()->first()->id) && $institution->delete()
                 ? response([
                     'success' => true,
                     'message' => 'Data Lembaga Berhasil Dihapus',
                     'result' => new InstitutionResource($institution)
                 ]) : throw new Exception('Data Lembaga Gagal Dihapus');
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             return response([
                 'success' => false,
                 'message' => $exception->getMessage(),

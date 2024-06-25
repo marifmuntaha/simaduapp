@@ -10,6 +10,7 @@ class Year extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'institution_id',
         'name',
         'description',
         'active'
@@ -26,5 +27,10 @@ class Year extends Model
         static::updated(function ($year) {
             event(new YearCreateOrUpdateEvent($year));
         });
+    }
+
+    public function institution(): object
+    {
+        return $this->hasOne(Institution::class, 'id', 'institution_id');
     }
 }

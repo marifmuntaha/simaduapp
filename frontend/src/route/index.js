@@ -12,7 +12,7 @@ const User = React.lazy(() => import("../pages/user"));
 const Institution = React.lazy(() => import('../pages/institution'))
 
 const Program = React.lazy(() => import('../pages/institute/program'));
-const CLassroom = React.lazy(() => import('../pages/institute/classroom'));
+const Classroom = React.lazy(() => import('../pages/institute/classroom'));
 
 const Login = React.lazy(() => import("../pages/auth/Login"));
 const Logout = React.lazy(() => import("../pages/auth/Logout"));
@@ -65,7 +65,7 @@ export const protectedRoutes = [
     {
         path: '/lembaga/rombel',
         name: 'Rombel',
-        element: <CLassroom/>,
+        element: <Classroom/>,
         route: PrivateRoute,
     },
     {

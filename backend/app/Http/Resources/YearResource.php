@@ -16,6 +16,7 @@ class YearResource extends JsonResource
     {
         $resource = [
             'id' => $this['id'],
+            'institution_id' => $this['institution_id'],
             'name' => $this['name'],
             'description' => $this['description'],
             'active' => $this['active'],

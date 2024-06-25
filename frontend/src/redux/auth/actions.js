@@ -10,9 +10,9 @@ export const authApiResponseError = (actionType, error) => ({
     payload: {actionType, error},
 });
 
-export const loginUser = ({formData: [type, username, password]}) => ({
+export const loginUser = ({formData: [username, password]}) => ({
     type: AuthActionTypes.LOGIN_USER,
-    payload: {type, username, password},
+    payload: {username, password},
 })
 
 export const logoutUser = () => ({

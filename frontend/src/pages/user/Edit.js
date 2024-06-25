@@ -8,17 +8,10 @@ import {Controller, useForm} from "react-hook-form";
 const Edit = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.user)
-    const {loading, modal, user} = selector;
+    const {loading, modal, user, success} = selector;
     const roleOption = [
         {value: 1, label: 'Administrator'},
-        {value: 2, label: 'Kepala Madrasah'},
-        {value: 3, label: 'Wakil Kepala'},
-        {value: 4, label: 'Guru'},
         {value: 5, label: 'Operator'},
-        {value: 6, label: 'Bendahara'},
-        {value: 7, label: 'Teller'},
-        {value: 8, label: 'Siswa'},
-        {value: 9, label: 'Orang Tua'}
     ];
     const onSubmit = () => {
         dispatch(updateUser({
@@ -34,24 +27,24 @@ const Edit = () => {
             ])
         }))
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        setValue,
-        getValues,
-        control,
-        reset
-    } = useForm()
+    const {register, handleSubmit, formState: {errors}, setValue, getValues, control, reset} = useForm()
     const toggle = () => {
         dispatch(setUser({}, false))
         reset()
     }
+
     useEffect(() => {
         user && Object.entries(user).map((user) => {
             return setValue(user[0], user[1])
         });
-    }, [setValue, user])
+    }, [setValue, user]);
+
+    useEffect(() => {
+        success &&
+        dispatch(setUser({}, false));
+        reset();
+    }, [success, reset, dispatch])
+
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>

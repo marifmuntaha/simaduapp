@@ -1,13 +1,14 @@
 import {LadderActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
-    user: false,
-    users: [],
+    ladder: false,
     modal : {
         add: false,
         edit: false,
     },
+    success: false,
     error: false,
+    loadData: true,
 }
 const Ladder = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,33 +17,28 @@ const Ladder = (state = INITIAL_STATE, action): any => {
                 case LadderActionTypes.GET_LADDER:
                     return {
                         ...state,
-                        ladders: action.payload.data,
+                        ladders: action.payload.data.result,
                         loading: false,
                     }
                 case LadderActionTypes.STORE_LADDER:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        ladder: action.payload.data.result,
                     }
                 case LadderActionTypes.UPDATE_LADDER:
                     return {
                         ...state,
                         loading: false,
-                        ladder: action.payload.data.ladder,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        ladder: action.payload.data.result,
                     }
                 case LadderActionTypes.DESTROY_LADDER:
                     return {
                         ...state,
-                        ladder: action.payload.data,
+                        success: action.payload.data.message,
+                        ladder: action.payload.data.result,
                         loading: false,
                     }
                 default:
@@ -118,19 +114,16 @@ const Ladder = (state = INITIAL_STATE, action): any => {
         case LadderActionTypes.DESTROY_LADDER:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case LadderActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 ladder: false,
-                ladders: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

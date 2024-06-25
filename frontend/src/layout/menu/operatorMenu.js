@@ -2,7 +2,7 @@ export const operatorMenu = [
     {
         icon: "monitor",
         text: "Dashboard",
-        link: "/",
+        link: "/operator",
     },
     {
         icon: "archived",
@@ -10,32 +10,31 @@ export const operatorMenu = [
         active: false,
         subMenu: [
             {
-                text: "Rekening",
-                link: "/master/rekening",
-            },
-            {
-                text: "Grup",
-                link: "/master/grup",
+                text: "Tahun Pelajaran",
+                link: "/master/tahun-pelajaran",
             },
         ],
     },
     {
-        icon: "archived",
-        text: "Produk",
+        icon: "building",
+        text: "Data Institusi",
         active: "false",
-        link: "/produk",
+        link: "/institusi",
     },
     {
-        icon: "users-fill",
-        text: "Pelanggan",
-        active: "false",
-        link: "/pelanggan",
-    },
-    {
-        icon: "ticket",
-        text: "Tagihan",
-        active: "false",
-        link: "/tagihan",
+        icon: "panel",
+        text: "Lembaga",
+        active: false,
+        subMenu: [
+            {
+                text: "Program",
+                link: "/lembaga/program",
+            },
+            {
+                text: "Rombel",
+                link: "/lembaga/rombel",
+            },
+        ],
     },
     {
         icon: "reports",

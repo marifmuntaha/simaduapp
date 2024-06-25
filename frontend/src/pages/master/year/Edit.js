@@ -5,10 +5,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
 import {setYear, updateYear} from "../../../redux/master/year/actions";
 
-const Edit = () => {
+const Edit = ({user}) => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.year)
-    const {loading, modal, year} = selector;
+    const yearSelector = useSelector((state) => state.year)
+    const {loading, modal, year, success} = yearSelector;
+    const institutionSelector = useSelector((state) => state.institution);
+    const {institutions} = institutionSelector;
     const activeOption = [
         {value: 0, label: 'Tidak'},
         {value: 1, label: 'Aktif'}
@@ -17,6 +19,7 @@ const Edit = () => {
         dispatch(updateYear({
             formData: getValues([
                 'id',
+                'institution_id',
                 'name',
                 'description',
                 'active'
@@ -24,23 +27,28 @@ const Edit = () => {
         }))
     }
     const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        setValue,
-        getValues,
-        reset,
-        control
+        register, handleSubmit, formState: {errors}, setValue, getValues, reset, control
     } = useForm()
     const toggle = () => {
-        dispatch(setYear({}, false))
-        reset()
+        dispatch(setYear({}, false));
+        reset();
     }
     useEffect(() => {
         year && Object.entries(year).map((year) => {
             return setValue(year[0], year[1])
         });
     }, [setValue, year]);
+
+    useEffect(() => {
+        success &&
+        dispatch(setYear({}, false));
+        reset();
+    }, [success, reset, dispatch]);
+
+    useEffect(() => {
+        user.role !== 1 && setValue('institution_id', user.institution.id)
+    }, [user, setValue])
+
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>
@@ -48,6 +56,34 @@ const Edit = () => {
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
+                            {user.role === 1 && (
+                                <Col className="col-md-12">
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="institution_id">
+                                            Lembaga
+                                        </label>
+                                        <div className="form-control-wrap">
+                                            <input type="hidden" className="form-control"/>
+                                            <Controller
+                                                control={control}
+                                                className="form-control"
+                                                name="institution_id"
+                                                rules={{required: true}}
+                                                render={({field: {onChange, value, ref}}) => (
+                                                    <RSelect
+                                                        inputRef={ref}
+                                                        options={institutions}
+                                                        value={institutions.find((c) => c.value === value)}
+                                                        onChange={(val) => onChange(val.value)}
+                                                        placeholder="Pilih Jenjang"
+                                                    />
+                                                )}/>
+                                            {errors.institution_id &&
+                                                <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        </div>
+                                    </div>
+                                </Col>
+                            )}
                             <Col className="col-md-12">
                                 <div className="form-group">
                                     <Label htmlFor="name" className="form-label">Nama</Label>
@@ -73,7 +109,8 @@ const Edit = () => {
                                             id="description"
                                             {...register('description', {required: false})}
                                         />
-                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.description &&
+                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -102,7 +139,7 @@ const Edit = () => {
                                 </div>
                             </Col>
                             <div className="form-group">
-                                <Button size="lg" className="btn-block" type="submit" color="primary">
+                                <Button size="lg" className="btn-block" type="submit" color="primary" disabled={loading}>
                                     {loading ? <Spinner size="sm" color="light"/> : "SIMPAN"}
                                 </Button>
                             </div>

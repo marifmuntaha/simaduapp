@@ -97,7 +97,7 @@ class LevelController extends Controller
                 'success' => false,
                 'message' => $exception->getMessage(),
                 'result' => null
-            ], 422);
+            ]);
         }
     }
 }

@@ -4,12 +4,11 @@ import {Col, Row, RSelect} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
 import {setLevel, updateLevel} from "../../../redux/master/level/actions";
-import {getLadders} from "../../../redux/master/ladder/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();
     const levelSelector = useSelector((state) => state.level);
-    const { loading, modal, level} = levelSelector
+    const { loading, modal, level, success} = levelSelector
     const ladderSelector = useSelector((state) => state.ladder)
     const { ladders } = ladderSelector;
     const onSubmit = () => {
@@ -22,14 +21,7 @@ const Edit = () => {
             ])
         }))
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        setValue,
-        getValues,
-        reset,
-        control
+    const {register, handleSubmit, formState: {errors}, setValue, getValues, reset, control
     } = useForm()
     const toggle = () => {
         dispatch(setLevel({}, false));
@@ -41,9 +33,12 @@ const Edit = () => {
         });
         level && setValue('ladder', level.ladder ? level.ladder.id : 0);
     }, [setValue, level]);
+
     useEffect(() => {
-        dispatch(getLadders({type: 'select'}));
-    }, [dispatch]);
+        success &&
+        dispatch(setLevel({}, false));
+        reset();
+    }, [success, reset, dispatch]);
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>

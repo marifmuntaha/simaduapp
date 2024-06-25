@@ -20,9 +20,9 @@ export const addMajor = (modal) => ({
     payload: {modal}
 })
 
-export const storeMajor = ({formData: [ladder: number, name: string, alias: string, description: string]}) => ({
+export const storeMajor = ({formData: [ladder_id: number, name: string, alias: string, description: string]}) => ({
     type: MajorActionTypes.STORE_MAJOR,
-    payload: {ladder, name, alias, description},
+    payload: {ladder_id, name, alias, description},
 })
 
 export const setMajor = (major, modal) => ({
@@ -30,9 +30,9 @@ export const setMajor = (major, modal) => ({
     payload: {major, modal},
 })
 
-export const updateMajor = ({formData: [id, ladder, name, alias, description]}) => ({
+export const updateMajor = ({formData: [id, ladder_id, name, alias, description]}) => ({
     type: MajorActionTypes.UPDATE_MAJOR,
-    payload: {id, ladder, name, alias, description},
+    payload: {id, ladder_id, name, alias, description},
 })
 
 export const destroyMajor = (params) => ({

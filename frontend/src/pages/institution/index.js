@@ -9,10 +9,9 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable, toastError
+    ReactDataTable, toastError, toastSuccess
 } from "../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
-import Add from "./Add";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addInstitution,
@@ -21,12 +20,18 @@ import {
     resetInstitution,
     setInstitution
 } from "../../redux/institution/actions";
+import Add from "./Add";
 import Edit from "./Edit";
+import {getUsers} from "../../redux/user/actions";
+import {getLadders} from "../../redux/master/ladder/actions";
+import {APICore} from "../../utils/api/APICore";
 
 const Institution = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.institution)
-    const {loading, institutions, error} = selector;
+    const {loading, institutions, error, success, loadData} = selector;
+    const api = new APICore();
+    const user = api.getLoggedInUser();
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -77,21 +82,38 @@ const Institution = () => {
                         }}>
                         <Icon name="edit"/>
                     </Button>
-                    <Button
-                        color="outline-danger"
-                        onClick={() => {
-                            dispatch(destroyInstitution(row.id));
-                        }}
-                        disabled={row.id === loading}>
-                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
-                    </Button>
+                    {user.role === 1 && (
+                        <Button
+                            color="outline-danger"
+                            onClick={() => {
+                                dispatch(destroyInstitution(row.id));
+                            }}
+                            disabled={row.id === loading}>
+                            {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
+                        </Button>
+                    )}
                 </ButtonGroup>
             )
         },
     ];
+    let params = ''
     useEffect(() => {
-        dispatch(getInstitutions({with: ['ladder', 'user']}));
-    }, [dispatch]);
+        if (user.role !== 1){
+            params = {with: ['ladder', 'user'], user_id: user.id}
+        }
+        else {
+            params = {with: ['ladder', 'user']}
+        }
+    }, [])
+    useEffect(() => {
+        success && toastSuccess(success);
+        error && toastError(error);
+        (success || loadData)
+        && dispatch(getInstitutions(params))
+        && dispatch(getUsers({type: 'select', role: 5}))
+        && dispatch(getLadders({type: 'select'}));
+        dispatch(resetInstitution());
+    }, [dispatch, success, error, loadData]);
     return (
         <>
             {error && toastError(error) && dispatch(resetInstitution())}
@@ -122,17 +144,19 @@ const Institution = () => {
                                     <Icon name="menu-alt-r"></Icon>
                                 </Button>
                                 <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
-                                    <ul className="nk-block-tools g-3">
-                                        <li
-                                            className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addInstitution(true))}
-                                        >
-                                            <Button color="secondary">
-                                                <Icon name="plus"/>
-                                                <span>Tambah</span>
-                                            </Button>
-                                        </li>
-                                    </ul>
+                                    {user.role === 1 && (
+                                        <ul className="nk-block-tools g-3">
+                                            <li
+                                                className="nk-block-tools-opt"
+                                                onClick={() => dispatch(addInstitution(true))}
+                                            >
+                                                <Button color="secondary">
+                                                    <Icon name="plus"/>
+                                                    <span>Tambah</span>
+                                                </Button>
+                                            </li>
+                                        </ul>
+                                    )}
                                 </div>
                             </div>
                         </BlockHeadContent>
@@ -142,7 +166,7 @@ const Institution = () => {
                     <ReactDataTable data={institutions} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add/>
-                <Edit/>
+                <Edit user={user}/>
             </Content>
         </>
     )

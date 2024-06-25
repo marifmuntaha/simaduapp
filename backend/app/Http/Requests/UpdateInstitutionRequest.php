@@ -23,8 +23,8 @@ class UpdateInstitutionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user' => 'required',
-            'ladder' => 'required',
+            'user_id' => 'required',
+            'ladder_id' => 'required',
             'name' => 'required|string',
             'alias' => 'required|string',
             'nsm' => 'required|string',
@@ -37,8 +37,8 @@ class UpdateInstitutionRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'user' => 'Operator',
-            'ladder' => 'Jenjang',
+            'user_id' => 'Operator',
+            'ladder_id' => 'Jenjang',
             'name' => 'Nama Madrasah',
             'alias' => 'Singkatan',
             'nsm' => 'NSM',

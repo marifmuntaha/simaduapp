@@ -3,14 +3,12 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addInstitution, resetInstitution, storeInstitution} from "../../redux/institution/actions";
-import {getUsers} from "../../redux/user/actions";
-import {getLadders} from "../../redux/master/ladder/actions";
+import {addInstitution, storeInstitution} from "../../redux/institution/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
     const institutionSelector = useSelector((state) => state.institution);
-    const {loading, modal} = institutionSelector
+    const {loading, modal, success} = institutionSelector
     const userSelector = useSelector((state) => state.user)
     const {users} = userSelector
     const ladderSelector = useSelector((state) => state.ladder)
@@ -42,10 +40,10 @@ const Add = () => {
         dispatch(addInstitution(false));
     }
     useEffect(() => {
-        dispatch(getUsers({type: 'select', role: 5}));
-        dispatch(getLadders({type: 'select'}));
-        dispatch(resetInstitution);
-    }, [dispatch]);
+        success &&
+        dispatch(addInstitution(false));
+        reset();
+    }, [success, reset, dispatch])
     return (
         <>
             <Modal isOpen={modal.add} toggle={toggle}>

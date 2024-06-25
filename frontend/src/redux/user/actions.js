@@ -35,7 +35,7 @@ export const updateUser = ({formData: [id, fullname, email, username, password, 
     payload: {id, fullname, email, username, password, role, phone, image},
 })
 
-export const destroyUsers = (params) => ({
+export const destroyUser = (params) => ({
     type: UserActionTypes.DESTROY_USER,
     payload: {params},
 });

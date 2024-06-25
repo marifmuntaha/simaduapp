@@ -9,7 +9,7 @@ class Level extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'ladder',
+        'ladder_id',
         'name',
         'alias',
     ];
@@ -19,7 +19,7 @@ class Level extends Model
         return $this->hasOne(
             Ladder::class,
             'id',
-            'ladder'
+            'ladder_id'
         );
     }
 }

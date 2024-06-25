@@ -20,9 +20,9 @@ export const addInstitution = (modal) => ({
     payload: {modal}
 })
 
-export const storeInstitution = ({formData: [user, ladder, name, alias, nsm, npsn, headmaster, logo]}) => ({
+export const storeInstitution = ({formData: [user_id, ladder_id, name, alias, nsm, npsn, headmaster, logo]}) => ({
     type: InstitutionActionTypes.STORE_INSTITUTION,
-    payload: {user, ladder, name, alias, nsm, npsn, headmaster, logo},
+    payload: {user_id, ladder_id, name, alias, nsm, npsn, headmaster, logo},
 })
 
 export const setInstitution = (institution, modal) => ({
@@ -30,9 +30,9 @@ export const setInstitution = (institution, modal) => ({
     payload: {institution, modal},
 })
 
-export const updateInstitution = ({formData: [id, user, ladder, name, alias, nsm, npsn, headmaster, logo]}) => ({
+export const updateInstitution = ({formData: [id, user_id, ladder_id, name, alias, nsm, npsn, headmaster, logo]}) => ({
     type: InstitutionActionTypes.UPDATE_INSTITUTION,
-    payload: {id, user, ladder, name, alias, nsm, npsn, headmaster, logo},
+    payload: {id, user_id, ladder_id, name, alias, nsm, npsn, headmaster, logo},
 })
 
 export const destroyInstitution = (params) => ({

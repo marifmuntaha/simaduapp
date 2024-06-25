@@ -11,36 +11,37 @@ import {
     BlockTitle,
     Button,
     Icon,
-    PreviewCard, RSelect,
+    PreviewCard, toastError, toastSuccess,
 } from "../../components";
-import {Alert, Form, Spinner} from "reactstrap";
-import {Link, Navigate, useLocation} from "react-router-dom";
+import {Form, Spinner} from "reactstrap";
+import {Link, Navigate, useLocation, useNavigate, useNavigation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser, resetAuth} from "../../redux/actions";
-import {Controller, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 
 const Login = () => {
     const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth);
+    const selector = useSelector(state => state.auth);
+    const {loading, success, error, user} = selector;
     const [passState, setPassState] = useState(false);
     const handleFormSubmit = () => {
-        dispatch(loginUser({formData: getValues(['type', 'username', 'password'])}));
+        dispatch(loginUser({formData: getValues(['username', 'password'])}));
     }
-    const {register, handleSubmit, formState: {errors}, getValues, control} = useForm();
-    const typeOptions = [
-        {value: 'root', label: 'Administrator'},
-        {value: 'employee', label: 'Guru & Karyawan'},
-        {value: 'student', label: 'Siswa'},
-        {value: 'parent', label: 'Orangtua'},
-    ]
+    const {register, handleSubmit, formState: {errors}, getValues} = useForm();
     const location = useLocation()
     const redirectUrl = location?.search?.slice(6) || '/'
     useEffect(() => {
         dispatch(resetAuth())
-    }, [dispatch])
+    }, [dispatch]);
+
+    useEffect(() => {
+        success && toastSuccess(success)
+        error && toastError(error);
+        dispatch(resetAuth());
+    }, [success, error, dispatch, redirectUrl]);
     return (
         <>
-            {(auth.userLoggedIn || auth.user) && <Navigate to={redirectUrl} />}
+            {(success || user) && <Navigate to={redirectUrl}/>}
             <Head title="Masuk"/>
             <Block className="nk-block-middle nk-auth-body  wide-xs">
                 <div className="brand-logo pb-4 text-center">
@@ -58,40 +59,9 @@ const Login = () => {
                             </BlockDes>
                         </BlockContent>
                     </BlockHead>
-                    {auth.error && (
-                        <div className="mb-3">
-                            <Alert className="alert-icon" color="danger">
-                                <Icon name="cross-circle"/>
-                                <strong>Kesalahan !</strong> {auth.error}.
-                            </Alert>
-                        </div>
-                    )}
                     <Form
                         className="form-validate is-alter"
                         onSubmit={handleSubmit(handleFormSubmit)}>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="type">
-                                Hak Akses
-                            </label>
-                            <div className="form-control-wrap">
-                                <input type="hidden" className="form-control"/>
-                                <Controller
-                                    control={control}
-                                    className="form-control"
-                                    name="type"
-                                    rules={{required: true}}
-                                    render={({field: {onChange, value, ref}}) => (
-                                        <RSelect
-                                            inputRef={ref}
-                                            options={typeOptions}
-                                            value={typeOptions.find((c) => c.value === value)}
-                                            onChange={(val) => onChange(val.value)}
-                                            placeholder="Pilih Hak Akses"
-                                        />
-                                    )}/>
-                                {errors.type && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                            </div>
-                        </div>
                         <div className="form-group">
                             <div className="form-label-group">
                                 <label className="form-label" htmlFor="username">Nama Pengguna</label>
@@ -139,7 +109,7 @@ const Login = () => {
                         </div>
                         <div className="form-group">
                             <Button size="lg" className="btn-block" type="submit" color="primary">
-                                {auth.loading ? <Spinner size="sm" color="light"/> : "MASUK"}
+                                {loading ? <Spinner size="sm" color="light"/> : "MASUK"}
                             </Button>
                         </div>
                     </Form>

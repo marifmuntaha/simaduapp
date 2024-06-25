@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
 
+sleep(1);
 Route::group(['prefix' => 'auth'], function (){
     Route::post('login', AuthController::class. '@login');
     Route::post('reset-password', AuthController::class. '@resetPassword');
@@ -18,7 +19,7 @@ Route::group(['prefix' => 'auth'], function (){
     Route::post('logout', AuthController::class. '@logout')->middleware('auth:sanctum');
 });
 
-Route::group(['middleware' => ['auth:root', 'auth:employee']], function () {
+Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'master'], function (){
         Route::apiResource('ladder', LadderController::class);
         Route::apiResource('level', LevelController::class);

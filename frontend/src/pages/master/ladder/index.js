@@ -10,18 +10,18 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable,
-    toastError
+    toastError, toastSuccess
 } from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, destroyLadders, getLadders, resetLadder, setLadder} from "../../../redux/master/ladder/actions";
+import {addLadder, destroyLadder, getLadders, resetLadder, setLadder} from "../../../redux/master/ladder/actions";
 import Add from "./Add";
 import Edit from "./Edit";
 
 const Ladder = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.ladder)
-    const {loading, ladders, error} = selector;
+    const {loading, ladders, error, success, loadData} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -57,7 +57,7 @@ const Ladder = () => {
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyLadders(row.id));
+                            dispatch(destroyLadder(row.id));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -66,13 +66,16 @@ const Ladder = () => {
             )
         },
     ];
+
     useEffect(() => {
-        dispatch(getLadders());
+        success && toastSuccess(success);
+        error && toastError(error);
+        (success || loadData) && dispatch(getLadders());
         dispatch(resetLadder());
-    }, [dispatch])
+    }, [dispatch, success, error, loadData]);
+
     return (
         <>
-            {error && toastError(error) && dispatch(resetLadder())}
             <Head title="Data Jenjang"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">

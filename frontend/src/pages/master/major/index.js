@@ -10,18 +10,19 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable,
-    toastError
+    toastError, toastSuccess
 } from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {addMajor, destroyMajor, getMajors, resetMajor, setMajor} from "../../../redux/master/major/actions";
 import Add from "./Add";
 import Edit from "./Edit";
+import {getLadders} from "../../../redux/master/ladder/actions";
 
 const Major = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.major)
-    const {loading, majors, error} = selector;
+    const {loading, majors, error, success, loadData} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -72,12 +73,13 @@ const Major = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getMajors({with: 'ladder'}));
+        success && toastSuccess(success);
+        error && toastError(error);
+        (success || loadData) && dispatch(getMajors({with: 'ladder'})) && dispatch(getLadders({type: 'select'}));
         dispatch(resetMajor());
-    }, [dispatch])
+    }, [dispatch, success, error, loadData]);
     return (
         <>
-            {error && toastError(error) && dispatch(resetMajor())}
             <Head title="Data Jurusan"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">

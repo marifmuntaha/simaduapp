@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('institutions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user')->nullable();
-            $table->unsignedBigInteger('ladder');
+            $table->unsignedBigInteger('ladder_id');
             $table->string('name');
             $table->string('alias');
             $table->string('nsm')->nullable();
@@ -25,6 +24,12 @@ return new class extends Migration
             $table->string('updater');
             $table->timestamps();
         });
+
+        Schema::create('institution_user', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('user_id');
+        });
     }
 
     /**
@@ -33,5 +38,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('institutions');
+        Schema::dropIfExists('institution_user');
     }
 };

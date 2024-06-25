@@ -3,13 +3,12 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {getLadders} from "../../../redux/master/ladder/actions";
-import {addLevel, resetLevel, storeLevel} from "../../../redux/master/level/actions";
+import {addLevel, storeLevel} from "../../../redux/master/level/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
     const levelSelector = useSelector((state) => state.level);
-    const { loading, modal } = levelSelector
+    const { loading, modal, success } = levelSelector
     const ladderSelector = useSelector((state) => state.ladder);
     const { ladders } = ladderSelector
     const onSubmit = () => {
@@ -21,22 +20,18 @@ const Add = () => {
             ])
         }));
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        getValues,
-        reset,
-        control
+    const {register, handleSubmit, formState: {errors}, getValues, reset, control
     } = useForm();
     const toggle = () => {
         reset();
         dispatch(addLevel(false));
     }
     useEffect(() => {
-        dispatch(getLadders({type: 'select'}));
-        dispatch(resetLevel());
-    }, [dispatch]);
+        success &&
+        dispatch(addLevel(false));
+        reset();
+    }, [success, reset, dispatch]);
+
     return (
         <>
             <Modal isOpen={modal.add} toggle={toggle}>

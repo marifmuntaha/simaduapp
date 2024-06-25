@@ -20,9 +20,9 @@ export const addLevel = (modal) => ({
     payload: {modal}
 })
 
-export const storeLevel = ({formData: [ladder, name, alias]}) => ({
+export const storeLevel = ({formData: [ladder_id, name, alias]}) => ({
     type: LevelActionTypes.STORE_LEVEL,
-    payload: {ladder, name, alias},
+    payload: {ladder_id, name, alias},
 })
 
 export const setLevel = (level, modal) => ({
@@ -30,9 +30,9 @@ export const setLevel = (level, modal) => ({
     payload: {level, modal},
 })
 
-export const updateLevel = ({formData: [id, ladder, name, alias]}) => ({
+export const updateLevel = ({formData: [id, ladder_id, name, alias]}) => ({
     type: LevelActionTypes.UPDATE_LEVEL,
-    payload: {id, ladder, name, alias},
+    payload: {id, ladder_id, name, alias},
 })
 
 export const destroyLevel = (params) => ({

@@ -3,13 +3,12 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {getLadders} from "../../../redux/master/ladder/actions";
 import {setMajor, updateMajor} from "../../../redux/master/major/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();
     const majorSelector = useSelector((state) => state.major);
-    const { loading, modal, major} = majorSelector
+    const { loading, modal, major, success} = majorSelector
     const ladderSelector = useSelector((state) => state.ladder)
     const { ladders } = ladderSelector;
     const onSubmit = () => {
@@ -23,15 +22,7 @@ const Edit = () => {
             ])
         }))
     }
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        setValue,
-        getValues,
-        reset,
-        control
-    } = useForm()
+    const {register, handleSubmit, formState: {errors}, setValue, getValues, reset, control} = useForm()
     const toggle = () => {
         dispatch(setMajor({}, false));
         reset();
@@ -43,8 +34,10 @@ const Edit = () => {
         major && setValue('ladder', major.ladder ? major.ladder.id : 0);
     }, [setValue, major]);
     useEffect(() => {
-        dispatch(getLadders({type: 'select'}));
-    }, [dispatch]);
+        success &&
+        dispatch(setMajor({}, false));
+        reset();
+    }, [success, reset, dispatch]);
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>

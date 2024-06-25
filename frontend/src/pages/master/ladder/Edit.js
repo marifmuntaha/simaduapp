@@ -3,12 +3,12 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {useForm} from "react-hook-form";
-import {setLadder, updateLadder} from "../../../redux/master/ladder/actions";
+import {addLadder, setLadder, updateLadder} from "../../../redux/master/ladder/actions";
 
 const Edit = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.ladder)
-    const {loading, modal, ladder} = selector;
+    const {loading, modal, ladder, success} = selector;
     const onSubmit = () => {
         dispatch(updateLadder({
             formData: getValues([
@@ -36,6 +36,12 @@ const Edit = () => {
             return setValue(ladder[0], ladder[1])
         });
     }, [setValue, ladder])
+
+    useEffect(() => {
+        success &&
+        dispatch(setLadder({}, false));
+        reset();
+    }, [success, reset, dispatch])
     return (
         <>
             <Modal isOpen={modal.edit} toggle={toggle}>

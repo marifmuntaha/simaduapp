@@ -12,11 +12,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            return Auth::guard($request->type)->attempt($request->only('username', 'password'))
+            return Auth::attempt($request->only('username', 'password'))
                 ? response([
                     'status' => true,
                     'message' => 'Berhasil masuk, anda akan dialihkan dalam 2 detik',
-                    'result' => Arr::add(Auth::guard($request->type)->user()->toArray(), 'token', Auth::guard('employee')->user()->createToken($request->username)->plainTextToken)
+                    'result' => Arr::collapse([$request->user()->toArray(), [
+                        'token' => $request->user()->createToken($request->username)->plainTextToken,
+                        'institution' => $request->user()->institution()->first(),
+                    ]])
                 ]) : throw new Exception("Nama Pengguna atau Kata Sandi Salah");
         } catch (Exception $exception) {
             return response([

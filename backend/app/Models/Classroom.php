@@ -9,33 +9,33 @@ class Classroom extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'institution',
-        'year',
-        'level',
-        'major',
+        'institution_id',
+        'year_id',
+        'level_id',
+        'major_id',
         'name',
         'fullname',
         'creator',
         'updater',
     ];
 
-    public function institutions(): object
+    public function institution(): object
     {
-        return $this->hasOne(Institution::class, 'id', 'institution');
+        return $this->hasOne(Institution::class, 'id', 'institution_id');
     }
 
-    public function years(): object
+    public function year(): object
     {
-        return $this->hasOne(Year::class, 'id', 'year');
+        return $this->hasOne(Year::class, 'id', 'year_id');
     }
 
-    public function levels(): object
+    public function level(): object
     {
-        return $this->hasOne(Level::class, 'id', 'level');
+        return $this->hasOne(Level::class, 'id', 'level_id');
     }
 
-    public function majors(): object
+    public function major(): object
     {
-        return $this->hasOne(Major::class, 'id', 'major');
+        return $this->hasOne(Major::class, 'id', 'major_id');
     }
 }

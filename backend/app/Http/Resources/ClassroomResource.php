@@ -15,10 +15,10 @@ class ClassroomResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resource = [
-            'institution' => $this['institution'],
-            'year' => $this['year'],
-            'level' => $this['level'],
-            'major' => $this['major'],
+            'institution_id' => $this['institution_id'],
+            'year_id' => $this['year_id'],
+            'level_id' => $this['level_id'],
+            'major_id' => $this['major_id'],
             'name' => $this['name'],
             'fullname' => $this['fullname'],
             'creator' => $this['creator'],
@@ -35,10 +35,10 @@ class ClassroomResource extends JsonResource
         if ($request->has('with')){
             $with = explode(',', $request->with);
             $with = count($with) > 1 ? $with : [$request->with];
-            in_array('institution', $with) && $resource['institution'] = new InstitutionResource($this->institutions);
-            in_array('year', $with) && $resource['year'] = $this->years;
-            in_array('level', $with) && $resource['level'] = $this->levels;
-            in_array('major', $with) && $resource['major'] = $this->majors;
+            in_array('institution', $with) && $resource['institution'] = new InstitutionResource($this->institution);
+            in_array('year', $with) && $resource['year'] = $this->year;
+            in_array('level', $with) && $resource['level'] = $this->level;
+            in_array('major', $with) && $resource['major'] = $this->major;
         }
         return $resource;
     }

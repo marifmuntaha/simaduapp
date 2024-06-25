@@ -66,4 +66,9 @@ class User extends Authenticatable
         ]);
         return new NewAccessToken($token, $token->getKey(). '|'.$plainTextToken);
     }
+
+    public function institution(): object
+    {
+        return $this->belongsToMany(Institution::class, 'institution_user', 'user_id', 'institution_id');
+    }
 }

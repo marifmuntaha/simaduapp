@@ -35,7 +35,7 @@ export const updateLadder = ({formData: [id, name, alias, description]}) => ({
     payload: {id, name, alias, description},
 })
 
-export const destroyLadders = (params) => ({
+export const destroyLadder = (params) => ({
     type: LadderActionTypes.DESTROY_LADDER,
     payload: {params},
 });

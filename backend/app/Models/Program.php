@@ -9,8 +9,8 @@ class Program extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'institution',
-        'year',
+        'institution_id',
+        'year_id',
         'name',
         'alias',
         'description',
@@ -19,21 +19,21 @@ class Program extends Model
         'updater'
     ];
 
-    public function institutions(): object
+    public function institution(): object
     {
         return $this->hasOne(
             Institution::class,
             'id',
-            'institution'
+            'institution_id'
         );
     }
 
-    public function years(): object
+    public function year(): object
     {
         return $this->hasOne(
             Year::class,
             'id',
-            'year'
+            'year_id'
         );
     }
 }

@@ -36,8 +36,6 @@ axios.interceptors.response.use(
     }
 )
 
-const AUTH_SESSION_KEY = 'simadu'
-
 /**
  * Sets the default authorization
  * @param {*} token
@@ -48,7 +46,7 @@ const setAuthorization = (token) => {
 }
 
 const getUserFromCookie = () => {
-    const user = sessionStorage.getItem(AUTH_SESSION_KEY)
+    const user = sessionStorage.getItem('user')
     return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null
 }
 
@@ -185,18 +183,18 @@ class APICore {
 
     setLoggedInUser = (session) => {
         session
-            ? sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session))
-            : sessionStorage.removeItem(AUTH_SESSION_KEY)
+            ? sessionStorage.setItem('user', JSON.stringify(session))
+            : sessionStorage.removeItem('user')
     }
     /**
      * Returns the logged-in user
      */
     getLoggedInUser = () => {
-        return getUserFromCookie()
+        return getUserFromCookie();
     }
 
     setUserInSession = (modifiedUser) => {
-        const userInfo = sessionStorage.getItem(AUTH_SESSION_KEY)
+        const userInfo = sessionStorage.getItem('user')
         if (userInfo) {
             const {token, user} = JSON.parse(userInfo)
             this.setLoggedInUser({token, ...user, ...modifiedUser})

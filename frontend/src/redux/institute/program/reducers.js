@@ -2,12 +2,13 @@ import {ProgramActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     program: false,
-    programs: [],
     modal : {
         add: false,
         edit: false,
     },
     error: false,
+    success: false,
+    loadData: true
 }
 const Program = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,34 +17,29 @@ const Program = (state = INITIAL_STATE, action): any => {
                 case ProgramActionTypes.GET_PROGRAM:
                     return {
                         ...state,
-                        programs: action.payload.data,
+                        programs: action.payload.data.result,
                         loading: false,
                     }
                 case ProgramActionTypes.STORE_PROGRAM:
                     return {
                         ...state,
                         loading: false,
-                        program: action.payload.data.program,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        program: action.payload.data.result,
                     }
                 case ProgramActionTypes.UPDATE_PROGRAM:
                     return {
                         ...state,
                         loading: false,
-                        program: action.payload.data.program,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        program: action.payload.data.result,
                     }
                 case ProgramActionTypes.DESTROY_PROGRAM:
                     return {
                         ...state,
-                        program: action.payload.data,
                         loading: false,
+                        success: action.payload.data.message,
+                        program: action.payload.data.result,
                     }
                 default:
                     return {...state}
@@ -118,19 +114,16 @@ const Program = (state = INITIAL_STATE, action): any => {
         case ProgramActionTypes.DESTROY_PROGRAM:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case ProgramActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 program: false,
-                programs: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

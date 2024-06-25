@@ -2,12 +2,13 @@ import {MajorActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     major: false,
-    majors: [],
     modal : {
         add: false,
         edit: false,
     },
     error: false,
+    success: false,
+    loadData: true
 }
 const Major = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,34 +17,29 @@ const Major = (state = INITIAL_STATE, action): any => {
                 case MajorActionTypes.GET_MAJOR:
                     return {
                         ...state,
-                        majors: action.payload.data,
+                        majors: action.payload.data.result,
                         loading: false,
                     }
                 case MajorActionTypes.STORE_MAJOR:
                     return {
                         ...state,
                         loading: false,
-                        major: action.payload.data.major,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        major: action.payload.data.result,
                     }
                 case MajorActionTypes.UPDATE_MAJOR:
                     return {
                         ...state,
                         loading: false,
-                        major: action.payload.data.major,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        major: action.payload.data.result,
                     }
                 case MajorActionTypes.DESTROY_MAJOR:
                     return {
                         ...state,
-                        major: action.payload.data,
                         loading: false,
+                        success: action.payload.data.message,
+                        major: action.payload.data.result,
                     }
                 default:
                     return {...state}
@@ -118,19 +114,16 @@ const Major = (state = INITIAL_STATE, action): any => {
         case MajorActionTypes.DESTROY_MAJOR:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case MajorActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 major: false,
-                majors: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

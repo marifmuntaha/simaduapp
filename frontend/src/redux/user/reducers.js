@@ -2,12 +2,13 @@ import {UserActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     user: false,
-    users: [],
     modal : {
         add: false,
         edit: false,
     },
     error: false,
+    success: false,
+    loadData: true
 }
 const User = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,34 +17,28 @@ const User = (state = INITIAL_STATE, action): any => {
                 case UserActionTypes.GET_USER:
                     return {
                         ...state,
-                        users: action.payload.data,
+                        users: action.payload.data.result,
                         loading: false,
                     }
                 case UserActionTypes.STORE_USER:
                     return {
                         ...state,
                         loading: false,
-                        user: action.payload.data.user,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        user: action.payload.data.result,
                     }
                 case UserActionTypes.UPDATE_USER:
                     return {
                         ...state,
                         loading: false,
-                        user: action.payload.data.user,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        user: action.payload.data.result,
                     }
                 case UserActionTypes.DESTROY_USER:
                     return {
-                        ...state,
-                        user: action.payload.data,
-                        loading: false,
+                        ...state,loading: false,
+                        success: action.payload.data.message,
+                        user: action.payload.data.result,
                     }
                 default:
                     return {...state}
@@ -118,19 +113,16 @@ const User = (state = INITIAL_STATE, action): any => {
         case UserActionTypes.DESTROY_USER:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case UserActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 user: false,
-                users: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

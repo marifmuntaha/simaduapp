@@ -9,19 +9,19 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable, toastError
+    ReactDataTable, toastError, toastSuccess
 } from "../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import Add from "./Add";
 import {useDispatch, useSelector} from "react-redux";
-import {addUser, destroyUsers, getUsers, resetUser, setUser} from "../../redux/user/actions";
+import {addUser, destroyUser, getUsers, resetUser, setUser} from "../../redux/user/actions";
 import Edit from "./Edit";
 import {Role} from "../../utils/Utils";
 
 const User = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.user)
-    const {loading, users, error} = selector;
+    const {loading, users, error, success, loadData} = selector;
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -72,7 +72,7 @@ const User = () => {
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyUsers(row.id));
+                            dispatch(destroyUser(row.id));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -81,9 +81,14 @@ const User = () => {
             )
         },
     ];
+
     useEffect(() => {
-        dispatch(getUsers());
-    }, [dispatch]);
+        success && toastSuccess(success);
+        error && toastError(error);
+        (success || loadData) && dispatch(getUsers());
+        dispatch(resetUser());
+    }, [dispatch, success, error, loadData]);
+
     return (
         <>
             {error && toastError(error) && dispatch(resetUser())}

@@ -23,7 +23,7 @@ class UpdateLevelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ladder' => 'required|string',
+            'ladder_id' => 'required|string',
             'name' => 'required|string',
             'alias' => 'required|string',
         ];
@@ -32,7 +32,7 @@ class UpdateLevelRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'ladder' => 'Jenjang',
+            'ladder_id' => 'Jenjang',
             'name' => 'Nama',
             'alias' => 'Singkatan',
         ];

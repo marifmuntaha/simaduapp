@@ -8,7 +8,7 @@ import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 function* get({payload: {params}}): SagaIterator {
     try {
         const response = yield call(getApi, params)
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(programApiResponseSuccess(ProgramActionTypes.GET_PROGRAM, data))
     } catch (error){
         yield put(programApiResponseError(ProgramActionTypes.GET_PROGRAM, error))
@@ -18,7 +18,7 @@ function* get({payload: {params}}): SagaIterator {
 function* store({payload: {institution, year, name, alias, description, boarding}}): SagaIterator {
     try {
         const response = yield call(storeApi, {institution, year, name, alias, description, boarding});
-        const data = response && response.data.result;
+        const data = response && response.data;
         yield put(programApiResponseSuccess(ProgramActionTypes.STORE_PROGRAM, data));
     } catch (error){
         yield put(programApiResponseError(ProgramActionTypes.STORE_PROGRAM, error))
@@ -28,7 +28,7 @@ function* store({payload: {institution, year, name, alias, description, boarding
 function* update({payload: {id, institution, year, name, alias, description, boarding}}): SagaIterator {
     try {
         const response = yield call(updateApi, {id, institution, year, name, alias, description, boarding});
-        const data = response && response.data.result;
+        const data = response && response.data;
         yield put(programApiResponseSuccess(ProgramActionTypes.UPDATE_PROGRAM, data));
     } catch (error){
         yield put(programApiResponseError(ProgramActionTypes.UPDATE_PROGRAM, error))
@@ -38,7 +38,7 @@ function* update({payload: {id, institution, year, name, alias, description, boa
 function* destroy({payload: {params}}): SagaIterator {
     try {
         const response = yield call(destroyApi, params);
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(programApiResponseSuccess(ProgramActionTypes.DESTROY_PROGRAM, data))
     } catch (error){
         yield put(programApiResponseError(ProgramActionTypes.DESTROY_PROGRAM, error))
@@ -51,17 +51,14 @@ export function* watchGetPrograms() {
 
 export function* watchStoreProgram() {
     yield takeEvery(ProgramActionTypes.STORE_PROGRAM, store);
-    yield takeEvery(ProgramActionTypes.STORE_PROGRAM, get);
 }
 
 export function* watchUpdateProgram() {
     yield takeEvery(ProgramActionTypes.UPDATE_PROGRAM, update);
-    yield takeEvery(ProgramActionTypes.UPDATE_PROGRAM, get);
 }
 
 export function* watchDestroyProgram() {
     yield takeEvery(ProgramActionTypes.DESTROY_PROGRAM, destroy);
-    yield takeEvery(ProgramActionTypes.DESTROY_PROGRAM, get);
 }
 function* programSaga(){
     yield all([fork(watchGetPrograms), fork(watchStoreProgram), fork(watchUpdateProgram), fork(watchDestroyProgram)])

@@ -23,6 +23,7 @@ class UpdateYearRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'institution_id' => 'required|integer',
             'name' => 'required|string',
             'description' => 'nullable|string',
         ];
@@ -31,6 +32,7 @@ class UpdateYearRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'institution_id' => 'Lembaga',
             'name' => 'Nama Tahun',
             'description' => 'Diskripsi',
         ];

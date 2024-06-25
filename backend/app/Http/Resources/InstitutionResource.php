@@ -16,24 +16,24 @@ class InstitutionResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resource = [
-            'id' => $this->id,
-            'user' => $this->user,
-            'ladder' => $this->ladder,
-            'name' => $this->name,
-            'alias' => $this->alias,
-            'nsm' => $this->nsm,
-            'npsn' => $this->npsn,
-            'headmaster' => $this->headmaster,
-            'logo' => $this->logo,
-            'creator' => $this->creator,
-            'updater' => $this->updater,
-            'withLadderAlias' => $this->ladders->alias .' '. $this['name']
+            'id' => $this['id'],
+            'user_id' => $this['user_id'],
+            'ladder_id' => $this['ladder_id'],
+            'name' => $this['name'],
+            'alias' => $this['alias'],
+            'nsm' => $this['nsm'],
+            'npsn' => $this['npsn'],
+            'headmaster' => $this['headmaster'],
+            'logo' => $this['logo'],
+            'creator' => $this['creator'],
+            'updater' => $this['updater'],
+            'withLadderAlias' => $this->ladder->alias .' '. $this['name']
         ];
         if ($request->has('type')){
             if ($request->type == 'select'){
                 $resource = [
                     'value' => $this['id'],
-                    'label' => $this->ladders->alias .' '.$this['name'],
+                    'label' => $this->ladder->alias .' '.$this['name'],
                 ];
             }
         }
@@ -41,10 +41,10 @@ class InstitutionResource extends JsonResource
             $with = explode(',', $request->with);
             $with = count($with) > 1 ? $with : [$request->with];
             if (in_array('ladder', $with)){
-                $resource['ladder'] = $this->ladders;
+                $resource['ladder'] = $this->ladder;
             }
             if (in_array('user', $with)){
-                $resource['user'] = $this->users;
+                $resource['user'] = $this->user->first();
             }
         }
 

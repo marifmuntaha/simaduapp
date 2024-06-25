@@ -1,15 +1,24 @@
 import {AuthActionTypes} from "./constants";
 
-const Auth = (state, action): any => {
+const INITIAL_STATE = {
+    loading: false,
+    user: false,
+    userLoggedIn: false,
+    userLoggedOut: false,
+    error: false,
+    success: false
+}
+const Auth = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
         case AuthActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
                 case AuthActionTypes.LOGIN_USER:
                     return {
                         ...state,
-                        user: action.payload.data,
+                        loading: false,
                         userLoggedIn: true,
-                        loading: false
+                        success: action.payload.data.message,
+                        user: action.payload.data.result,
                     }
                 case AuthActionTypes.LOGOUT_USER: {
                     return {
@@ -29,8 +38,8 @@ const Auth = (state, action): any => {
                     return {
                         ...state,
                         loading: false,
-                        error: action.payload.error,
                         userLoggedIn: false,
+                        error: action.payload.error,
                     }
                 default:
                     return {...state}
@@ -49,7 +58,6 @@ const Auth = (state, action): any => {
                 ...state,
                 loading: false,
                 error: false,
-                userSignUp: false,
                 userLoggedIn: false,
                 passwordReset: false,
                 passwordChange: false,

@@ -91,7 +91,7 @@ const CustomCheckbox = React.forwardRef(({onClick, ...rest}, ref) => (
     </div>
 ));
 
-const ReactDataTable = ({data, columns, pagination, actions, className, selectableRows, expandableRows}) => {
+const ReactDataTable = ({data, columns, pagination, actions, className, selectableRows, expandableRows, onLoad}) => {
     const [tableData, setTableData] = useState(data);
     const [searchText, setSearchText] = useState("");
     const [rowsPerPageS, setRowsPerPage] = useState(10);
@@ -181,6 +181,8 @@ const ReactDataTable = ({data, columns, pagination, actions, className, selectab
                 expandableRowsComponent={ExpandableRowComponent}
                 expandableRows={mobileView}
                 noDataComponent={<div className="p-2">Tidak ada data</div>}
+                // progressPending={onLoad}
+                // progressComponent={<Spinner color="primary" className="mt-lg-4"/>}
                 sortIcon={
                     <div>
                         <span>&darr;</span>

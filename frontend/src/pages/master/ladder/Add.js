@@ -1,14 +1,14 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row} from "../../../components";
+import {Col, Row, toastSuccess} from "../../../components";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addLadder, storeLadder} from "../../../redux/master/ladder/actions";
+import {addLadder, getLadders, resetLadder, storeLadder} from "../../../redux/master/ladder/actions";
 
 const Add = () => {
     const dispatch = useDispatch();
     const selector = useSelector((state) => state.ladder);
-    const {loading, modal} = selector
+    const {loading, modal, success} = selector
     const onSubmit = () => {
         dispatch(storeLadder({
             formData: getValues([
@@ -29,6 +29,12 @@ const Add = () => {
         reset();
         dispatch(addLadder(false));
     }
+
+    useEffect(() => {
+        success &&
+        dispatch(addLadder(false));
+        reset();
+    }, [success, reset, dispatch])
 
     return (
         <>

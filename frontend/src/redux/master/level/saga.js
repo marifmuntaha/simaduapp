@@ -8,27 +8,27 @@ import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 function* get({payload: {params}}): SagaIterator {
     try {
         const response = yield call(getApi, params)
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(levelApiResponseSuccess(LevelActionTypes.GET_LEVEL, data))
     } catch (error){
         yield put(levelApiResponseError(LevelActionTypes.GET_LEVEL, error))
     }
 }
 
-function* store({payload: {ladder, name, alias}}): SagaIterator {
+function* store({payload: {ladder_id, name, alias}}): SagaIterator {
     try {
-        const response = yield call(storeApi, {ladder, name, alias});
-        const data = response && response.data.result;
+        const response = yield call(storeApi, {ladder_id, name, alias});
+        const data = response && response.data;
         yield put(levelApiResponseSuccess(LevelActionTypes.STORE_LEVEL, data));
     } catch (error){
         yield put(levelApiResponseError(LevelActionTypes.STORE_LEVEL, error))
     }
 }
 
-function* update({payload: {id, ladder, name, alias}}): SagaIterator {
+function* update({payload: {id, ladder_id, name, alias}}): SagaIterator {
     try {
-        const response = yield call(updateApi, {id, ladder, name, alias});
-        const data = response && response.data.result;
+        const response = yield call(updateApi, {id, ladder_id, name, alias});
+        const data = response && response.data;
         yield put(levelApiResponseSuccess(LevelActionTypes.UPDATE_LEVEL, data));
     } catch (error){
         yield put(levelApiResponseError(LevelActionTypes.UPDATE_LEVEL, error))
@@ -38,33 +38,30 @@ function* update({payload: {id, ladder, name, alias}}): SagaIterator {
 function* destroy({payload: {params}}): SagaIterator {
     try {
         const response = yield call(destroyApi, params);
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(levelApiResponseSuccess(LevelActionTypes.DESTROY_LEVEL, data))
     } catch (error){
         yield put(levelApiResponseError(LevelActionTypes.DESTROY_LEVEL, error))
     }
 }
 
-export function* watchGetLevel() {
+export function* watchGetLevels() {
     yield takeEvery(LevelActionTypes.GET_LEVEL, get);
 }
 
 export function* watchStoreLevel() {
     yield takeEvery(LevelActionTypes.STORE_LEVEL, store);
-    yield takeEvery(LevelActionTypes.STORE_LEVEL, get);
 }
 
 export function* watchUpdateLevel() {
     yield takeEvery(LevelActionTypes.UPDATE_LEVEL, update);
-    yield takeEvery(LevelActionTypes.UPDATE_LEVEL, get);
 }
 
 export function* watchDestroyLevel() {
     yield takeEvery(LevelActionTypes.DESTROY_LEVEL, destroy);
-    yield takeEvery(LevelActionTypes.DESTROY_LEVEL, get);
 }
 function* levelSaga(){
-    yield all([fork(watchGetLevel), fork(watchStoreLevel), fork(watchUpdateLevel), fork(watchDestroyLevel)])
+    yield all([fork(watchGetLevels), fork(watchStoreLevel), fork(watchUpdateLevel), fork(watchDestroyLevel)])
 }
 
 export default levelSaga;

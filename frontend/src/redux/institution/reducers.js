@@ -1,13 +1,14 @@
 import {InstitutionActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
-    user: false,
-    users: [],
+    institution: false,
     modal : {
         add: false,
         edit: false,
     },
     error: false,
+    success: false,
+    loadData: true
 }
 const Institution = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,34 +17,29 @@ const Institution = (state = INITIAL_STATE, action): any => {
                 case InstitutionActionTypes.GET_INSTITUTION:
                     return {
                         ...state,
-                        institutions: action.payload.data,
+                        institutions: action.payload.data.result,
                         loading: false,
                     }
                 case InstitutionActionTypes.STORE_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
-                        institution: action.payload.data.institution,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        institution: action.payload.data.result,
                     }
                 case InstitutionActionTypes.UPDATE_INSTITUTION:
                     return {
                         ...state,
                         loading: false,
+                        success: action.payload.data.message,
                         institution: action.payload.data.institution,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
                     }
                 case InstitutionActionTypes.DESTROY_INSTITUTION:
                     return {
                         ...state,
-                        institution: action.payload.data,
                         loading: false,
+                        success: action.payload.data.message,
+                        institution: action.payload.params,
                     }
                 default:
                     return {...state}
@@ -118,19 +114,16 @@ const Institution = (state = INITIAL_STATE, action): any => {
         case InstitutionActionTypes.DESTROY_INSTITUTION:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case InstitutionActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 institution: false,
-                institutions: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

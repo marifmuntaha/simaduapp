@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('years', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('institution_id');
             $table->string('name');
             $table->string('description')->nullable();
             $table->boolean('active')->default(false);

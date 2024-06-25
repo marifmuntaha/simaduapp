@@ -2,12 +2,13 @@ import {LevelActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     level: false,
-    levels: [],
     modal : {
         add: false,
         edit: false,
     },
     error: false,
+    success: false,
+    loadData: true
 }
 const Level = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -16,24 +17,22 @@ const Level = (state = INITIAL_STATE, action): any => {
                 case LevelActionTypes.GET_LEVEL:
                     return {
                         ...state,
-                        levels: action.payload.data,
+                        levels: action.payload.data.result,
                         loading: false,
                     }
                 case LevelActionTypes.STORE_LEVEL:
                     return {
                         ...state,
                         loading: false,
-                        level: action.payload.data.level,
-                        modal: {
-                            add: false,
-                            edit: false,
-                        }
+                        success: action.payload.data.message,
+                        level: action.payload.data.result,
                     }
                 case LevelActionTypes.UPDATE_LEVEL:
                     return {
                         ...state,
                         loading: false,
-                        level: action.payload.data.level,
+                        success: action.payload.data.message,
+                        level: action.payload.data.result,
                         modal: {
                             add: false,
                             edit: false,
@@ -42,7 +41,8 @@ const Level = (state = INITIAL_STATE, action): any => {
                 case LevelActionTypes.DESTROY_LEVEL:
                     return {
                         ...state,
-                        level: action.payload.data,
+                        success: action.payload.data.message,
+                        level: action.payload.data.result,
                         loading: false,
                     }
                 default:
@@ -118,19 +118,16 @@ const Level = (state = INITIAL_STATE, action): any => {
         case LevelActionTypes.DESTROY_LEVEL:
             return {
                 ...state,
-                loading: action.payload,
+                loading: action.payload.params,
             }
         case LevelActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 level: false,
-                levels: [],
-                modal : {
-                    add: false,
-                    edit: false,
-                },
                 error: false,
+                success: false,
+                loadData: false
             }
         default:
             return {...state}

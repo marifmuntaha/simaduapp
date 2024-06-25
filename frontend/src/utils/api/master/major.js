@@ -7,12 +7,12 @@ function get(params){
     return api.get(baseUrl, params)
 }
 
-function store(params: {ladder: number, name: string, alias: string, description: string}){
+function store(params: {ladder_id: number, name: string, alias: string, description: string}){
     const baseUrl = '/master/major';
     return api.create(baseUrl, params)
 }
 
-function update(params: {id: number, ladder: number, name: string, alias: string, description: string}){
+function update(params: {id: number, ladder_id: number, name: string, alias: string, description: string}){
     const baseUrl = `/master/major/${params.id}`;
     return api.update(baseUrl, params)
 }

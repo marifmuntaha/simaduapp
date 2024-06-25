@@ -9,7 +9,7 @@ class Major extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'ladder',
+        'ladder_id',
         'name',
         'alias',
         'description'
@@ -20,7 +20,7 @@ class Major extends Model
         return $this->hasOne(
             Ladder::class,
             'id',
-            'ladder'
+            'ladder_id'
         );
     }
 }
