@@ -23,7 +23,7 @@ class YearCreateOrUpdateListener
     public function handle(YearCreateOrUpdateEvent $event): void
     {
         if ($event->year->active == 1){
-            $years = Year::all();
+            $years = Year::where('institution_id', $event->year->institution_id)->get();
             foreach ($years as $year) {
                 if ($year->id != $event->year->id) {
                     $year->update(['active' => 0]);

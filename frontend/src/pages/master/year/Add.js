@@ -3,7 +3,7 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addYear, resetYear, storeYear} from "../../../redux/master/year/actions";
+import {addYear, storeYear} from "../../../redux/master/year/actions";
 
 const Add = ({user}) => {
     const dispatch = useDispatch();
@@ -32,11 +32,13 @@ const Add = ({user}) => {
     }
 
     useEffect(() => {
-        success && dispatch(addYear(false)) && reset();
+        success &&
+        dispatch(addYear(false));
+        reset();
     }, [success, reset, dispatch]);
 
     useEffect(() => {
-        user.role !== 1 && setValue('institution_id', user.institution.id)
+        user.role !== '1' && setValue('institution_id', user.institution.id)
     }, [user, setValue]);
 
     return (

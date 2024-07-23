@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
@@ -6,19 +6,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {addProgram, resetProgram, storeProgram} from "../../../redux/institute/program/actions";
 import {getInstitutions} from "../../../redux/institution/actions";
 import {getYears} from "../../../redux/master/year/actions";
+import {APICore} from "../../../utils/api/APICore";
 
 const Add = () => {
+    const {institutions} = useSelector((state) => state.institution);
+    const {years} = useSelector((state) => state.year);
+    const {loading, modal} = useSelector((state) => state.program);
     const dispatch = useDispatch();
-    const institutionSelector = useSelector((state) => state.institution);
-    const {institutions} = institutionSelector;
-    const yearSelector = useSelector((state) => state.year);
-    const {years} = yearSelector;
-    const programSelector = useSelector((state) => state.program);
-    const {loading, modal} = programSelector;
     const boardingOption = [
         {value: 0, label: "Tidak"},
         {value: 1, label: "Ya"},
     ]
+    const api = new APICore();
+    const user = api.getLoggedInUser();
     const onSubmit = () => {
         dispatch(storeProgram({
             formData: getValues([
@@ -31,11 +31,15 @@ const Add = () => {
             ])
         }));
     }
+    const params = useCallback(() => {
+        return user && user.institution && {type: 'select', institution_id: user.institution.id}
+    }, [user])
     const {
         register,
         handleSubmit,
         formState: {errors},
         getValues,
+        setValue,
         reset,
         control
     } = useForm();

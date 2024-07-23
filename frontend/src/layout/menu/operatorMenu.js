@@ -11,7 +11,15 @@ export const operatorMenu = [
         subMenu: [
             {
                 text: "Tahun Pelajaran",
-                link: "/master/tahun-pelajaran",
+                link: "/operator/master/tahun-pelajaran",
+            },
+            {
+                text: "Program",
+                link: "/operator/master/program",
+            },
+            {
+                text: "Rombel",
+                link: "/operator/master/rombel",
             },
         ],
     },
@@ -19,22 +27,7 @@ export const operatorMenu = [
         icon: "building",
         text: "Data Institusi",
         active: "false",
-        link: "/institusi",
-    },
-    {
-        icon: "panel",
-        text: "Lembaga",
-        active: false,
-        subMenu: [
-            {
-                text: "Program",
-                link: "/lembaga/program",
-            },
-            {
-                text: "Rombel",
-                link: "/lembaga/rombel",
-            },
-        ],
+        link: "/operator/institusi",
     },
     {
         icon: "reports",

@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../../components";
+import {Col, Row, RSelect} from "../../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {setYear, updateYear} from "../../../redux/master/year/actions";
+import {setYear, updateYear} from "../../../../redux/master/year/actions";
 
 const Edit = ({user}) => {
     const dispatch = useDispatch();

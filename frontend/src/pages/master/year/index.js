@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import {
@@ -42,7 +42,8 @@ const Year = () => {
             selector: (row) => row.active,
             sortable: false,
             cell: row => (
-                row.active === 0 ? <Badge className="badge-dot" color="danger">Tidak</Badge> : <Badge className="badge-dot" color="success">Aktif</Badge>
+                row.active === 0 ? <Badge className="badge-dot" color="danger">Tidak</Badge> :
+                    <Badge className="badge-dot" color="success">Aktif</Badge>
             )
         },
         {
@@ -73,12 +74,19 @@ const Year = () => {
     ];
     const api = new APICore();
     const user = api.getLoggedInUser();
+    const params = useCallback(() => {
+        return user.role !== '1'
+            ? {institution_id: user.institution.id}
+            : ''
+    }, [user]);
     useEffect(() => {
-        loadData && dispatch(getYears({institution_id: user.institution.id}))
-        // success && toastSuccess(success);
-        // error && toastError(error);
-        // (success || loadData) && dispatch(getInstitutions({type: 'select'})) && ));
-    }, [dispatch, success, error, loadData]);
+        success && toastSuccess(success);
+        error && toastError(error);
+        (success || loadData)
+        && dispatch(getYears(params()))
+        && dispatch(getInstitutions({type: 'select'}));
+        dispatch(resetYear());
+    }, [dispatch, success, error, loadData, params]);
     return (
         <>
             <Head title="Tahun Pelajaran"/>
@@ -127,8 +135,8 @@ const Year = () => {
                 <PreviewCard>
                     <ReactDataTable data={years} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                {/*<Add user={user}/>*/}
-                {/*<Edit user={user}/>*/}
+                <Add user={user}/>
+                <Edit user={user}/>
             </Content>
         </>
     )

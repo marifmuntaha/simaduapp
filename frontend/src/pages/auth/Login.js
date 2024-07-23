@@ -14,7 +14,7 @@ import {
     PreviewCard, toastError, toastSuccess,
 } from "../../components";
 import {Form, Spinner} from "reactstrap";
-import {Link, Navigate, useLocation, useNavigate, useNavigation} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {loginUser, resetAuth} from "../../redux/actions";
 import {useForm} from "react-hook-form";
@@ -28,8 +28,7 @@ const Login = () => {
         dispatch(loginUser({formData: getValues(['username', 'password'])}));
     }
     const {register, handleSubmit, formState: {errors}, getValues} = useForm();
-    const location = useLocation()
-    const redirectUrl = location?.search?.slice(6) || '/'
+    const navigate = useNavigate();
     useEffect(() => {
         dispatch(resetAuth())
     }, [dispatch]);
@@ -38,10 +37,24 @@ const Login = () => {
         success && toastSuccess(success)
         error && toastError(error);
         dispatch(resetAuth());
-    }, [success, error, dispatch, redirectUrl]);
+    }, [success, error, dispatch]);
+
+    useEffect(() => {
+        let redirectUrl = '';
+        switch (user.role){
+            case '1':
+                redirectUrl = '/administrator'
+                break
+            case '5':
+                redirectUrl = '/operator'
+                break
+            default :
+                redirectUrl = '/'
+        }
+        user && navigate(redirectUrl)
+    }, [user, navigate])
     return (
         <>
-            {(success || user) && <Navigate to={redirectUrl}/>}
             <Head title="Masuk"/>
             <Block className="nk-block-middle nk-auth-body  wide-xs">
                 <div className="brand-logo pb-4 text-center">

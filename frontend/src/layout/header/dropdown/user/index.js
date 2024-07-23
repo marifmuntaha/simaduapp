@@ -8,6 +8,30 @@ const User = () => {
     const user = api.getLoggedInUser();
     const [open, setOpen] = useState(false);
     const toggle = () => setOpen((prevState) => !prevState);
+    const role = (role) => {
+        switch (role) {
+            case '1':
+                return 'Administrator'
+            case '2':
+                return 'Kepala Madrasah'
+            case '3':
+                return 'Wakil Kepala'
+            case '4':
+                return 'Guru'
+            case '5':
+                return 'Operator'
+            case '6':
+                return 'Bendahara'
+            case '7':
+                return 'Teller'
+            case '8':
+                return 'Siswa'
+            case '9':
+                return 'Orang Tua'
+            default:
+                return  ''
+        }
+    }
     return (
         <>
             <Dropdown isOpen={open} className="user-dropdown" toggle={toggle}>
@@ -22,7 +46,7 @@ const User = () => {
                     <div className="user-toggle">
                         <UserAvatar icon="user-alt" className="sm"/>
                         <div className="user-info d-none d-md-block">
-                            <div className="user-status">{user.role === '1' ? 'Administrator' : 'Member'}</div>
+                            <div className="user-status">{role(user.role)}</div>
                             <div className="user-name dropdown-indicator">{user.fullname}</div>
                         </div>
                     </div>

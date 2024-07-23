@@ -3,6 +3,9 @@ import PrivateRoute from "./PrivateRoutes";
 import {Route} from "react-router-dom";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
+
+const OperatorDashboard = React.lazy(() => import("../pages/operator/dashboard"));
+const OperatorYear = React.lazy(() => import("../pages/operator/master/year"));
 const Major = React.lazy(() => import("../pages/master/major"));
 const Ladder = React.lazy(() => import('../pages/master/ladder'))
 const Level = React.lazy(() => import('../pages/master/level'))
@@ -19,7 +22,62 @@ const Logout = React.lazy(() => import("../pages/auth/Logout"));
 const Error404 = React.lazy(() => import('../pages/error/Error404'))
 const Error504 = React.lazy(() => import('../pages/error/Error504'))
 
-export const protectedRoutes = [
+const administratorRoutes = [
+    {
+        path: '/administrator',
+        name: 'Dashboard',
+        element: <Dashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/administrator/master/jenjang',
+        name: 'Jenjang',
+        element: <Ladder/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/administrator/institusi',
+        name: 'Data Institusi',
+        element: <Institution/>,
+        route: PrivateRoute,
+    },
+]
+const operatorRoutes = [
+    {
+        path: '/operator',
+        name: 'Dashboard',
+        element: <OperatorDashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/master/tahun-pelajaran',
+        name: 'Tahun Pelajaran',
+        element: <OperatorYear/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/master/program',
+        name: 'Program',
+        element: <Program/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/institusi',
+        name: 'Data Institusi',
+        element: <Institution/>,
+        route: PrivateRoute,
+    },
+]
+const otherProtectedRoutes = [
+    {
+        path: '/',
+        name: 'Dashboard',
+        element: <Dashboard/>,
+        route: PrivateRoute,
+    },
+]
+export const protectedRoutes = [...administratorRoutes, ...operatorRoutes, ...otherProtectedRoutes];
+export const protectedRoute = [
     {
         path: '/',
         name: 'Dashboard',
@@ -50,12 +108,7 @@ export const protectedRoutes = [
         element: <Level/>,
         route: PrivateRoute,
     },
-    {
-        path: '/institusi',
-        name: 'Data Institusi',
-        element: <Institution/>,
-        route: PrivateRoute,
-    },
+
     {
         path: '/lembaga/program',
         name: 'Program',

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Toggle from "../sidebar/Toggle";
 import Logo from "../logo";
 import User from "./dropdown/user";
-import Notification from "./dropdown/notification";
+// import Notification from "./dropdown/notification";
 import HeaderSearch from "../header-search";
 
 import {useTheme, useThemeUpdate} from '../provider/Theme';

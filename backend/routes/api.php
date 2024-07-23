@@ -11,7 +11,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
 
-sleep(1);
 Route::group(['prefix' => 'auth'], function (){
     Route::post('login', AuthController::class. '@login');
     Route::post('reset-password', AuthController::class. '@resetPassword');

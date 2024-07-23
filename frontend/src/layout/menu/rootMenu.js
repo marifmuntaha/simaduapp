@@ -2,7 +2,7 @@ export const rootMenu = [
     {
         icon: "monitor",
         text: "Dashboard",
-        link: "/",
+        link: "/administrator",
     },
     {
         icon: "archived",
@@ -11,11 +11,7 @@ export const rootMenu = [
         subMenu: [
             {
                 text: "Jenjang",
-                link: "/master/jenjang",
-            },
-            {
-                text: "Tahun Pelajaran",
-                link: "/master/tahun-pelajaran",
+                link: "/administrator/master/jenjang",
             },
             {
                 text: "Tingkatan",
@@ -25,13 +21,17 @@ export const rootMenu = [
                 text: "Jurusan",
                 link: "/master/jurusan",
             },
+            {
+                text: "Tahun Pelajaran",
+                link: "/master/tahun-pelajaran",
+            },
         ],
     },
     {
         icon: "building",
         text: "Data Institusi",
         active: "false",
-        link: "/institusi",
+        link: "/administrator/institusi",
     },
     {
         icon: "panel",

@@ -25,6 +25,7 @@ class UpdateYearRequest extends FormRequest
         return [
             'institution_id' => 'required|integer',
             'name' => 'required|string',
+            'active' => 'nullable|boolean',
             'description' => 'nullable|string',
         ];
     }
@@ -34,6 +35,7 @@ class UpdateYearRequest extends FormRequest
         return [
             'institution_id' => 'Lembaga',
             'name' => 'Nama Tahun',
+            'active' => 'Status',
             'description' => 'Diskripsi',
         ];
     }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Head from "../../layout/head";
 import Content from "../../layout/content";
 import {
@@ -82,7 +82,7 @@ const Institution = () => {
                         }}>
                         <Icon name="edit"/>
                     </Button>
-                    {user.role === 1 && (
+                    {user.role === '1' && (
                         <Button
                             color="outline-danger"
                             onClick={() => {
@@ -96,24 +96,21 @@ const Institution = () => {
             )
         },
     ];
-    let params = ''
-    useEffect(() => {
-        if (user.role !== 1){
-            params = {with: ['ladder', 'user'], user_id: user.id}
-        }
-        else {
-            params = {with: ['ladder', 'user']}
-        }
-    }, [])
+    const params = useCallback(() => {
+        return user.role !== '1'
+            ? {with: ['ladder', 'user'], user_id: user.id}
+            : {with: ['ladder', 'user']}
+    }, [user])
+
     useEffect(() => {
         success && toastSuccess(success);
         error && toastError(error);
         (success || loadData)
-        && dispatch(getInstitutions(params))
+        && dispatch(getInstitutions(params()))
         && dispatch(getUsers({type: 'select', role: 5}))
         && dispatch(getLadders({type: 'select'}));
         dispatch(resetInstitution());
-    }, [dispatch, success, error, loadData]);
+    }, [dispatch, success, error, loadData, params]);
     return (
         <>
             {error && toastError(error) && dispatch(resetInstitution())}
@@ -144,7 +141,7 @@ const Institution = () => {
                                     <Icon name="menu-alt-r"></Icon>
                                 </Button>
                                 <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
-                                    {user.role === 1 && (
+                                    {user.role === '1' && (
                                         <ul className="nk-block-tools g-3">
                                             <li
                                                 className="nk-block-tools-opt"

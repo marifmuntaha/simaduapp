@@ -3,7 +3,7 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {addInstitution, setInstitution, updateInstitution} from "../../redux/institution/actions";
+import {setInstitution, updateInstitution} from "../../redux/institution/actions";
 
 const Edit = ({user}) => {
     const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const Edit = ({user}) => {
     } = useForm();
     const toggle = () => {
         reset();
-        dispatch(addInstitution(false));
+        dispatch(setInstitution({}, false));
     }
     useEffect(() => {
         success &&

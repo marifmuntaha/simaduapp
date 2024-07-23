@@ -36,7 +36,6 @@ const AllRoutes = (props) => {
                                 api.isUserAuthenticated() === false ? (
                                     <Navigate to={{
                                         pathname: '/auth/masuk',
-                                        search: 'next=' + route.path,
                                     }}
                                     />
                                 ) : (
