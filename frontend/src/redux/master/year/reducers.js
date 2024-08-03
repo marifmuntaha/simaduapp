@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     success: false,
     error: false,
     loadData: true,
+    active: false
 }
 const Year = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -19,7 +20,10 @@ const Year = (state = INITIAL_STATE, action): any => {
                         ...state,
                         years: action.payload.data.result,
                         loading: false,
-                        loadData: false
+                        loadData: false,
+                        active: action.payload.data.result.filter((year) => {
+                            return year.active === 1
+                        })[0]
                     }
                 case YearActionTypes.STORE_YEAR:
                     return {
@@ -27,6 +31,7 @@ const Year = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         year: action.payload.data.result,
+                        loadData: true
                     }
                 case YearActionTypes.UPDATE_YEAR:
                     return {
@@ -34,6 +39,7 @@ const Year = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         year: action.payload.data.result,
+                        loadData: true
                     }
                 case YearActionTypes.DESTROY_YEAR:
                     return {
@@ -41,6 +47,7 @@ const Year = (state = INITIAL_STATE, action): any => {
                         success: action.payload.data.message,
                         year: action.payload.data.result,
                         loading: false,
+                        loadData: true
                     }
                 default:
                     return {...state}

@@ -26,6 +26,7 @@ const Institution = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         institution: action.payload.data.result,
+                        loadData: true
                     }
                 case InstitutionActionTypes.UPDATE_INSTITUTION:
                     return {
@@ -33,6 +34,7 @@ const Institution = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         institution: action.payload.data.institution,
+                        loadData: true
                     }
                 case InstitutionActionTypes.DESTROY_INSTITUTION:
                     return {
@@ -40,6 +42,7 @@ const Institution = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         institution: action.payload.params,
+                        loadData: true
                     }
                 default:
                     return {...state}

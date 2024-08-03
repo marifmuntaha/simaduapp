@@ -83,15 +83,19 @@ const User = () => {
     ];
 
     useEffect(() => {
+        dispatch(getUsers()) && dispatch(resetUser());
+    }, [loadData, dispatch]);
+
+    useEffect(() => {
         success && toastSuccess(success);
+    }, [success]);
+
+    useEffect(() => {
         error && toastError(error);
-        (success || loadData) && dispatch(getUsers());
-        dispatch(resetUser());
-    }, [dispatch, success, error, loadData]);
+    }, [error])
 
     return (
         <>
-            {error && toastError(error) && dispatch(resetUser())}
             <Head title="Data Pengguna"/>
             <Content>
                 <BlockHead size="lg" wide="sm">

@@ -17,13 +17,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/master/year/actions";
 import Add from "./Add";
 import Edit from "./Edit";
-import {getInstitutions} from "../../../redux/institution/actions";
 import {APICore} from "../../../utils/api/APICore";
 
 const Year = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.year)
-    const {loading, years, error, success, loadData} = selector;
+    const {loading, years, error, success, loadData} = useSelector((state) => state.year);
     const [sm, updateSm] = useState(false);
     const Columns = [
         {
@@ -42,7 +40,7 @@ const Year = () => {
             selector: (row) => row.active,
             sortable: false,
             cell: row => (
-                row.active === 0 ? <Badge className="badge-dot" color="danger">Tidak</Badge> :
+                row.active === 2 ? <Badge className="badge-dot" color="danger">Tidak</Badge> :
                     <Badge className="badge-dot" color="success">Aktif</Badge>
             )
         },
@@ -79,14 +77,18 @@ const Year = () => {
             ? {institution_id: user.institution.id}
             : ''
     }, [user]);
+
+    useEffect(() => {
+        dispatch(getYears(params())) && dispatch(resetYear());
+    }, [loadData, dispatch]);
+
     useEffect(() => {
         success && toastSuccess(success);
+    }, [success]);
+
+    useEffect(() => {
         error && toastError(error);
-        (success || loadData)
-        && dispatch(getYears(params()))
-        && dispatch(getInstitutions({type: 'select'}));
-        dispatch(resetYear());
-    }, [dispatch, success, error, loadData, params]);
+    }, [error])
     return (
         <>
             <Head title="Tahun Pelajaran"/>

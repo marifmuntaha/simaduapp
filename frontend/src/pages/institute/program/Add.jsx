@@ -1,49 +1,60 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../components";
+import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {addInstitution, storeInstitution} from "../../redux/institution/actions";
-
-const Add = () => {
+import {addProgram, resetProgram, storeProgram} from "../../../redux/institute/program/actions";
+import {getInstitutions} from "../../../redux/institution/actions";
+import {getYears} from "../../../redux/master/year/actions";
+const Add = ({user}) => {
+    const {institutions} = useSelector((state) => state.institution);
+    const {years, active} = useSelector((state) => state.year);
+    const {loading, modal} = useSelector((state) => state.program);
     const dispatch = useDispatch();
-    const institutionSelector = useSelector((state) => state.institution);
-    const {loading, modal, success} = institutionSelector
-    const userSelector = useSelector((state) => state.user)
-    const {users} = userSelector
-    const ladderSelector = useSelector((state) => state.ladder)
-    const {ladders} = ladderSelector;
+    const boardingOption = [
+        {value: 2, label: "Tidak"},
+        {value: 1, label: "Ya"},
+    ]
     const onSubmit = () => {
-        dispatch(storeInstitution({
+        dispatch(storeProgram({
             formData: getValues([
-                'user',
-                'ladder',
+                'institution_id',
+                'year_id',
                 'name',
                 'alias',
-                'nsm',
-                'npsn',
-                'headmaster',
-                'logo',
+                'description',
+                'boarding'
             ])
         }));
     }
+    const params = useCallback(() => {
+        return user.institution && {type: 'select', institution_id: user.institution.id}
+    }, [user])
     const {
         register,
         handleSubmit,
         formState: {errors},
         getValues,
-        control,
-        reset
+        setValue,
+        reset,
+        control
     } = useForm();
+
     const toggle = () => {
         reset();
-        dispatch(addInstitution(false));
+        dispatch(addProgram(false));
     }
+
     useEffect(() => {
-        success &&
-        dispatch(addInstitution(false));
-        reset();
-    }, [success, reset, dispatch])
+        dispatch(getInstitutions({type: 'select'}));
+        dispatch(getYears(params()));
+        dispatch(resetProgram());
+    }, [dispatch]);
+
+    useEffect(() => {
+        user.role !== '1' && setValue('institution_id', user.institution.id) && setValue('year_id', 2)
+    }, [user, active, setValue]);
+
     return (
         <>
             <Modal isOpen={modal.add} toggle={toggle}>
@@ -53,63 +64,62 @@ const Add = () => {
                         <Row className="gy-2">
                             <Col className="col-md-6">
                                 <div className="form-group">
-                                    <label className="form-label" htmlFor="user">
-                                        Operator
+                                    <label className="form-label" htmlFor="institution">
+                                        Lembaga
                                     </label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
                                             className="form-control"
-                                            name="user"
+                                            name="institution_id"
                                             rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={users}
-                                                    value={users.find((c) => c.value === value)}
+                                                    options={institutions}
+                                                    value={institutions.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Pengguna"
+                                                    placeholder="Pilih Lembaga"
                                                 />
                                             )}/>
-                                        {errors.user && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.institution &&
+                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
-                                    <label className="form-label" htmlFor="ladder">
-                                        Jenjang
+                                    <label className="form-label" htmlFor="year">
+                                        Tahun Pelajaran
                                     </label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
                                             className="form-control"
-                                            name="ladder"
+                                            name="year_id"
                                             rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={ladders}
-                                                    value={ladders.find((c) => c.value === value)}
+                                                    options={years}
+                                                    value={years.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Jenjang"
+                                                    placeholder="Pilih Tahun Pelajaran"
                                                 />
                                             )}/>
-                                        {errors.ladder && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.year && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="name" className="form-label">Nama Institusi</Label>
+                                    <Label htmlFor="fullname" className="form-label">Nama</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
                                             id="name"
-                                            placeholder="Ex. Darul Hikmah"
+                                            placeholder="Ex. Tahfidz"
                                             {...register('name', {required: true})}
                                         />
                                         {errors.name && <span className="invalid">Kolom tidak boleh kosong.</span>}
@@ -125,72 +135,50 @@ const Add = () => {
                                             className="form-control"
                                             type="text"
                                             id="alias"
-                                            placeholder="Ex. MADH"
+                                            placeholder="Ex. TFZ"
                                             {...register('alias', {required: true})}
                                         />
                                         {errors.alias && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
-                            <Col className="col-md-6">
-                                <div className="form-group">
-                                    <Label htmlFor="nsm" className="form-label">NSM</Label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            className="form-control"
-                                            type="text"
-                                            id="nsm"
-                                            placeholder="Ex. 1234567890"
-                                            {...register('nsm', {required: true})}
-                                        />
-                                        {errors.nsm && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col className="col-md-6">
-                                <div className="form-group">
-                                    <Label htmlFor="npsn" className="form-label">NPSN</Label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            className="form-control"
-                                            type="text"
-                                            id="npsn"
-                                            placeholder="Ex. 1234567890"
-                                            {...register('npsn', {required: true})}
-                                        />
-                                        {errors.npsn && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                    </div>
-                                </div>
-                            </Col>
-
-
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="headmaster" className="form-label">Kepala Madrasah</Label>
+                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
-                                            id="headmaster"
-                                            placeholder="Ex. Sholihin, S.Ag."
-                                            {...register('headmaster', {required: true})}
+                                            id="description"
+                                            placeholder="Ex. Program Tahfidz"
+                                            {...register('description', {required: false})}
                                         />
-                                        {errors.headmaster &&
+                                        {errors.description &&
                                             <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
+                                    <label className="form-label" htmlFor="boarding">
+                                        Boarding
+                                    </label>
                                     <div className="form-control-wrap">
-                                        <Label htmlFor="image" className="form-label">
-                                            Foto
-                                        </Label>
-                                        <input
+                                        <Controller
+                                            control={control}
                                             className="form-control"
-                                            type="file"
-                                            id="image"
-                                        />
+                                            name="boarding"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={boardingOption}
+                                                    value={boardingOption.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Boarding"
+                                                />
+                                            )}/>
+                                        {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>

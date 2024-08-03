@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
-import Head from "../../layout/head";
-import Content from "../../layout/content";
+import Head from "../../../layout/head";
+import Content from "../../../layout/content";
 import {
     BackTo,
     BlockBetween,
@@ -10,7 +10,7 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable, toastError, toastSuccess
-} from "../../components";
+} from "../../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -19,17 +19,16 @@ import {
     getInstitutions,
     resetInstitution,
     setInstitution
-} from "../../redux/institution/actions";
+} from "../../../redux/institution/actions";
 import Add from "./Add";
 import Edit from "./Edit";
-import {getUsers} from "../../redux/user/actions";
-import {getLadders} from "../../redux/master/ladder/actions";
-import {APICore} from "../../utils/api/APICore";
+import {getUsers} from "../../../redux/user/actions";
+import {getLadders} from "../../../redux/master/ladder/actions";
+import {APICore} from "../../../utils/api/APICore";
 
 const Institution = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.institution)
-    const {loading, institutions, error, success, loadData} = selector;
+    const {loading, institutions, error, success, loadData} = useSelector((state) => state.institution);
     const api = new APICore();
     const user = api.getLoggedInUser();
     const [sm, updateSm] = useState(false);
@@ -103,17 +102,19 @@ const Institution = () => {
     }, [user])
 
     useEffect(() => {
+        loadData && dispatch(getInstitutions(params())) && dispatch(resetInstitution());
+        dispatch(getUsers({type: 'select', role: 5}));
+        dispatch(getLadders({type: 'select'}));
+    }, [loadData, dispatch]);
+
+    useEffect(() => {
         success && toastSuccess(success);
+    }, [success]);
+    useEffect(() => {
         error && toastError(error);
-        (success || loadData)
-        && dispatch(getInstitutions(params()))
-        && dispatch(getUsers({type: 'select', role: 5}))
-        && dispatch(getLadders({type: 'select'}));
-        dispatch(resetInstitution());
-    }, [dispatch, success, error, loadData, params]);
+    }, [error]);
     return (
         <>
-            {error && toastError(error) && dispatch(resetInstitution())}
             <Head title="Data Institutusi"/>
             <Content>
                 <BlockHead size="lg" wide="sm">

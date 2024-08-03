@@ -3,16 +3,13 @@ import PrivateRoute from "./PrivateRoutes";
 import {Route} from "react-router-dom";
 
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
-
-const OperatorDashboard = React.lazy(() => import("../pages/operator/dashboard"));
-const OperatorYear = React.lazy(() => import("../pages/operator/master/year"));
 const Major = React.lazy(() => import("../pages/master/major"));
 const Ladder = React.lazy(() => import('../pages/master/ladder'))
 const Level = React.lazy(() => import('../pages/master/level'))
 const Year = React.lazy(() => import('../pages/master/year'))
 const User = React.lazy(() => import("../pages/user"));
 
-const Institution = React.lazy(() => import('../pages/institution'))
+const Institution = React.lazy(() => import('../pages/administrator/institution'))
 
 const Program = React.lazy(() => import('../pages/institute/program'));
 const Classroom = React.lazy(() => import('../pages/institute/classroom'));
@@ -22,23 +19,28 @@ const Logout = React.lazy(() => import("../pages/auth/Logout"));
 const Error404 = React.lazy(() => import('../pages/error/Error404'))
 const Error504 = React.lazy(() => import('../pages/error/Error504'))
 
-const administratorRoutes = [
+const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
+
+const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
+
+const administratorRoute = [
     {
         path: '/administrator',
         name: 'Dashboard',
-        element: <Dashboard/>,
-        route: PrivateRoute,
-    },
-    {
-        path: '/administrator/master/jenjang',
-        name: 'Jenjang',
-        element: <Ladder/>,
+        element: <AdministratorDashboard/>,
         route: PrivateRoute,
     },
     {
         path: '/administrator/institusi',
         name: 'Data Institusi',
         element: <Institution/>,
+        route: PrivateRoute,
+    },
+
+    {
+        path: '/administrator/pengguna',
+        name: 'Data Pengguna',
+        element: <User/>,
         route: PrivateRoute,
     },
 ]
@@ -52,7 +54,7 @@ const operatorRoutes = [
     {
         path: '/operator/master/tahun-pelajaran',
         name: 'Tahun Pelajaran',
-        element: <OperatorYear/>,
+        element: <Year/>,
         route: PrivateRoute,
     },
     {
@@ -61,13 +63,8 @@ const operatorRoutes = [
         element: <Program/>,
         route: PrivateRoute,
     },
-    {
-        path: '/operator/institusi',
-        name: 'Data Institusi',
-        element: <Institution/>,
-        route: PrivateRoute,
-    },
 ]
+
 const otherProtectedRoutes = [
     {
         path: '/',
@@ -76,7 +73,12 @@ const otherProtectedRoutes = [
         route: PrivateRoute,
     },
 ]
-export const protectedRoutes = [...administratorRoutes, ...operatorRoutes, ...otherProtectedRoutes];
+
+export const protectedRoutes = [
+    ...administratorRoute,
+    ...operatorRoutes,
+    ...otherProtectedRoutes
+]
 export const protectedRoute = [
     {
         path: '/',
@@ -108,7 +110,12 @@ export const protectedRoute = [
         element: <Level/>,
         route: PrivateRoute,
     },
-
+    {
+        path: '/institusi',
+        name: 'Data Institusi',
+        element: <Institution/>,
+        route: PrivateRoute,
+    },
     {
         path: '/lembaga/program',
         name: 'Program',

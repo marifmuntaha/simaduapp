@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Admission;
 
 use App\Models\Student;
 use App\Models\User;

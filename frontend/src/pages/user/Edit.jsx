@@ -10,8 +10,15 @@ const Edit = () => {
     const selector = useSelector((state) => state.user)
     const {loading, modal, user, success} = selector;
     const roleOption = [
-        {value: 1, label: 'Administrator'},
-        {value: 5, label: 'Operator'},
+        {value: 1, label: "Administrator"},
+        {value: 2, label: "Kepala Madrasah"},
+        {value: 3, label: "Wakil Kepala"},
+        {value: 4, label: "Guru"},
+        {value: 5, label: "Operator"},
+        {value: 6, label: "Bendahara"},
+        {value: 7, label: "Teller"},
+        {value: 8, label: "Siswa"},
+        {value: 9, label: "Orang Tua"}
     ];
     const onSubmit = () => {
         dispatch(updateUser({

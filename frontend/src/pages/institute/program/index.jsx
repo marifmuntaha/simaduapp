@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import {
@@ -10,7 +10,7 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable,
-    toastError
+    toastError, toastSuccess
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
@@ -23,13 +23,18 @@ import {
     resetProgram,
     setProgram
 } from "../../../redux/institute/program/actions";
+import {APICore} from "../../../utils/api/APICore";
+import {getYears} from "../../../redux/master/year/actions";
 
 const Program = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.program)
-    const {loading, programs, error} = selector;
+
+    const api = new APICore();
+    const user = api.getLoggedInUser();
+    const {loading, programs, success, error, loadData} = useSelector((state) => state.program);
+    const {active} = useSelector((state) => state.year);
     const [sm, updateSm] = useState(false);
-    const Columns = [
+    const ColumnAdministrator = [
         {
             name: "Lembaga",
             selector: (row) => row.institution && row.institution.withLadderAlias,
@@ -40,7 +45,9 @@ const Program = () => {
             name: "Tahun Pelajaran",
             selector: (row) => row.year && row.year.name,
             sortable: false,
-        },
+        }
+    ]
+    const ColumnOther = [
         {
             name: "Nama Program",
             selector: (row) => row.name,
@@ -84,14 +91,29 @@ const Program = () => {
                 </ButtonGroup>
             )
         },
-    ];
+    ]
+    const Columns = user.role === '1' ? [...ColumnAdministrator, ...ColumnOther] : ColumnOther;
+    const params = useCallback(() => {
+        return user.role !== '1'
+            ? {institution_id: user.institution.id, year_id: active && active.id}
+            : ''
+    }, [user, active]);
+
     useEffect(() => {
-        dispatch(getPrograms({with: ['institution', 'year']}));
-        dispatch(resetProgram());
-    }, [dispatch])
+        dispatch(getPrograms(params())) && dispatch(resetProgram());
+        dispatch(getYears({institution_id: user.institution.id}));
+    }, [loadData, dispatch])
+
+    useEffect(() => {
+        success && toastSuccess(success);
+    }, [success]);
+
+    useEffect(() => {
+        error && toastError(error);
+    }, [error]);
+
     return (
         <>
-            {error && toastError(error) && dispatch(resetProgram())}
             <Head title="Data Program"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
@@ -138,7 +160,7 @@ const Program = () => {
                 <PreviewCard>
                     <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add/>
+                <Add user={user}/>
                 <Edit/>
             </Content>
         </>

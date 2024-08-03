@@ -79,7 +79,7 @@ export const rootMenu = [
         icon: "users",
         text: "Data Pengguna",
         active: "false",
-        link: "/pengguna",
+        link: "/administrator/pengguna",
     },
 
     {

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('institution_id');
             $table->string('name');
             $table->string('description')->nullable();
-            $table->boolean('active')->default(false);
+            $table->enum('active', [1, 2])->default(2);
             $table->timestamps();
         });
     }

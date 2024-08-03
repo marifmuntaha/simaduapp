@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('alias');
             $table->string('description')->nullable();
-            $table->boolean('boarding');
+            $table->enum('boarding', [1, 2])->default(2);
             $table->unsignedBigInteger('creator');
             $table->unsignedBigInteger('updater');
             $table->timestamps();

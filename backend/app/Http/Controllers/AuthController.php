@@ -18,7 +18,7 @@ class AuthController extends Controller
                     'message' => 'Berhasil masuk, anda akan dialihkan dalam 2 detik',
                     'result' => Arr::collapse([$request->user()->toArray(), [
                         'token' => $request->user()->createToken($request->username)->plainTextToken,
-                        'institution' => $request->user()->institution()->first(),
+                        'institution' => $request->user()->role !== '1' ? $request->user()->institution()->first() : null,
                     ]])
                 ]) : throw new Exception("Nama Pengguna atau Kata Sandi Salah");
         } catch (Exception $exception) {
