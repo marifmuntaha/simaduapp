@@ -20,9 +20,9 @@ export const addProgram = (modal) => ({
     payload: {modal}
 })
 
-export const storeProgram = ({formData: [institution, year, name, alias, description, boarding]}) => ({
+export const storeProgram = ({formData: [institution_id, year_id, name, alias, description, boarding]}) => ({
     type: ProgramActionTypes.STORE_PROGRAM,
-    payload: {institution, year, name, alias, description, boarding},
+    payload: {institution_id, year_id, name, alias, description, boarding},
 })
 
 export const setProgram = (program, modal) => ({
@@ -30,9 +30,9 @@ export const setProgram = (program, modal) => ({
     payload: {program, modal},
 })
 
-export const updateProgram = ({formData: [id, institution, year, name, alias, description, boarding]}) => ({
+export const updateProgram = ({formData: [id, institution_id, year_id, name, alias, description, boarding]}) => ({
     type: ProgramActionTypes.UPDATE_PROGRAM,
-    payload: {id, institution, year, name, alias, description, boarding},
+    payload: {id, institution_id, year_id, name, alias, description, boarding},
 })
 
 export const destroyProgram = (params) => ({

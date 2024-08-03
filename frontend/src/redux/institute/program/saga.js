@@ -15,9 +15,9 @@ function* get({payload: {params}}): SagaIterator {
     }
 }
 
-function* store({payload: {institution, year, name, alias, description, boarding}}): SagaIterator {
+function* store({payload: {institution_id, year_id, name, alias, description, boarding}}): SagaIterator {
     try {
-        const response = yield call(storeApi, {institution, year, name, alias, description, boarding});
+        const response = yield call(storeApi, {institution_id, year_id, name, alias, description, boarding});
         const data = response && response.data;
         yield put(programApiResponseSuccess(ProgramActionTypes.STORE_PROGRAM, data));
     } catch (error){
@@ -25,9 +25,9 @@ function* store({payload: {institution, year, name, alias, description, boarding
     }
 }
 
-function* update({payload: {id, institution, year, name, alias, description, boarding}}): SagaIterator {
+function* update({payload: {id, institution_id, year_id, name, alias, description, boarding}}): SagaIterator {
     try {
-        const response = yield call(updateApi, {id, institution, year, name, alias, description, boarding});
+        const response = yield call(updateApi, {id, institution_id, year_id, name, alias, description, boarding});
         const data = response && response.data;
         yield put(programApiResponseSuccess(ProgramActionTypes.UPDATE_PROGRAM, data));
     } catch (error){

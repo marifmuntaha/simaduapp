@@ -26,6 +26,7 @@ const Program = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         program: action.payload.data.result,
+                        loadData: true
                     }
                 case ProgramActionTypes.UPDATE_PROGRAM:
                     return {
@@ -33,6 +34,7 @@ const Program = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         program: action.payload.data.result,
+                        loadData: true
                     }
                 case ProgramActionTypes.DESTROY_PROGRAM:
                     return {
@@ -40,6 +42,7 @@ const Program = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         program: action.payload.data.result,
+                        loadData: true
                     }
                 default:
                     return {...state}

@@ -7,7 +7,7 @@ function get(params){
     return api.get(baseUrl, params)
 }
 
-function store(params: {institution: string, year: string, name: string, alias: string, description: string, boarding: boolean}){
+function store(params: {institution_id: string, year_id: string, name: string, alias: string, description: string, boarding: string}){
     const baseUrl = '/institute/program';
     return api.create(baseUrl, params)
 }
