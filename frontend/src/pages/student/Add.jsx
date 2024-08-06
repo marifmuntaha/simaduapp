@@ -1,19 +1,18 @@
 import {useDispatch} from "react-redux";
 import {APICore} from "../../utils/api/APICore";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Head from "../../layout/head";
 import Content from "../../layout/content";
 import {
     BackTo, BlockBetween,
     BlockHead,
     BlockHeadContent,
-    BlockTitle, Col,
+    BlockTitle, Button, Col,
     Icon,
     PreviewCard, Row, RSelect
 } from "../../components";
 import DatePicker from "react-datepicker";
-import {Button, Label, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {addStudent} from "../../redux/student/actions";
+import {Label, Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import classnames from "classnames";
 import {Controller, useForm} from "react-hook-form";
 
@@ -22,9 +21,10 @@ const AddStudent = () => {
     const api = new APICore();
     const user = api.getLoggedInUser();
     const [activeIconTab, setActiveIconTab] = useState("1");
-    const toggleIconTab = (icontab) => {
-        if (activeIconTab !== icontab) setActiveIconTab(icontab);
-    };
+    const [provinceOptions, setProvinceOptions] = useState([]);
+    const [districtOptions, setDistrictOptions] = useState([]);
+    const [subDistrictOptions, setSubDistrictOptions] = useState([]);
+    const [villageOptions, setVillageOptions] = useState([]);
     const genderOption = [
         {value: 'L', label: 'Laki-laki'},
         {value: 'P', label: 'Perempuan'},
@@ -39,6 +39,57 @@ const AddStudent = () => {
         {value: 2, label: 'Sama dengan Ibu Kandung'},
         {value: 3, label: 'Lainnya'}
     ]
+    const toggleIconTab = (icontab) => {
+        if (activeIconTab !== icontab) setActiveIconTab(icontab);
+    }
+    const handleProvince = () => {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
+            .then(response => {
+                response.json().then((resp) => {
+                    setProvinceOptions(() => {
+                        return resp.map((province) => {
+                            return {value: province.id, label: province.name};
+                        })
+                    })
+                });
+            })
+    }
+    const handleDistrict = (province) => {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${province}.json`)
+            .then(response => {
+                response.json().then((resp) => {
+                    setDistrictOptions(() => {
+                        return resp.map((district) => {
+                            return {value: district.id, label: district.name};
+                        })
+                    })
+                })
+            })
+    }
+    const handleSubistrict = (district) => {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${district}.json`)
+            .then(response => {
+                response.json().then((resp) => {
+                    setSubDistrictOptions(() => {
+                        return resp.map((subdistrict) => {
+                            return {value: subdistrict.id, label: subdistrict.name};
+                        })
+                    })
+                })
+            })
+    }
+    const handleVillage = (subdistrict) => {
+        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrict}.json`)
+            .then(response => {
+                response.json().then((resp) => {
+                    setVillageOptions(() => {
+                        return resp.map((village) => {
+                            return {value: village.id, label: village.name};
+                        })
+                    })
+                })
+            })
+    }
     const onSubmit = () => {
 
     }
@@ -46,8 +97,24 @@ const AddStudent = () => {
         handleSubmit,
         register,
         formState: {errors},
-        control
-    } = useForm()
+        control,
+        getValues,
+        setValue,
+        watch
+    } = useForm();
+
+    useEffect(() => {
+        handleProvince()
+    }, []);
+
+    useEffect(() => {
+        const subscription = watch((value) => {
+            value['province_id'] && handleDistrict(value['province_id']);
+            value['district_id'] && handleSubistrict(value['district_id']);
+            value['subdistrict_id'] && handleVillage(value['subdistrict_id']);
+        })
+        return () => subscription.unsubscribe()
+    }, [watch]);
     return (
         <>
             <Head title="Tambah Siswa"/>
@@ -495,161 +562,98 @@ const AddStudent = () => {
                                         <Col className="col-md-8">
                                             <Row className="gy-2">
                                                 <Col className="col-md-6">
-                                                    <Row className="gy-2">
-                                                        <Col className="col-md-12">
-                                                            <div className="form-group">
-                                                                <Label htmlFor="father_status" className="form-label">Status
-                                                                    Ayah Kandung</Label>
-                                                                <div className="form-control-wrap">
-                                                                    <Controller
-                                                                        control={control}
-                                                                        className="form-control"
-                                                                        name="father_status"
-                                                                        rules={{required: true}}
-                                                                        render={({field: {onChange, value, ref}}) => (
-                                                                            <RSelect
-                                                                                inputRef={ref}
-                                                                                options={parentStatusOption}
-                                                                                value={parentStatusOption.find((c) => c.value === value)}
-                                                                                onChange={(val) => onChange(val.value)}
-                                                                                placeholder="Pilih Status Ayah Kandung"
-                                                                            />
-                                                                        )}/>
-                                                                    {errors.father_status &&
-                                                                        <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                        <Col className="col-md-12">
-                                                            <div className="form-group">
-                                                                <Label htmlFor="father_name" className="form-label">Nama
-                                                                    Ayah
-                                                                    Kandung</Label>
-                                                                <div className="form-control-wrap">
-                                                                    <input
-                                                                        className="form-control"
-                                                                        type="text"
-                                                                        id="father_name"
-                                                                        placeholder="Ex. Ngadimin"
-                                                                        {...register('father_name', {required: true})}
-                                                                    />
-                                                                    {errors.father_name && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col className="col-md-6">
-                                                    <Row className="gy-2">
-                                                        <Col className="col-md-12">
-                                                            <div className="form-group">
-                                                                <Label htmlFor="mother_status" className="form-label">Status
-                                                                    Ibu Kandung</Label>
-                                                                <div className="form-control-wrap">
-                                                                    <Controller
-                                                                        control={control}
-                                                                        className="form-control"
-                                                                        name="mother_status"
-                                                                        rules={{required: true}}
-                                                                        render={({field: {onChange, value, ref}}) => (
-                                                                            <RSelect
-                                                                                inputRef={ref}
-                                                                                options={parentStatusOption}
-                                                                                value={parentStatusOption.find((c) => c.value === value)}
-                                                                                onChange={(val) => onChange(val.value)}
-                                                                                placeholder="Pilih Status Ibu Kandung"
-                                                                            />
-                                                                        )}/>
-                                                                    {errors.mother_status &&
-                                                                        <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                        <Col className="col-md-12">
-                                                            <div className="form-group">
-                                                                <Label htmlFor="mother_name" className="form-label">Nama
-                                                                    Ibu
-                                                                    Kandung</Label>
-                                                                <div className="form-control-wrap">
-                                                                    <input
-                                                                        className="form-control"
-                                                                        type="text"
-                                                                        id="motherr_name"
-                                                                        placeholder="Ex. Ngadijah"
-                                                                        {...register('mother_name', {required: true})}
-                                                                    />
-                                                                    {errors.mother_name &&
-                                                                        <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                </Col>
-                                                <Col className="col-md-12">
                                                     <div className="form-group">
-                                                        <Label htmlFor="guard_status" className="form-label">Wali
-                                                            Siswa</Label>
+                                                        <Label htmlFor="province_id" className="form-label">Provinsi</Label>
                                                         <div className="form-control-wrap">
                                                             <Controller
                                                                 control={control}
                                                                 className="form-control"
-                                                                name="guard_status"
+                                                                name="province_id"
                                                                 rules={{required: true}}
                                                                 render={({field: {onChange, value, ref}}) => (
                                                                     <RSelect
                                                                         inputRef={ref}
-                                                                        options={guardStatusOption}
-                                                                        value={guardStatusOption.find((c) => c.value === value)}
+                                                                        options={provinceOptions}
+                                                                        value={provinceOptions.find((c) => c.value === value)}
                                                                         onChange={(val) => onChange(val.value)}
-                                                                        placeholder="Pilih Status Wali"
+                                                                        placeholder="Pilih Provinsi"
                                                                     />
                                                                 )}/>
-                                                            {errors.guard_status && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                                            {errors.province_id &&
+                                                                <span
+                                                                    className="invalid">Kolom tidak boleh kosong.</span>}
                                                         </div>
                                                     </div>
                                                 </Col>
                                                 <Col className="col-md-6">
                                                     <div className="form-group">
-                                                        <Label htmlFor="guard_nik" className="form-label">NIK Wali</Label>
+                                                        <Label htmlFor="district_id"
+                                                               className="form-label">Kabupaten/Kota</Label>
                                                         <div className="form-control-wrap">
-                                                            <input
+                                                            <Controller
+                                                                control={control}
                                                                 className="form-control"
-                                                                type="text"
-                                                                id="motherr_name"
-                                                                placeholder="Ex. Ngadijah"
-                                                                {...register('mother_name', {required: true})}
-                                                            />
-                                                            {errors.mother_name && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                                                name="district_id"
+                                                                rules={{required: true}}
+                                                                render={({field: {onChange, value, ref}}) => (
+                                                                    <RSelect
+                                                                        inputRef={ref}
+                                                                        options={districtOptions}
+                                                                        value={districtOptions.find((c) => c.value === value)}
+                                                                        onChange={(val) => onChange(val.value)}
+                                                                        placeholder="Pilih Kabupaten/Kota"
+                                                                        isDisabled={getValues('province_id') === undefined}
+                                                                    />
+                                                                )}/>
+                                                            {errors.district_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                                         </div>
                                                     </div>
                                                 </Col>
                                                 <Col className="col-md-6">
                                                     <div className="form-group">
-                                                        <Label htmlFor="guard_name" className="form-label">Nama Wali</Label>
+                                                        <Label htmlFor="subdistrict_id"
+                                                               className="form-label">Kecamatan</Label>
                                                         <div className="form-control-wrap">
-                                                            <input
+                                                            <Controller
+                                                                control={control}
                                                                 className="form-control"
-                                                                type="text"
-                                                                id="guard_name"
-                                                                placeholder="Ex. Ngadijah"
-                                                                {...register('guard_name', {required: true})}
-                                                            />
-                                                            {errors.guard_name && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                                                name="subdistrict_id"
+                                                                rules={{required: true}}
+                                                                render={({field: {onChange, value, ref}}) => (
+                                                                    <RSelect
+                                                                        inputRef={ref}
+                                                                        options={subDistrictOptions}
+                                                                        value={subDistrictOptions.find((c) => c.value === value)}
+                                                                        onChange={(val) => onChange(val.value)}
+                                                                        placeholder="Pilih Kecamatan"
+                                                                        isDisabled={getValues('district_id') === undefined}
+                                                                    />
+                                                                )}/>
+                                                            {errors.subdistrict_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                                         </div>
                                                     </div>
                                                 </Col>
                                                 <Col className="col-md-6">
                                                     <div className="form-group">
-                                                        <Label htmlFor="guard_email" className="form-label">Email Wali</Label>
+                                                        <Label htmlFor="village_id"
+                                                               className="form-label">Kelurahan/Desa</Label>
                                                         <div className="form-control-wrap">
-                                                            <input
+                                                            <Controller
+                                                                control={control}
                                                                 className="form-control"
-                                                                type="text"
-                                                                id="guard_email"
-                                                                placeholder="Ex. Ngadijah"
-                                                                {...register('guard_email', {required: true})}
-                                                            />
-                                                            {errors.guard_email && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                                                name="village_id"
+                                                                rules={{required: true}}
+                                                                render={({field: {onChange, value, ref}}) => (
+                                                                    <RSelect
+                                                                        inputRef={ref}
+                                                                        options={villageOptions}
+                                                                        value={villageOptions.find((c) => c.value === value)}
+                                                                        onChange={(val) => onChange(val.value)}
+                                                                        placeholder="Pilih Kelurahan/Desa"
+                                                                        isDisabled={getValues('subdistrict_id') === undefined}
+                                                                    />
+                                                                )}/>
+                                                            {errors.village_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                                         </div>
                                                     </div>
                                                 </Col>
@@ -671,6 +675,7 @@ const AddStudent = () => {
                                 </p>
                             </TabPane>
                         </TabContent>
+                        <Button>asdadad</Button>
                     </form>
                 </PreviewCard>
             </Content>
