@@ -10,8 +10,8 @@ const Edit = ({user}) => {
     const {loading, modal, year, success} = useSelector((state) => state.year);
     const {institutions} = useSelector((state) => state.institution);
     const activeOption = [
-        {value: 2, label: 'Tidak'},
-        {value: 1, label: 'Aktif'}
+        {value: '2', label: 'Tidak'},
+        {value: '1', label: 'Aktif'}
     ]
     const onSubmit = () => {
         dispatch(updateYear({

@@ -1,15 +1,13 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useEffect} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {addProgram, resetProgram, storeProgram} from "../../../redux/institute/program/actions";
 import {getInstitutions} from "../../../redux/institution/actions";
-import {getYears} from "../../../redux/master/year/actions";
-const Add = ({user}) => {
+const Add = ({user, years}) => {
     const {institutions} = useSelector((state) => state.institution);
-    const {years, active} = useSelector((state) => state.year);
-    const {loading, modal} = useSelector((state) => state.program);
+    const {loading, modal, success} = useSelector((state) => state.program);
     const dispatch = useDispatch();
     const boardingOption = [
         {value: 2, label: "Tidak"},
@@ -27,9 +25,6 @@ const Add = ({user}) => {
             ])
         }));
     }
-    const params = useCallback(() => {
-        return user.institution && {type: 'select', institution_id: user.institution.id}
-    }, [user])
     const {
         register,
         handleSubmit,
@@ -37,23 +32,32 @@ const Add = ({user}) => {
         getValues,
         setValue,
         reset,
-        control
-    } = useForm();
+        control} = useForm();
 
     const toggle = () => {
         reset();
         dispatch(addProgram(false));
     }
+    const optionYear = years && years.map((year) => {
+        return {value: year.id, label: year.name};
+    })
+    const yearActive = years && years.filter((year) => {
+        return year.active === '1'
+    });
 
     useEffect(() => {
         dispatch(getInstitutions({type: 'select'}));
-        dispatch(getYears(params()));
-        dispatch(resetProgram());
     }, [dispatch]);
 
     useEffect(() => {
-        user.role !== '1' && setValue('institution_id', user.institution.id) && setValue('year_id', 2)
-    }, [user, active, setValue]);
+        user.role !== '1' && setValue('institution_id', user.institution.id);
+        user.role !== '1' && setValue('year_id', yearActive && yearActive[0].id)
+    }, [user, yearActive, setValue]);
+
+    useEffect(() => {
+        success && dispatch(addProgram(false)) && dispatch(resetProgram());
+        reset();
+    }, [success, dispatch, reset]);
 
     return (
         <>
@@ -62,55 +66,59 @@ const Add = ({user}) => {
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
-                            <Col className="col-md-6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="institution">
-                                        Lembaga
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <Controller
-                                            control={control}
-                                            className="form-control"
-                                            name="institution_id"
-                                            rules={{required: true}}
-                                            render={({field: {onChange, value, ref}}) => (
-                                                <RSelect
-                                                    inputRef={ref}
-                                                    options={institutions}
-                                                    value={institutions.find((c) => c.value === value)}
-                                                    onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Lembaga"
-                                                />
-                                            )}/>
-                                        {errors.institution &&
-                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col className="col-md-6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="year">
-                                        Tahun Pelajaran
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <Controller
-                                            control={control}
-                                            className="form-control"
-                                            name="year_id"
-                                            rules={{required: true}}
-                                            render={({field: {onChange, value, ref}}) => (
-                                                <RSelect
-                                                    inputRef={ref}
-                                                    options={years}
-                                                    value={years.find((c) => c.value === value)}
-                                                    onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Tahun Pelajaran"
-                                                />
-                                            )}/>
-                                        {errors.year && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                    </div>
-                                </div>
-                            </Col>
+                            {user.role === '1' && (
+                                <>
+                                    <Col className="col-md-6">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="institution">
+                                                Lembaga
+                                            </label>
+                                            <div className="form-control-wrap">
+                                                <Controller
+                                                    control={control}
+                                                    className="form-control"
+                                                    name="institution_id"
+                                                    rules={{required: true}}
+                                                    render={({field: {onChange, value, ref}}) => (
+                                                        <RSelect
+                                                            inputRef={ref}
+                                                            options={institutions}
+                                                            value={institutions.find((c) => c.value === value)}
+                                                            onChange={(val) => onChange(val.value)}
+                                                            placeholder="Pilih Lembaga"
+                                                        />
+                                                    )}/>
+                                                {errors.institution &&
+                                                    <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col className="col-md-6">
+                                        <div className="form-group">
+                                            <label className="form-label" htmlFor="year">
+                                                Tahun Pelajaran
+                                            </label>
+                                            <div className="form-control-wrap">
+                                                <Controller
+                                                    control={control}
+                                                    className="form-control"
+                                                    name="year_id"
+                                                    rules={{required: true}}
+                                                    render={({field: {onChange, value, ref}}) => (
+                                                        <RSelect
+                                                            inputRef={ref}
+                                                            options={optionYear}
+                                                            value={optionYear.find((c) => c.value === value)}
+                                                            onChange={(val) => onChange(val.value)}
+                                                            placeholder="Pilih Tahun Pelajaran"
+                                                        />
+                                                    )}/>
+                                                {errors.year && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                            </div>
+                                        </div>
+                                    </Col>
+                                </>
+                            )}
                             <Col className="col-md-12">
                                 <div className="form-group">
                                     <Label htmlFor="fullname" className="form-label">Nama</Label>

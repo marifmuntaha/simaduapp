@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import Head from "../../../layout/head";
-import Content from "../../../layout/content";
+import React, {useCallback, useEffect, useState} from "react";
+import Head from "../../layout/head";
+import Content from "../../layout/content";
 import {
     BackTo,
     BlockBetween,
@@ -10,26 +10,23 @@ import {
     Icon,
     PreviewCard,
     ReactDataTable,
-    toastError
-} from "../../../components";
+    toastError, toastSuccess
+} from "../../components";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import Add from "./Add";
+import {APICore} from "../../utils/api/APICore";
+import {addStudent} from "../../redux/student/actions";
+import {useNavigate, useNavigation} from "react-router-dom";
+// import Add from "./Add";
 // import Edit from "./Edit";
-import {
-    addClassroom,
-    destroyClassroom,
-    getClassrooms,
-    resetClassroom,
-    setClassroom
-} from "../../../redux/institute/classroom/actions";
 
-const Classroom = () => {
+
+const Student = () => {
     const dispatch = useDispatch();
-    const selector = useSelector((state) => state.classroom)
-    const {loading, classrooms, error} = selector;
+    const api = new APICore();
+    const user = api.getLoggedInUser();
     const [sm, updateSm] = useState(false);
-    const Columns = [
+    const ColumnAdministrator = [
         {
             name: "Lembaga",
             selector: (row) => row.institution && row.institution.withLadderAlias,
@@ -41,6 +38,8 @@ const Classroom = () => {
             selector: (row) => row.year && row.year.name,
             sortable: false,
         },
+    ]
+    const ColumnOther = [
         {
             name: "Tingkat",
             selector: (row) => row.level && row.level.name,
@@ -61,40 +60,59 @@ const Classroom = () => {
             selector: (row) => row.fullname,
             sortable: false,
         },
-        {
-            name: "Aksi",
-            selector: (row) => row.id,
-            sortable: false,
-            hide: "sm",
-            cell: (row) => (
-                <ButtonGroup size="sm">
-                    <Button
-                        color="outline-warning"
-                        onClick={() => {
-                            dispatch(setClassroom(row, true));
-                        }}>
-                        <Icon name="edit"/>
-                    </Button>
-                    <Button
-                        color="outline-danger"
-                        onClick={() => {
-                            dispatch(destroyClassroom(row.id));
-                        }}
-                        disabled={row.id === loading}>
-                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
-                    </Button>
-                </ButtonGroup>
-            )
-        },
-    ];
-    useEffect(() => {
-        dispatch(getClassrooms({with: ['institution', 'year', 'level', 'major']}));
-        dispatch(resetClassroom());
-    }, [dispatch])
+        // {
+        //     name: "Aksi",
+        //     selector: (row) => row.id,
+        //     sortable: false,
+        //     hide: "sm",
+        //     cell: (row) => (
+        //         <ButtonGroup size="sm">
+        //             <Button
+        //                 color="outline-warning"
+        //                 onClick={() => {
+        //                     dispatch(setClassroom(row, true));
+        //                 }}>
+        //                 <Icon name="edit"/>
+        //             </Button>
+        //             <Button
+        //                 color="outline-danger"
+        //                 onClick={() => {
+        //                     dispatch(destroyClassroom(row.id));
+        //                 }}
+        //                 disabled={row.id === loading}>
+        //                 {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
+        //             </Button>
+        //         </ButtonGroup>
+        //     )
+        // },
+    ]
+    const Columns = user.role === '1' ? [...ColumnAdministrator, ...ColumnOther] : ColumnOther;
+    // const params = useCallback(() => {
+    //     return user.role !== '1'
+    //         ? {institution_id: user.institution.id, year_id: years && years.filter((year) => {
+    //                 return year.active === '1'
+    //             })[0].id, with: ['level', 'major']}
+    //         : {with: ['institution', 'year', 'level', 'major']}
+    // }, [user, years])
+    // useEffect(() => {
+    //     dispatch(getClassrooms(params())) && dispatch(resetClassroom());
+    //     dispatch(getYears({institution_id: user.institution.id}));
+    //     dispatch(getLevels({type: 'select', ladder_id: user.institution.ladder_id}));
+    //     dispatch(getMajors({type: 'select', ladder_id: user.institution.ladder_id}));
+    // }, [loadData, dispatch]);
+    //
+    // useEffect(() => {
+    //     success && toastSuccess(success)
+    // }, [success]);
+    //
+    // useEffect(() => {
+    //     error && toastError(error);
+    //     dispatch(resetClassroom())
+    // }, [error, dispatch]);
+    const navigate = useNavigate();
     return (
         <>
-            {error && toastError(error) && dispatch(resetClassroom())}
-            <Head title="Data Rombel"/>
+            <Head title="Data Siswa"/>
             <Content>
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
@@ -124,7 +142,7 @@ const Classroom = () => {
                                     <ul className="nk-block-tools g-3">
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addClassroom(true))}
+                                            onClick={() => navigate('/operator/kesiswaan/data-siswa/tambah')}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -138,12 +156,12 @@ const Classroom = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={classrooms} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={[]} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add/>
-                {/*<Edit/>*/}
+                {/*<Add user={user} years={years} levels={levels} majors={majors}/>*/}
+                {/*<Edit user={user} years={years} levels={levels} majors={majors}/>*/}
             </Content>
         </>
     )
 }
-export default Classroom;
+export default Student;

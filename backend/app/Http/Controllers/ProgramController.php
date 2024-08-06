@@ -7,15 +7,18 @@ use App\Http\Requests\UpdateProgramRequest;
 use App\Http\Resources\ProgramResource;
 use App\Models\Program;
 use Exception;
+use Illuminate\Http\Request;
 
 class ProgramController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $program = new Program();
+        $program = $request->has('institution_id') ? $program->whereInstitutionId($request->input('institution_id')) : $program;
+        $program = $request->has('year_id') ? $program->whereYearId($request->input('year_id')) : $program;
         return response([
             'success' => true,
             'message' => null,

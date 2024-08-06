@@ -12,8 +12,8 @@ const Add = ({user}) => {
     const institutionSelector = useSelector((state) => state.institution);
     const {institutions} = institutionSelector;
     const activeOption = [
-        {value: 2, label: 'Tidak'},
-        {value: 1, label: 'Aktif'}
+        {value: '2', label: 'Tidak'},
+        {value: '1', label: 'Aktif'}
     ]
     const onSubmit = () => {
         dispatch(storeYear({

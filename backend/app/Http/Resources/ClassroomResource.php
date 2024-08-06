@@ -15,6 +15,7 @@ class ClassroomResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resource = [
+            'id' => $this['id'],
             'institution_id' => $this['institution_id'],
             'year_id' => $this['year_id'],
             'level_id' => $this['level_id'],

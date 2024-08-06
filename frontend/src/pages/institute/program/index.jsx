@@ -32,7 +32,7 @@ const Program = () => {
     const api = new APICore();
     const user = api.getLoggedInUser();
     const {loading, programs, success, error, loadData} = useSelector((state) => state.program);
-    const {active} = useSelector((state) => state.year);
+    const {years} = useSelector((state) => state.year);
     const [sm, updateSm] = useState(false);
     const ColumnAdministrator = [
         {
@@ -63,7 +63,7 @@ const Program = () => {
             selector: (row) => row.boarding,
             sortable: false,
             cell: (row) => (
-                row.boarding === 1 ? <Badge color="success">Ya</Badge> : <Badge color="danger">Tidak</Badge>
+                row.boarding === '1' ? <Badge color="success">Ya</Badge> : <Badge color="danger">Tidak</Badge>
             )
         },
         {
@@ -95,9 +95,11 @@ const Program = () => {
     const Columns = user.role === '1' ? [...ColumnAdministrator, ...ColumnOther] : ColumnOther;
     const params = useCallback(() => {
         return user.role !== '1'
-            ? {institution_id: user.institution.id, year_id: active && active.id}
+            ? {institution_id: user.institution.id, year_id: years && years.filter((year) => {
+                return year.active === '1'
+                })[0].id}
             : ''
-    }, [user, active]);
+    }, [user, years]);
 
     useEffect(() => {
         dispatch(getPrograms(params())) && dispatch(resetProgram());
@@ -160,8 +162,8 @@ const Program = () => {
                 <PreviewCard>
                     <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add user={user}/>
-                <Edit/>
+                <Add user={user} years={years}/>
+                <Edit user={user} years={years}/>
             </Content>
         </>
     )

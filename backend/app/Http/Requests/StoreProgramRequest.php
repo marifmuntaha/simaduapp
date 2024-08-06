@@ -28,7 +28,7 @@ class StoreProgramRequest extends FormRequest
             'name' => 'required|string',
             'alias' => 'required|string',
             'description' => 'nullable|string',
-            'boarding' => 'required|boolean',
+            'boarding' => 'required|string',
         ];
     }
 

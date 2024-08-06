@@ -18,7 +18,7 @@ class LevelController extends Controller
     public function index(Request $request)
     {
         $levels = new Level();
-        $levels = $request->has('institution') ? $levels->whereLadder(Institution::find($request->institution)->ladder) : $levels;
+        $levels = $request->has('ladder_id') ? $levels->whereLadderId($request->input('ladder_id')) : $levels;
         return response([
             'success' => true,
             'message' => null,

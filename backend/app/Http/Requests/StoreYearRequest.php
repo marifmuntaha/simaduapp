@@ -25,7 +25,7 @@ class StoreYearRequest extends FormRequest
         return [
             'institution_id' => 'required|integer',
             'name' => 'required|string',
-            'active' => 'nullable|boolean',
+            'active' => 'nullable|string',
             'description' => 'nullable|string',
         ];
     }

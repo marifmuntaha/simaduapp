@@ -7,15 +7,18 @@ use App\Http\Requests\UpdateClassroomRequest;
 use App\Http\Resources\ClassroomResource;
 use App\Models\Classroom;
 use Exception;
+use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $classrooms = new Classroom();
+        $classrooms = $request->has('institution_id') ? $classrooms->whereInstitutionId($request->input('institution_id')) : $classrooms;
+        $classrooms = $request->has('year_id') ? $classrooms->whereYearId($request->input('year_id')) : $classrooms;
         return response([
             'success' => true,
             'message' => null,

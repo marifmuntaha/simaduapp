@@ -23,10 +23,10 @@ class StoreClassroomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => 'required',
-            'year' => 'required',
-            'level' => 'required',
-            'major' => 'required',
+            'institution_id' => 'required',
+            'year_id' => 'required',
+            'level_id' => 'required',
+            'major_id' => 'required',
             'name' => 'required|string',
             'fullname' => 'required|string',
         ];
@@ -35,10 +35,10 @@ class StoreClassroomRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'institution' => 'Lembaga',
-            'year' => 'Tahun Pelajaran',
-            'level' => 'Tingkat',
-            'major' => 'Jurusan',
+            'institution_id' => 'Lembaga',
+            'year_id' => 'Tahun Pelajaran',
+            'level_id' => 'Tingkat',
+            'major_id' => 'Jurusan',
             'name' => 'Nama',
             'fullname' => 'Alias',
         ];

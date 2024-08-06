@@ -1,7 +1,7 @@
-import {ClassroomActionTypes} from "./constants";
+import {StudentActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
-    classroom: false,
+    student: false,
     modal : {
         add: false,
         edit: false,
@@ -10,67 +10,67 @@ const INITIAL_STATE = {
     success: false,
     loadData: true
 }
-const Classroom = (state = INITIAL_STATE, action): any => {
+const Student = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case ClassroomActionTypes.API_RESPONSE_SUCCESS: {
+        case StudentActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case ClassroomActionTypes.GET_CLASSROOM:
+                case StudentActionTypes.GET_STUDENT:
                     return {
                         ...state,
-                        classrooms: action.payload.data.result,
+                        students: action.payload.data.result,
                         loading: false,
                     }
-                case ClassroomActionTypes.STORE_CLASSROOM:
+                case StudentActionTypes.STORE_STUDENT:
                     return {
                         ...state,
                         loading: false,
                         success: action.payload.data.message,
-                        classroom: action.payload.data.result,
+                        student: action.payload.data.result,
                         loadData: true
                     }
-                case ClassroomActionTypes.UPDATE_CLASSROOM:
+                case StudentActionTypes.UPDATE_STUDENT:
                     return {
                         ...state,
                         loading: false,
                         success: action.payload.data.message,
-                        classroom: action.payload.data.result,
+                        student: action.payload.data.result,
                         loadData: true
                     }
-                case ClassroomActionTypes.DESTROY_CLASSROOM:
+                case StudentActionTypes.DESTROY_STUDENT:
                     return {
                         ...state,
                         loading: false,
                         success: action.payload.data.message,
-                        classroom: action.payload.data.result,
+                        student: action.payload.data.result,
                         loadData: true
                     }
                 default:
                     return {...state}
             }
         }
-        case ClassroomActionTypes.API_RESPONSE_ERROR: {
+        case StudentActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case ClassroomActionTypes.GET_CLASSROOM:
+                case StudentActionTypes.GET_STUDENT:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case ClassroomActionTypes.STORE_CLASSROOM:
-                    return {
-                        ...state,
-                        loading: false,
-                        error: action.payload.error,
-
-                    }
-                case ClassroomActionTypes.UPDATE_CLASSROOM:
+                case StudentActionTypes.STORE_STUDENT:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
 
                     }
-                case ClassroomActionTypes.DESTROY_CLASSROOM:
+                case StudentActionTypes.UPDATE_STUDENT:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case StudentActionTypes.DESTROY_STUDENT:
                     return {
                         ...state,
                         loading: false,
@@ -80,12 +80,12 @@ const Classroom = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case ClassroomActionTypes.GET_CLASSROOM:
+        case StudentActionTypes.GET_STUDENT:
             return {
                 ...state,
                 loading: true,
             }
-        case ClassroomActionTypes.ADD_CLASSROOM:
+        case StudentActionTypes.ADD_STUDENT:
             return {
                 ...state,
                 loading: false,
@@ -94,36 +94,36 @@ const Classroom = (state = INITIAL_STATE, action): any => {
                     edit: false,
                 }
             }
-        case ClassroomActionTypes.STORE_CLASSROOM:
+        case StudentActionTypes.STORE_STUDENT:
             return {
                 ...state,
                 loading: true,
             }
-        case ClassroomActionTypes.SET_CLASSROOM:
+        case StudentActionTypes.SET_STUDENT:
             return {
                 ...state,
                 loading: false,
-                classroom: action.payload.classroom,
+                student: action.payload.student,
                 modal: {
                     add: false,
                     edit: action.payload.modal,
                 }
             }
-        case ClassroomActionTypes.UPDATE_CLASSROOM:
+        case StudentActionTypes.UPDATE_STUDENT:
             return {
                 ...state,
                 loading: true,
             }
-        case ClassroomActionTypes.DESTROY_CLASSROOM:
+        case StudentActionTypes.DESTROY_STUDENT:
             return {
                 ...state,
                 loading: action.payload,
             }
-        case ClassroomActionTypes.RESET:
+        case StudentActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
-                classroom: false,
+                student: false,
                 error: false,
                 success: false,
                 loadData: false
@@ -132,4 +132,4 @@ const Classroom = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default Classroom;
+export default Student;

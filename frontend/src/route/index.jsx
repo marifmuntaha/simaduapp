@@ -9,6 +9,8 @@ const Level = React.lazy(() => import('../pages/master/level'))
 const Year = React.lazy(() => import('../pages/master/year'))
 const User = React.lazy(() => import("../pages/user"));
 
+const Student = React.lazy(() => import("../pages/student"));
+const AddStudent = React.lazy(() => import("../pages/student/Add"));
 const Institution = React.lazy(() => import('../pages/administrator/institution'))
 
 const Program = React.lazy(() => import('../pages/institute/program'));
@@ -61,6 +63,24 @@ const operatorRoutes = [
         path: '/operator/master/program',
         name: 'Program',
         element: <Program/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/master/rombel',
+        name: 'Rombel',
+        element: <Classroom/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/kesiswaan/data-siswa',
+        name: 'Data Siswa',
+        element: <Student/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/kesiswaan/data-siswa/tambah',
+        name: 'Tambah Siswa',
+        element: <AddStudent/>,
         route: PrivateRoute,
     },
 ]

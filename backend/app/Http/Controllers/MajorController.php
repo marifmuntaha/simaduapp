@@ -18,7 +18,7 @@ class MajorController extends Controller
     public function index(Request $request)
     {
         $majors = new Major();
-        $majors = $request->has('institution') ? $majors->whereLadder(Institution::find($request->institution)->ladder) : $majors;
+        $majors = $request->has('ladder_id') ? $majors->whereLadderId($request->input('ladder_id')) : $majors;
 
         return response([
             'success' => true,

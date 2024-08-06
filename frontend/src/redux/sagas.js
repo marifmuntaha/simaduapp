@@ -8,6 +8,7 @@ import levelSaga from "./master/level/saga";
 import majorSaga from "./master/major/saga";
 import programSaga from "./institute/program/saga";
 import classroomSaga from "./institute/classroom/saga";
+import studentSaga from "./student/saga";
 
 export default function* rootSaga(){
     yield all([
@@ -17,6 +18,7 @@ export default function* rootSaga(){
         ladderSaga(),
         levelSaga(),
         programSaga(),
+        studentSaga(),
         yearSaga(),
         institutionSaga(),
         userSaga()])

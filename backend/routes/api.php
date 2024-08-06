@@ -7,6 +7,7 @@ use App\Http\Controllers\LadderController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use Illuminate\Support\Facades\Route;
@@ -30,5 +31,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::apiResource('classroom', ClassroomController::class);
     });
     Route::apiResource('institution', InstitutionController::class);
+    Route::apiResource('student', StudentController::class);
     Route::apiResource('user', UserController::class);
 });

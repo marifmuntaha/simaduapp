@@ -23,20 +23,20 @@ class UpdateProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => 'required',
-            'year' => 'required',
+            'institution_id' => 'required',
+            'year_id' => 'required',
             'name' => 'required|string',
             'alias' => 'required|string',
             'description' => 'nullable|string',
-            'boarding' => 'required|boolean',
+            'boarding' => 'required|string',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'institution' => 'Lembaga',
-            'year' => 'Tahun Ajaran',
+            'institution_id' => 'Lembaga',
+            'year_id' => 'Tahun Ajaran',
             'name' => 'Nama Program',
             'alias' => 'Singkatan',
             'description' => 'Diskripsi',

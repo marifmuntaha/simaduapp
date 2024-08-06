@@ -20,9 +20,9 @@ export const addClassroom = (modal) => ({
     payload: {modal}
 })
 
-export const storeClassroom = ({formData: [institution, year, level, major, name, fullname]}) => ({
+export const storeClassroom = ({formData: [institution_id, year_id, level_id, major_id, name, fullname]}) => ({
     type: ClassroomActionTypes.STORE_CLASSROOM,
-    payload: {institution, year, level, major, name, fullname},
+    payload: {institution_id, year_id, level_id, major_id, name, fullname},
 })
 
 export const setClassroom = (classroom, modal) => ({
@@ -30,9 +30,9 @@ export const setClassroom = (classroom, modal) => ({
     payload: {classroom, modal},
 })
 
-export const updateClassroom = ({formData: [id, institution, year, level, major, name, fullname]}) => ({
+export const updateClassroom = ({formData: [id, institution_id, year_id, level_id, major_id, name, fullname]}) => ({
     type: ClassroomActionTypes.UPDATE_CLASSROOM,
-    payload: {id, institution, year, level, major, name, fullname},
+    payload: {id, institution_id, year_id, level_id, major_id, name, fullname},
 })
 
 export const destroyClassroom = (params) => ({

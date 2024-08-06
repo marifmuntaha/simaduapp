@@ -8,27 +8,27 @@ import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 function* get({payload: {params}}): SagaIterator {
     try {
         const response = yield call(getApi, params)
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(classroomApiResponseSuccess(ClassroomActionTypes.GET_CLASSROOM, data))
     } catch (error){
         yield put(classroomApiResponseError(ClassroomActionTypes.GET_CLASSROOM, error))
     }
 }
 
-function* store({payload: {institution, year, level, major, name, fullname}}): SagaIterator {
+function* store({payload: {institution_id, year_id, level_id, major_id, name, fullname}}): SagaIterator {
     try {
-        const response = yield call(storeApi, {institution, year, level, major, name, fullname});
-        const data = response && response.data.result;
+        const response = yield call(storeApi, {institution_id, year_id, level_id, major_id, name, fullname});
+        const data = response && response.data;
         yield put(classroomApiResponseSuccess(ClassroomActionTypes.STORE_CLASSROOM, data));
     } catch (error){
         yield put(classroomApiResponseError(ClassroomActionTypes.STORE_CLASSROOM, error))
     }
 }
 
-function* update({payload: {id, institution, year, level, major, name, fullname}}): SagaIterator {
+function* update({payload: {id, institution_id, year_id, level_id, major_id, name, fullname}}): SagaIterator {
     try {
-        const response = yield call(updateApi, {id, institution, year, level, major, name, fullname});
-        const data = response && response.data.result;
+        const response = yield call(updateApi, {id, institution_id, year_id, level_id, major_id, name, fullname});
+        const data = response && response.data;
         yield put(classroomApiResponseSuccess(ClassroomActionTypes.UPDATE_CLASSROOM, data));
     } catch (error){
         yield put(classroomApiResponseError(ClassroomActionTypes.UPDATE_CLASSROOM, error))
@@ -38,7 +38,7 @@ function* update({payload: {id, institution, year, level, major, name, fullname}
 function* destroy({payload: {params}}): SagaIterator {
     try {
         const response = yield call(destroyApi, params);
-        const data = response && response.data.result
+        const data = response && response.data
         yield put(classroomApiResponseSuccess(ClassroomActionTypes.DESTROY_CLASSROOM, data))
     } catch (error){
         yield put(classroomApiResponseError(ClassroomActionTypes.DESTROY_CLASSROOM, error))

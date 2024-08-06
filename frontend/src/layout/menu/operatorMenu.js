@@ -30,13 +30,13 @@ export const operatorMenu = [
         link: "/operator/institusi",
     },
     {
-        icon: "reports",
-        text: "Laporan",
+        icon: "users",
+        text: "Kesiswaan",
         active: false,
         subMenu: [
             {
-                text: "Pembayaran",
-                link: "/laporan/pembayaran",
+                text: "Data Siswa",
+                link: "/operator/kesiswaan/data-siswa",
             },
             {
                 text: "Tagihan",
