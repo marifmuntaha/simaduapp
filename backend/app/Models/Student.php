@@ -27,6 +27,7 @@ class Student extends Model
         'village_id',
         'address',
         'boarding',
+        'oneemis',
         'onevervalpd',
         'parent_id',
         'creator',
