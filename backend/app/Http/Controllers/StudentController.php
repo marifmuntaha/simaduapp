@@ -32,55 +32,7 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request)
     {
         try {
-            $userStudent = User::create([
-                'fullname' => $request->name,
-                'email' => $request->email,
-                'username' => $request->nisn,
-                'password' => 'password',
-                'role' => 8,
-                'phone' => $request->phone,
-                'image' => ''
-            ]);
-            $userParent = User::firstOrNew([
-                'username' => $request->guard_nik,
-                'email' => 'testingParent@gmail.com',
-                'fullname' => $request->guard_name,
-                'password' => 'password',
-                'role' => 9,
-                'phone' => '0002232323',
-                'image' => ''
-            ]);
-            $userParent->save();
-            $parent = StudentParent::create([
-                'user_id' => $userParent->id,
-                'father_name' => $request->father_name,
-                'mother_name' => $request->mother_name,
-                'guard_nik' => $request->guard_nik,
-                'guard_name' => $request->guard_name,
-            ]);
-            return ($student = Student::create([
-                'user_id' => $userStudent->id,
-                'nism' => $request->nism,
-                'nisn' => $request->nisn,
-                'nik' => $request->nik,
-                'name' => $request->name,
-                'birthplace' => $request->birthplace,
-                'birthdate' => $request->birthdate,
-                'gender' => $request->gender,
-                'orderborn' => $request->orderborn,
-                'sibling' => $request->sibling,
-                'phone' => $request->phone,
-                'province_id' => $request->province_id,
-                'city_id' => $request->city_id,
-                'district_id' => $request->district_id,
-                'village_id' => $request->village_id,
-                'address' => $request->address,
-                'boarding' => $request->boarding,
-                'onevervalpd' => $request->onevervalpd,
-                'parent_id' => $parent->id,
-                'creator' => $request->user('sanctum')->id,
-                'updater' => $request->user('sanctum')->id,
-            ]))
+            return ($student = Student::create([$request->all()]))
                 ? response([
                     'success' => true,
                     'message' => 'Siswa '.$student->name.' berhasil ditambahkan',

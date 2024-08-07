@@ -15,9 +15,9 @@ function* get({payload: {params}}): SagaIterator {
     }
 }
 
-function* store({payload: {institution_id, year_id, level_id, major_id, name, fullname}}): SagaIterator {
+function* store({payload: {user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id}}): SagaIterator {
     try {
-        const response = yield call(storeApi, {institution_id, year_id, level_id, major_id, name, fullname});
+        const response = yield call(storeApi, {user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id});
         const data = response && response.data;
         yield put(studentApiResponseSuccess(StudentActionTypes.STORE_STUDENT, data));
     } catch (error){

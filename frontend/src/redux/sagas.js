@@ -9,6 +9,7 @@ import majorSaga from "./master/major/saga";
 import programSaga from "./institute/program/saga";
 import classroomSaga from "./institute/classroom/saga";
 import studentSaga from "./student/saga";
+import studentParentSaga from "./studentParent/saga";
 
 export default function* rootSaga(){
     yield all([
@@ -19,6 +20,7 @@ export default function* rootSaga(){
         levelSaga(),
         programSaga(),
         studentSaga(),
+        studentParentSaga(),
         yearSaga(),
         institutionSaga(),
         userSaga()])

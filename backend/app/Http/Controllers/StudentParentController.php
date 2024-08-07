@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStudentParentRequest;
 use App\Http\Requests\UpdateStudentParentRequest;
+use App\Http\Resources\StudentParentResource;
 use App\Models\StudentParent;
+use Exception;
 
 class StudentParentController extends Controller
 {
@@ -29,7 +31,20 @@ class StudentParentController extends Controller
      */
     public function store(StoreStudentParentRequest $request)
     {
-        //
+        try {
+            return ($studentParent = StudentParent::create([$request->all()]))
+                ? response([
+                    'success' => true,
+                    'message' => 'Siswa '.$studentParent->name.' berhasil ditambahkan',
+                    'result' => new StudentParentResource($studentParent)
+                ]) : throw new Exception('Siswa '.$studentParent->name.' gagal ditambahkan');
+        } catch (Exception $exception) {
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], 422);
+        }
     }
 
     /**

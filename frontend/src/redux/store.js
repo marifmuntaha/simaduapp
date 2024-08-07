@@ -14,6 +14,7 @@ import Major from "./master/major/reducers";
 import Program from "./institute/program/reducers";
 import Classroom from "./institute/classroom/reducers";
 import Student from "./student/reducers";
+import StudentParent from "./studentParent/reducers";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -30,6 +31,7 @@ export const store = configureStore({
         level: Level,
         program: Program,
         student: Student,
+        studentParent: StudentParent,
         user: User,
         year: Year,
     },

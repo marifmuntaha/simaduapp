@@ -14,10 +14,31 @@ return new class extends Migration
         Schema::create('student_parents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('number_kk');
+            $table->string('head_family');
+            $table->enum('father_status', [1, 2, 3]);
             $table->string('father_name');
+            $table->string('father_nik')->nullable();
+            $table->string('father_birthplace')->nullable();
+            $table->date('father_birthday')->nullable();
+            $table->string('father_email')->nullable();
+            $table->string('father_phone')->nullable();
+            $table->enum('mother_status', [1, 2, 3]);
             $table->string('mother_name');
-            $table->string('guard_nik');
+            $table->string('mother_nik')->nullable();
+            $table->string('mother_birthplace')->nullable();
+            $table->date('mother_birthday')->nullable();
+            $table->string('mother_email')->nullable();
+            $table->string('mother_phone')->nullable();
+            $table->enum('guard_status', [1, 2, 3]);
             $table->string('guard_name');
+            $table->string('guard_nik')->nullable();
+            $table->string('guard_birthplace')->nullable();
+            $table->date('guard_birthday')->nullable();
+            $table->string('guard_email')->nullable();
+            $table->string('guard_phone')->nullable();
+            $table->unsignedBigInteger('creator');
+            $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
     }

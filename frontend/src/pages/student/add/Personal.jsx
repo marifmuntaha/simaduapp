@@ -94,13 +94,17 @@ const Personal = ({register, errors, control}) => {
                                 <Label htmlFor="birthday" className="form-label">Tanggal Lahir</Label>
                                 <div className="form-control-wrap">
                                     <input type="hidden" id="birthday" className="form-control"/>
-                                    <DatePicker
-                                        selected={new Date()}
-                                        className="form-control date-picker"
-                                        onChange={() => {
-                                            alert('')
-                                        }}
-                                    />
+                                    <Controller
+                                        control={control}
+                                        name="birthday"
+                                        render={({field: {onChange, value, ref}}) => (
+                                            <DatePicker
+                                                inputRef={ref}
+                                                selected={new Date()}
+                                                className="form-control date-picker"
+                                                onChange={(val) => onChange(val)}
+                                            />
+                                        )}/>
                                     {errors['birthday'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>

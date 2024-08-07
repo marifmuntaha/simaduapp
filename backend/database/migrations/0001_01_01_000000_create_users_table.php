@@ -27,7 +27,7 @@ return new class extends Migration
                 7. Teller,
                 8. Siswa
                 9. Orang Tua');
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();

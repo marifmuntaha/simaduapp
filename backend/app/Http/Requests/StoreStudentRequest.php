@@ -23,6 +23,7 @@ class StoreStudentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required|int',
             'nism' => 'required|string',
             'nisn' => 'required|string',
             'nik' => 'required|string',
@@ -34,6 +35,7 @@ class StoreStudentRequest extends FormRequest
             'sibling' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|string',
+
             'province_id' => 'required|string',
             'city_id' => 'required|string',
             'district_id' => 'required|string',
@@ -41,12 +43,14 @@ class StoreStudentRequest extends FormRequest
             'address' => 'required|string',
             'boarding' => 'required|string',
             'onevervalpd' => 'required|string',
-            'father_name' => 'required|string',
-            'mother_name' => 'required|string',
-            'guard_nik' => 'required|string',
-            'guard_email' => 'required|string',
-            'guard_phone' => 'required|string',
-            'guard_name' => 'required|string',
+
+            'parent_id' => 'required|int',
+
+            'institution_id' => 'required|int',
+
+            'level_id' => 'required|int',
+
+            'program_id' => 'required|int',
         ];
     }
 

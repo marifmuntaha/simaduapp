@@ -4,8 +4,9 @@ import {Label} from "reactstrap";
 import {Controller} from "react-hook-form";
 
 const Parent = ({control, errors, register, watch, setValue, getValues}) => {
-    const [fatherStatus, setFatherStatus] = useState(true)
-    const [motherStatus, setMotherStatus] = useState(true)
+    const [fatherStatus, setFatherStatus] = useState(true);
+    const [motherStatus, setMotherStatus] = useState(true);
+    const [guardStatus, setGuardStatus] = useState(0);
     const parentStatusOption = [
         {value: 1, label: 'Masih Hidup'},
         {value: 2, label: 'Meninggal'},
@@ -16,21 +17,31 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
         {value: 2, label: 'Sama dengan Ibu Kandung'},
         {value: 3, label: 'Lainnya'}
     ];
-    const guardValues = (status) => {
-        switch (status) {
+
+    useEffect(() => {
+        switch (guardStatus) {
             case 1 :
+                setValue('guard_nik', getValues('father_nik'));
                 setValue('guard_name', getValues('father_name'));
+                setValue('guard_email', getValues('father_email'));
                 break;
-            default:
+            case 2 :
+                setValue('guard_nik', getValues('mother_nik'));
+                setValue('guard_name', getValues('mother_name'));
+                setValue('guard_email', getValues('mother_email'));
+                break;
+            default :
+                setValue('guard_nik', '');
+                setValue('guard_name', '');
+                setValue('guard_email', '');
         }
-    }
+    }, [guardStatus]);
+
     useEffect(() => {
         const subscription = watch((value) => {
             value['father_status'] !== 1 ? setFatherStatus(false) : setFatherStatus(true);
             value['mother_status'] !== 1 ? setMotherStatus(false) : setMotherStatus(true);
-            if (value['guard_status'] === 1){
-                setValue('guard_name', value['father_name']);
-            }
+            value['guard_status'] && setGuardStatus(value['guard_status']);
         })
         return () => subscription.unsubscribe()
     }, [watch]);

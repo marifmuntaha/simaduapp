@@ -31,6 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('village_id');
             $table->string('address');
+
             $table->unsignedBigInteger('boarding')->default(0);
 
             $table->enum('onemis', [1, 2])->default(2)->comment('1. Sudah 2. Belum');

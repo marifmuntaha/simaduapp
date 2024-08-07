@@ -20,9 +20,9 @@ export const addStudent = (modal) => ({
     payload: {modal}
 })
 
-export const storeStudent = ({formData: [institution_id, year_id, level_id, major_id, name, fullname]}) => ({
+export const storeStudent = ({formData: [user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id]}) => ({
     type: StudentActionTypes.STORE_STUDENT,
-    payload: {institution_id, year_id, level_id, major_id, name, fullname},
+    payload: {user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id},
 })
 
 export const setStudent = (student, modal) => ({
