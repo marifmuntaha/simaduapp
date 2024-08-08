@@ -53,6 +53,36 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
                     <Row className="gy-2">
                         <Col className="col-md-6">
                             <div className="form-group">
+                                <Label htmlFor="number_kk" className="form-label">Nomor Kartu Keluarga</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="number_kk"
+                                        placeholder="Ex. 1234512345123456"
+                                        {...register('number_kk', {required: true})}
+                                    />
+                                    {errors['number_kk'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
+                                <Label htmlFor="head_family" className="form-label">Nama Kepala Keluarga</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="head_family"
+                                        placeholder="Ex. Ngadimin"
+                                        {...register('head_family', {required: true})}
+                                    />
+                                    {errors['head_family'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
                                 <Label htmlFor="father_status" className="form-label">Status Ayah Kandung</Label>
                                 <div className="form-control-wrap">
                                     <input type="hidden" id="father_status" className="form-control" />
@@ -153,9 +183,73 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
                                         id="mother_nik"
                                         placeholder="Ex. 1234512345123456"
                                         disabled={!motherStatus}
-                                        {...register('mother_nik', {required: fatherStatus})}
+                                        {...register('mother_nik', {required: motherStatus})}
                                     />
                                     {errors['mother_nik'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-3">
+                            <div className="form-group">
+                                <Label htmlFor="father_birthplace" className="form-label">Tempat Lahir Ayah Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="father_birthplace"
+                                        placeholder="Ex. JEPARA"
+                                        disabled={!fatherStatus}
+                                        {...register('father_birthplace', {required: fatherStatus})}
+                                    />
+                                    {errors['father_birthplace'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-3">
+                            <div className="form-group">
+                                <Label htmlFor="father_birthday" className="form-label">Tanggal Lahir Ayah Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="father_birthday"
+                                        placeholder="Ex. JEPARA"
+                                        disabled={!fatherStatus}
+                                        {...register('father_birthday', {required: fatherStatus})}
+                                    />
+                                    {errors['father_birthday'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-3">
+                            <div className="form-group">
+                                <Label htmlFor="mother_birthplace" className="form-label">Tempat Lahir Ibu Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="mother_birthplace"
+                                        placeholder="Ex. JEPARA"
+                                        disabled={!motherStatus}
+                                        {...register('mother_birthplace', {required: motherStatus})}
+                                    />
+                                    {errors['mother_birthplace'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-3">
+                            <div className="form-group">
+                                <Label htmlFor="mother_birthday" className="form-label">Tanggal Lahir Ibu Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="mother_birthday"
+                                        placeholder="Ex. JEPARA"
+                                        disabled={!motherStatus}
+                                        {...register('mother_birthday', {required: motherStatus})}
+                                    />
+                                    {errors['mother_birthday'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>
@@ -191,6 +285,38 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
                                 </div>
                             </div>
                         </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
+                                <Label htmlFor="father_phone" className="form-label">Nomor WA Ayah Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="father_phone"
+                                        disabled={!fatherStatus}
+                                        placeholder="Ex. namaayahkandung@gmail.com"
+                                        {...register('father_phone', {required: fatherStatus})}
+                                    />
+                                    {errors['father_phone'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
+                                <Label htmlFor="mother_phone" className="form-label">Nomor WA Ibu Kandung</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="mother_phone"
+                                        disabled={!motherStatus}
+                                        placeholder="Ex. namaayahkandung@gmail.com"
+                                        {...register('mother_phone', {required: motherStatus})}
+                                    />
+                                    {errors['mother_phone'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
                         <Col className="col-md-12">
                             <div className="form-group">
                                 <Label htmlFor="guard_status" className="form-label">Wali Siswa</Label>
@@ -216,6 +342,21 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
                         </Col>
                         <Col className="col-md-6">
                             <div className="form-group">
+                                <Label htmlFor="guard_name" className="form-label">Nama Wali</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="guard_name"
+                                        placeholder="Ex. Ngadijah"
+                                        {...register('guard_name', {required: true})}
+                                    />
+                                    {errors['guard_name'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
                                 <Label htmlFor="guard_nik" className="form-label">NIK Wali</Label>
                                 <div className="form-control-wrap">
                                     <input
@@ -231,16 +372,31 @@ const Parent = ({control, errors, register, watch, setValue, getValues}) => {
                         </Col>
                         <Col className="col-md-6">
                             <div className="form-group">
-                                <Label htmlFor="guard_name" className="form-label">Nama Wali</Label>
+                                <Label htmlFor="guard_birthplace" className="form-label">Tempat Lahir Wali</Label>
                                 <div className="form-control-wrap">
                                     <input
                                         className="form-control"
                                         type="text"
-                                        id="guard_name"
-                                        placeholder="Ex. Ngadijah"
-                                        {...register('guard_name', {required: true})}
+                                        id="guard_birthplace"
+                                        placeholder="Ex. JEPARA"
+                                        {...register('guard_birthplace', {required: true})}
                                     />
-                                    {errors['guard_name'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    {errors['guard_birthplace'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col className="col-md-6">
+                            <div className="form-group">
+                                <Label htmlFor="guard_birthday" className="form-label">Tanggal Lahir Wali</Label>
+                                <div className="form-control-wrap">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        id="guard_birthday"
+                                        placeholder="Ex. JEPARA"
+                                        {...register('guard_birthday', {required: true})}
+                                    />
+                                    {errors['guard_birthday'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>

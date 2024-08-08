@@ -18,13 +18,14 @@ import Personal from "./add/Personal";
 import Parent from "./add/Parent";
 import Address from "./add/Address";
 import Activity from "./add/Activity";
+import {storeStudentParent} from "../../redux/studentParent/actions";
 
 const AddStudent = () => {
     const dispatch = useDispatch();
     const api = new APICore();
     const user = api.getLoggedInUser();
     const [userStudent, setUserStudent] = useState([]);
-    const [userParent, setUserParent] = useState([])
+    const [userParent, setUserParent] = useState([]);
     const {userCreate, successUser, errorUser} = useSelector((state) => ({
         userCreate: state.user.user,
         successUser: state.user.success,
@@ -37,25 +38,20 @@ const AddStudent = () => {
         if (activeIconTab !== icontab) setActiveIconTab(icontab);
     }
     const onSubmit = () => {
-        setValue('role', 8);
+        setValue('role', 9);
         setValue('image', '');
         dispatch(storeUser({
-            formData: getValues(['name', 'email', 'nisn', 'nisn', 'role', 'phone', 'image'])
-        }))
+            formData: getValues(['guard_name', 'guard_email', 'guard_nik', 'guard_nik', 'role', 'phone', 'image'])
+        }));
         if (successUser) {
-            setUserStudent(userCreate);
+            setUserParent(userCreate);
             dispatch(resetUser());
-            setValue('role', 9);
-            dispatch(storeUser({
-                formData: getValues(['guard_name', 'guard_email', 'guard_nik', 'guard_nik', 'role', 'phone', 'image'])
-            }));
-            if (successUser){
-                setUserParent(userCreate);
-            } else {
-                dispatch(destroyUser(userStudent.id));
-                dispatch(destroyUser(userParent.id));
-                dispatch(resetUser());
-            }
+            setValue('user_id', userParent.id);
+            dispatch(storeStudentParent({
+                formData: getValues([
+
+                ])
+            }))
         } else {
             dispatch(destroyUser(userStudent.id));
             dispatch(resetUser());

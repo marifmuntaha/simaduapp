@@ -1,76 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Col, PreviewCard, Row, RSelect} from "../../../components";
 import {Label} from "reactstrap";
 import {Controller} from "react-hook-form";
-import {getLevels} from "../../../redux/master/level/actions";
-import {useDispatch} from "react-redux";
 
-const Address = ({control, errors, getValues, register, watch, user}) => {
-    const dispatch = useDispatch();
+const Address = ({register, control, errors, getValues}) => {
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [districtOptions, setDistrictOptions] = useState([]);
     const [subDistrictOptions, setSubDistrictOptions] = useState([]);
     const [villageOptions, setVillageOptions] = useState([]);
-    const handleProvince = () => {
-        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
-            .then(response => {
-                response.json().then((resp) => {
-                    setProvinceOptions(() => {
-                        return resp.map((province) => {
-                            return {value: province.id, label: province.name};
-                        })
-                    })
-                });
-            })
-    }
-    const handleDistrict = (province) => {
-        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${province}.json`)
-            .then(response => {
-                response.json().then((resp) => {
-                    setDistrictOptions(() => {
-                        return resp.map((district) => {
-                            return {value: district.id, label: district.name};
-                        })
-                    })
-                })
-            })
-    }
-    const handleSubistrict = (district) => {
-        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${district}.json`)
-            .then(response => {
-                response.json().then((resp) => {
-                    setSubDistrictOptions(() => {
-                        return resp.map((subdistrict) => {
-                            return {value: subdistrict.id, label: subdistrict.name};
-                        })
-                    })
-                })
-            })
-    }
-    const handleVillage = (subdistrict) => {
-        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrict}.json`)
-            .then(response => {
-                response.json().then((resp) => {
-                    setVillageOptions(() => {
-                        return resp.map((village) => {
-                            return {value: village.id, label: village.name};
-                        })
-                    })
-                })
-            })
-    }
-    useEffect(() => {
-        handleProvince();
-        dispatch(getLevels({ladder_id: user.institution.ladder_id, type: 'select'}))
-    }, []);
-    useEffect(() => {
-        const subscription = watch((value) => {
-            value['province_id'] && handleDistrict(value['province_id']);
-            value['district_id'] && handleSubistrict(value['district_id']);
-            value['subdistrict_id'] && handleVillage(value['subdistrict_id']);
-        })
-        return () => subscription.unsubscribe()
-    }, [watch]);
     return <>
         <PreviewCard>
             <Row className="gy-2">
@@ -101,9 +38,9 @@ const Address = ({control, errors, getValues, register, watch, user}) => {
                         </Col>
                         <Col className="col-md-6">
                             <div className="form-group">
-                                <Label htmlFor="district_id" className="form-label">Kabupaten/Kota</Label>
+                                <Label htmlFor="district_id"
+                                       className="form-label">Kabupaten/Kota</Label>
                                 <div className="form-control-wrap">
-                                    <input type="hidden" className="form-control" id="district_id"/>
                                     <Controller
                                         control={control}
                                         className="form-control"
@@ -119,15 +56,15 @@ const Address = ({control, errors, getValues, register, watch, user}) => {
                                                 isDisabled={getValues('province_id') === undefined}
                                             />
                                         )}/>
-                                    {errors['district_id'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    {errors.district_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>
                         <Col className="col-md-6">
                             <div className="form-group">
-                                <Label htmlFor="subdistrict_id" className="form-label">Kecamatan</Label>
+                                <Label htmlFor="subdistrict_id"
+                                       className="form-label">Kecamatan</Label>
                                 <div className="form-control-wrap">
-                                    <input type="hidden" className="form-control" id="subdistrict_id"/>
                                     <Controller
                                         control={control}
                                         className="form-control"
@@ -143,15 +80,15 @@ const Address = ({control, errors, getValues, register, watch, user}) => {
                                                 isDisabled={getValues('district_id') === undefined}
                                             />
                                         )}/>
-                                    {errors['subdistrict_id'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    {errors.subdistrict_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>
                         <Col className="col-md-6">
                             <div className="form-group">
-                                <Label htmlFor="village_id" className="form-label">Kelurahan/Desa</Label>
+                                <Label htmlFor="village_id"
+                                       className="form-label">Kelurahan/Desa</Label>
                                 <div className="form-control-wrap">
-                                    <input type="hidden" className="form-control" id="village_id"/>
                                     <Controller
                                         control={control}
                                         className="form-control"
@@ -167,7 +104,7 @@ const Address = ({control, errors, getValues, register, watch, user}) => {
                                                 isDisabled={getValues('subdistrict_id') === undefined}
                                             />
                                         )}/>
-                                    {errors['village_id'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    {errors.village_id && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>
@@ -182,7 +119,9 @@ const Address = ({control, errors, getValues, register, watch, user}) => {
                                         placeholder="Ex. RT 01 RW 01"
                                         {...register('address', {required: true})}
                                     />
-                                    {errors.address && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    {errors.address &&
+                                        <span
+                                            className="invalid">Kolom tidak boleh kosong.</span>}
                                 </div>
                             </div>
                         </Col>
