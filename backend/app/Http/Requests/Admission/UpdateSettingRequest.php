@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admission;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateSettingRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,10 +24,10 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution' => 'required|string',
+            'institution_id' => 'required|string',
             'name' => 'required|string',
             'alias' => 'required|string',
-            'year' => 'required|integer',
+            'year_id' => 'required|integer',
             'brochure' => 'nullable|mimes:pdf|max:2048',
             'status' => 'required|string',
             'youtube' => 'nullable|string',
@@ -36,13 +37,18 @@ class UpdateSettingRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'institution' => 'Instansi',
+            'institution_id' => 'Instansi',
             'name' => 'Nama Aplikasi',
             'alias' => 'Nama Singkatan',
-            'year' => 'Tahun Pelajaran',
+            'year_id' => 'Tahun Pelajaran',
             'brochure' => 'Brosur Pendaftaran',
             'status' => 'Status Pendaftaran',
             'youtube' => 'Link Tutorial',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        return $this->merge(['updated_by' => Auth::guard('sanctum')->user()->id]);
     }
 }

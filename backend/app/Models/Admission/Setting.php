@@ -12,7 +12,9 @@ class Setting extends Model
     use HasFactory;
 
     protected $table = 'admission_settings';
-    protected $fillable = ['institution', 'name', 'alias', 'year', 'brochure', 'status', 'youtube', 'created_by', 'updated_by'];
+    protected $fillable = ['institution_id', 'name', 'alias', 'year_id', 'brochure', 'status', 'youtube', 'created_by', 'updated_by'];
+
+    public $timestamps = false;
 
     public function institution(): object
     {

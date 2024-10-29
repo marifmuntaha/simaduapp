@@ -11,18 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admission_settings', function (Blueprint $table) {
+//        Schema::create('admission_settings', function (Blueprint $table) {
+//            $table->id();
+//            $table->unsignedBigInteger('institution_id');
+//            $table->string('name');
+//            $table->string('alias');
+//            $table->unsignedBigInteger('year_id');
+//            $table->string('brochure')->nullable();
+//            $table->string('status');
+//            $table->string('youtube')->nullable();
+//            $table->unsignedBigInteger('created_by');
+//            $table->unsignedBigInteger('updated_by');
+//        });
+        Schema::create('admission_programs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('institution');
+            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('year_id');
             $table->string('name');
             $table->string('alias');
-            $table->unsignedBigInteger('year');
-            $table->string('brochure')->nullable();
-            $table->string('status');
-            $table->string('youtube')->nullable();
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
-            $table->timestamps();
+            $table->string('description')->nullable();
         });
     }
 
@@ -31,6 +38,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admission_settings');
+//        Schema::dropIfExists('admission_settings');
+        Schema::dropIfExists('admission_programs');
     }
 };

@@ -29,6 +29,11 @@ class Year extends Model
         });
     }
 
+    static function active(): object
+    {
+        return self::whereActive(1)->first();
+    }
+
     public function institution(): object
     {
         return $this->hasOne(Institution::class, 'id', 'institution_id');

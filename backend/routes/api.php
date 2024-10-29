@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admission\SettingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\InstitutionController;
@@ -36,7 +35,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('student', StudentController::class);
     Route::apiResource('student/parent', StudentParentController::class);
     Route::apiResource('user', UserController::class);
-    Route::group(['prefix' => 'ppdb'], function (){
-        Route::apiResource('setting', SettingController::class)->except(['store', 'destroy']);
-    });
+    Route::prefix('admission')->group(base_path('routes/admission.php'));
 });

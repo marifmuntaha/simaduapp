@@ -24,8 +24,9 @@ const Error504 = React.lazy(() => import('../pages/error/Error504'))
 const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
 
 const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
-const PPDBDashboard = React.lazy(() => import('../pages/operator/ppdb/dashboard'));
-const PPDBSetting = React.lazy(() => import('../pages/operator/ppdb/setting'));
+const AdmissionDashboard = React.lazy(() => import('../pages/operator/admission/dashboard'));
+const AdmissionProgram = React.lazy(() => import('../pages/operator/admission/program'));
+const AdmissionSetting = React.lazy(() => import('../pages/operator/admission/setting'));
 
 const administratorRoute = [
     {
@@ -87,14 +88,20 @@ const operatorRoutes = [
     },
     {
         path: '/operator/ppdb',
-        name: 'PPDB Dashboard',
-        element: <PPDBDashboard/>,
+        name: 'Admission Dashboard',
+        element: <AdmissionDashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/ppdb/program',
+        name: 'Admission Program',
+        element: <AdmissionProgram/>,
         route: PrivateRoute,
     },
     {
         path: '/operator/ppdb/pengaturan',
-        name: 'PPDB Pengaturan',
-        element: <PPDBSetting/>,
+        name: 'Admission Pengaturan',
+        element: <AdmissionSetting/>,
         route: PrivateRoute,
     },
 ]

@@ -60,8 +60,12 @@ export const operatorMenu = [
                 link: "/operator/ppdb/",
             },
             {
+                text: "Data Program",
+                link: "/operator/ppdb/program",
+            },
+            {
                 text: "Data Pendaftaran",
-                link: "/operator/master/tahun-pelajaran",
+                link: "/operator/data-pendaftar",
             },
             {
                 text: "Pengaturan",

@@ -17,7 +17,7 @@ class SettingController extends Controller
     public function index(Request $request)
     {
         $setting = new Setting;
-        $setting = $request->has('institution') ? $setting->whereInstitution($request->get('institution')) : $setting;
+        $setting = $request->has('institution') ? $setting->whereInstitutionID($request->get('institution_id')) : $setting;
         return response([
             'success' => true,
             'message' => null,

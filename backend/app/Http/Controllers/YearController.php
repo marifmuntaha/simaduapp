@@ -18,6 +18,7 @@ class YearController extends Controller
     {
         $years = new Year();
         $years = $request->has('institution_id') ? $years->whereInstitutionId($request->input('institution_id')): $years;
+        $years = $request->has('order') ? $years->orderBy('id', $request->input('order')): $years;
         return response([
             'success' => true,
             'message' => null,

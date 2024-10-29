@@ -1,4 +1,4 @@
-import {PPDBSettingActionTypes} from "./constants";
+import {SettingActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     setting: false,
@@ -6,23 +6,23 @@ const INITIAL_STATE = {
     success: false,
     loadData: true
 }
-const PPDBSetting = (state = INITIAL_STATE, action): any => {
+const Setting = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case PPDBSettingActionTypes.API_RESPONSE_SUCCESS: {
+        case SettingActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case PPDBSettingActionTypes.GET_PPDBSETTING:
+                case SettingActionTypes.GET_SETTING:
                     return {
                         ...state,
                         settings: action.payload.data.result,
                         loading: false,
                     }
-                case PPDBSettingActionTypes.SHOW_PPDBSETTING:
+                case SettingActionTypes.SHOW_SETTING:
                     return {
                         ...state,
                         setting: action.payload.data.result,
                         loading: false,
                     }
-                case PPDBSettingActionTypes.UPDATE_PPDBSETTING:
+                case SettingActionTypes.UPDATE_SETTING:
                     return {
                         ...state,
                         loading: false,
@@ -34,21 +34,21 @@ const PPDBSetting = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case PPDBSettingActionTypes.API_RESPONSE_ERROR: {
+        case SettingActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case PPDBSettingActionTypes.GET_PPDBSETTING:
+                case SettingActionTypes.GET_SETTING:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case PPDBSettingActionTypes.SHOW_PPDBSETTING:
+                case SettingActionTypes.SHOW_SETTING:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case PPDBSettingActionTypes.UPDATE_PPDBSETTING:
+                case SettingActionTypes.UPDATE_SETTING:
                     return {
                         ...state,
                         loading: false,
@@ -59,22 +59,22 @@ const PPDBSetting = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case PPDBSettingActionTypes.GET_PPDBSETTING:
+        case SettingActionTypes.GET_SETTING:
             return {
                 ...state,
                 loading: true,
             }
-        case PPDBSettingActionTypes.SHOW_PPDBSETTING:
+        case SettingActionTypes.SHOW_SETTING:
             return {
                 ...state,
                 loading: true,
             }
-        case PPDBSettingActionTypes.UPDATE_PPDBSETTING:
+        case SettingActionTypes.UPDATE_SETTING:
             return {
                 ...state,
                 loading: true,
             }
-        case PPDBSettingActionTypes.RESET:
+        case SettingActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
@@ -87,4 +87,4 @@ const PPDBSetting = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default PPDBSetting;
+export default Setting;
