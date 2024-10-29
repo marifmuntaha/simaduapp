@@ -10,6 +10,7 @@ import programSaga from "./institute/program/saga";
 import classroomSaga from "./institute/classroom/saga";
 import studentSaga from "./student/saga";
 import studentParentSaga from "./studentParent/saga";
+import PPDBSettingSaga from "./ppdb/setting/saga";
 
 export default function* rootSaga(){
     yield all([
@@ -23,5 +24,7 @@ export default function* rootSaga(){
         studentParentSaga(),
         yearSaga(),
         institutionSaga(),
-        userSaga()])
+        userSaga(),
+        PPDBSettingSaga(),
+    ])
 }

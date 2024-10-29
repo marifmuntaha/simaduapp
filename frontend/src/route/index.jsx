@@ -24,6 +24,8 @@ const Error504 = React.lazy(() => import('../pages/error/Error504'))
 const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
 
 const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
+const PPDBDashboard = React.lazy(() => import('../pages/operator/ppdb/dashboard'));
+const PPDBSetting = React.lazy(() => import('../pages/operator/ppdb/setting'));
 
 const administratorRoute = [
     {
@@ -81,6 +83,18 @@ const operatorRoutes = [
         path: '/operator/kesiswaan/data-siswa/tambah',
         name: 'Tambah Siswa',
         element: <AddStudent/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/ppdb',
+        name: 'PPDB Dashboard',
+        element: <PPDBDashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/ppdb/pengaturan',
+        name: 'PPDB Pengaturan',
+        element: <PPDBSetting/>,
         route: PrivateRoute,
     },
 ]

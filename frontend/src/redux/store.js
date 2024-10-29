@@ -15,6 +15,7 @@ import Program from "./institute/program/reducers";
 import Classroom from "./institute/classroom/reducers";
 import Student from "./student/reducers";
 import StudentParent from "./studentParent/reducers";
+import PPDBSetting from "./ppdb/setting/reducers";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -34,6 +35,7 @@ export const store = configureStore({
         studentParent: StudentParent,
         user: User,
         year: Year,
+        PPDBSetting: PPDBSetting,
     },
 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware),

@@ -51,6 +51,25 @@ export const operatorMenu = [
         link: "/arus-kas",
     },
     {
+        icon: "archived",
+        text: "PPDB",
+        active: false,
+        subMenu: [
+            {
+                text: "Dashboard PPDB",
+                link: "/operator/ppdb/",
+            },
+            {
+                text: "Data Pendaftaran",
+                link: "/operator/master/tahun-pelajaran",
+            },
+            {
+                text: "Pengaturan",
+                link: "/operator/ppdb/pengaturan",
+            },
+        ],
+    },
+    {
         icon: "setting-alt",
         text: "Pengaturan",
         active: "false",
