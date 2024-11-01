@@ -1,7 +1,7 @@
 
 import {SagaIterator} from "redux-saga";
 import {admissionProgramApiResponseError, admissionProgramApiResponseSuccess} from "./actions";
-import {ProgramActionTypes} from "./constants";
+import {AdmissionProgramActionTypes} from "./constants";
 import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../../utils/api/admission/program'
 import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
@@ -9,9 +9,9 @@ function* get({payload: {params}}): SagaIterator {
     try {
         const response = yield call(getApi, params)
         const data = response && response.data
-        yield put(admissionProgramApiResponseError(ProgramActionTypes.GET_PROGRAM, data))
+        yield put(admissionProgramApiResponseError(AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM, data))
     } catch (error){
-        yield put(admissionProgramApiResponseSuccess(ProgramActionTypes.GET_PROGRAM, error))
+        yield put(admissionProgramApiResponseSuccess(AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM, error))
     }
 }
 
@@ -19,9 +19,9 @@ function* store({payload: {institution_id, year_id, name, alias, description}}):
     try {
         const response = yield call(storeApi, {institution_id, year_id, name, alias, description});
         const data = response && response.data;
-        yield put(admissionProgramApiResponseError(ProgramActionTypes.STORE_PROGRAM, data));
+        yield put(admissionProgramApiResponseError(AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM, data));
     } catch (error){
-        yield put(admissionProgramApiResponseSuccess(ProgramActionTypes.STORE_PROGRAM, error))
+        yield put(admissionProgramApiResponseSuccess(AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM, error))
     }
 }
 
@@ -29,9 +29,9 @@ function* update({payload: {id, institution_id, year_id, name, alias, descriptio
     try {
         const response = yield call(updateApi, {id, institution_id, year_id, name, alias, description});
         const data = response && response.data;
-        yield put(admissionProgramApiResponseError(ProgramActionTypes.UPDATE_PROGRAM, data));
+        yield put(admissionProgramApiResponseError(AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM, data));
     } catch (error){
-        yield put(admissionProgramApiResponseSuccess(ProgramActionTypes.UPDATE_PROGRAM, error))
+        yield put(admissionProgramApiResponseSuccess(AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM, error))
     }
 }
 
@@ -39,29 +39,29 @@ function* destroy({payload: {params}}): SagaIterator {
     try {
         const response = yield call(destroyApi, params);
         const data = response && response.data
-        yield put(admissionProgramApiResponseError(ProgramActionTypes.DESTROY_PROGRAM, data))
+        yield put(admissionProgramApiResponseError(AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM, data))
     } catch (error){
-        yield put(admissionProgramApiResponseSuccess(ProgramActionTypes.DESTROY_PROGRAM, error))
+        yield put(admissionProgramApiResponseSuccess(AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM, error))
     }
 }
 
 export function* watchGetPrograms() {
-    yield takeEvery(ProgramActionTypes.GET_PROGRAM, get);
+    yield takeEvery(AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM, get);
 }
 
 export function* watchStoreProgram() {
-    yield takeEvery(ProgramActionTypes.STORE_PROGRAM, store);
+    yield takeEvery(AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM, store);
 }
 
 export function* watchUpdateProgram() {
-    yield takeEvery(ProgramActionTypes.UPDATE_PROGRAM, update);
+    yield takeEvery(AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM, update);
 }
 
 export function* watchDestroyProgram() {
-    yield takeEvery(ProgramActionTypes.DESTROY_PROGRAM, destroy);
+    yield takeEvery(AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM, destroy);
 }
-function* programSaga(){
+function* admissionProgramSaga(){
     yield all([fork(watchGetPrograms), fork(watchStoreProgram), fork(watchUpdateProgram), fork(watchDestroyProgram)])
 }
 
-export {programSaga};
+export default admissionProgramSaga;

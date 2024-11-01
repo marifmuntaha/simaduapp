@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {Suspense, useEffect} from "react";
 import Head from "../../../../layout/head";
 import {
     BackTo,
@@ -24,7 +24,7 @@ const Setting = () => {
     const api = new APICore();
     const user = api.getLoggedInUser();
     const institution = user.institution;
-    const {loading, settings, error, success} = useSelector((state) => state.PPDBSetting);
+    const {loading, setting, error, success, loadData} = useSelector((state) => state.admissionSetting);
     const {years} = useSelector((state) => state.year);
     const statusOption = [
         {value: '1', label: 'Dibuka'},
@@ -45,20 +45,19 @@ const Setting = () => {
         setValue,
         control
     } = useForm();
+
     useEffect(() => {
-        success && toastSuccess(success);
-        error && toastError(error);
-        dispatch(getYears({type: 'select', order: 'DESC'}))
-        dispatch(getAdmissionSetting({institution_id: institution.id}))
-        setValue('id', settings !== undefined ? settings[0].id : null);
+        loadData && dispatch(getYears({type: 'select', order: 'DESC'}));
+        loadData && dispatch(getAdmissionSetting({institution_id: institution.id}));
+        setValue('id', setting.length > 0 ? setting[0].id : null);
         setValue('institution_id', institution.id);
-        setValue('name', settings !== undefined ? settings[0].name : null);
-        setValue('alias', settings !== undefined? settings[0].alias : null);
-        setValue('year_id', settings !== undefined? settings[0].year_id : null);
-        setValue('status', settings !== undefined? settings[0].status : null);
-        setValue('youtube', settings !== undefined? settings[0].youtube : null);
-        dispatch(resetAdmissionSetting());
-    }, [success, error]);
+        setValue('name', setting.length > 0 ? setting[0].name : null);
+        setValue('alias', setting.length > 0 ? setting[0].alias : null);
+        setValue('year_id', setting.length > 0 ? setting[0].year_id : null);
+        setValue('status', setting.length > 0 ? setting[0].status : null);
+        setValue('youtube', setting.length > 0 ? setting[0].youtube : null);
+        resetAdmissionSetting();
+    }, [setting, loadData]);
 
     return <>
         <Head title="PPDB Penganturan"/>
@@ -97,6 +96,7 @@ const Setting = () => {
                                             className="form-control"
                                             {...register('name', {required: true})}
                                         />
+                                        {errors.name && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -229,7 +229,7 @@ const Setting = () => {
                             <Col lg="7" className="offset-lg-5">
                                 <div className="form-group mt-2">
                                     <Button className="col-3 text-center align-content-center" type="submit" color="primary" size="md" disabled={loading}>
-                                        {loading ? <Spinner size="sm" color="light"/> : <span>Simpan</span> }
+                                        {loading === undefined ? <Spinner size="sm" color="light"/> : <span>Simpan</span> }
                                     </Button>
                                 </div>
                             </Col>

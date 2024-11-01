@@ -1,46 +1,46 @@
-import {ProgramActionTypes} from "./constants";
+import {AdmissionProgramActionTypes} from "./constants";
 
 export const admissionProgramApiResponseSuccess = (actionType, data) => ({
-    type: ProgramActionTypes.API_RESPONSE_SUCCESS,
+    type: AdmissionProgramActionTypes.API_RESPONSE_SUCCESS,
     payload: { actionType, data }
 });
 
 export const admissionProgramApiResponseError = (actionType, error) => ({
-    type: ProgramActionTypes.API_RESPONSE_ERROR,
+    type: AdmissionProgramActionTypes.API_RESPONSE_ERROR,
     payload: { actionType, error },
 });
 
 export const getAdmissionPrograms = (params) => ({
-    type: ProgramActionTypes.GET_PROGRAM,
+    type: AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM,
     payload: {params},
 });
 
 export const addAdmissionProgram = (modal) => ({
-    type: ProgramActionTypes.ADD_PROGRAM,
+    type: AdmissionProgramActionTypes.ADD_ADMISSION_PROGRAM,
     payload: {modal}
 })
 
 export const storeAdmissionProgram = ({formData: [institution_id, year_id, name, alias, description, boarding]}) => ({
-    type: ProgramActionTypes.STORE_PROGRAM,
+    type: AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM,
     payload: {institution_id, year_id, name, alias, description, boarding},
 })
 
 export const setAdmissionProgram = (program, modal) => ({
-    type: ProgramActionTypes.SET_PROGRAM,
+    type: AdmissionProgramActionTypes.SET_ADMISSION_PROGRAM,
     payload: {program, modal},
 })
 
 export const updateAdmissionProgram = ({formData: [id, institution_id, year_id, name, alias, description, boarding]}) => ({
-    type: ProgramActionTypes.UPDATE_PROGRAM,
+    type: AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM,
     payload: {id, institution_id, year_id, name, alias, description, boarding},
 })
 
 export const destroyAdmissionProgram = (params) => ({
-    type: ProgramActionTypes.DESTROY_PROGRAM,
+    type: AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM,
     payload: {params},
 });
 
 export const resetAdmissionProgram = () => ({
-    type: ProgramActionTypes.RESET,
+    type: AdmissionProgramActionTypes.RESET,
     payload: {}
 })

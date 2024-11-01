@@ -1,10 +1,9 @@
-export const SettingActionTypes = {
-    API_RESPONSE_SUCCESS: '@@Setting/API_RESPONSE_SUCCESS',
-    API_RESPONSE_ERROR: '@@Setting/API_RESPONSE_ERROR',
+export const AdmissionSettingActionTypes = {
+    API_RESPONSE_SUCCESS: '@@AdmissionSetting/API_RESPONSE_SUCCESS',
+    API_RESPONSE_ERROR: '@@AdmissionSetting/API_RESPONSE_ERROR',
 
-    GET_SETTING: '@@Setting/GET_SETTING',
-    SHOW_SETTING: '@@Setting/SHOW_SETTING',
-    UPDATE_SETTING: '@@Setting/UPDATE_SETTING',
+    GET_ADMISSION_SETTING: '@@AdmissionSetting/GET_ADMISSION_SETTING',
+    UPDATE_ADMISSION_SETTING: '@@AdmissionSetting/UPDATE_ADMISSION_SETTING',
 
-    RESET: '@@Setting/RESET',
+    RESET: '@@AdmissionSetting/RESET',
 }

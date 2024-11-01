@@ -10,8 +10,8 @@ import programSaga from "./institute/program/saga";
 import classroomSaga from "./institute/classroom/saga";
 import studentSaga from "./student/saga";
 import studentParentSaga from "./studentParent/saga";
-import {settingSaga as admissionSettingSaga} from "./admission/setting/saga";
-import {programSaga as admissionProgramsSaga} from "./admission/program/saga";
+import admissionSettingSaga from "./admission/setting/saga";
+import admissionProgramsSaga from "./admission/program/saga";
 
 export default function* rootSaga(){
     yield all([

@@ -1,4 +1,4 @@
-import {ProgramActionTypes} from "./constants";
+import {AdmissionProgramActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     program: false,
@@ -10,17 +10,17 @@ const INITIAL_STATE = {
     success: false,
     loadData: true
 }
-const Program = (state = INITIAL_STATE, action): any => {
+const admissionProgram = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case ProgramActionTypes.API_RESPONSE_SUCCESS: {
+        case AdmissionProgramActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case ProgramActionTypes.GET_PROGRAM:
+                case AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         programs: action.payload.data.result,
                         loading: false,
                     }
-                case ProgramActionTypes.STORE_PROGRAM:
+                case AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
@@ -28,7 +28,7 @@ const Program = (state = INITIAL_STATE, action): any => {
                         program: action.payload.data.result,
                         loadData: true
                     }
-                case ProgramActionTypes.UPDATE_PROGRAM:
+                case AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
@@ -36,7 +36,7 @@ const Program = (state = INITIAL_STATE, action): any => {
                         program: action.payload.data.result,
                         loadData: true
                     }
-                case ProgramActionTypes.DESTROY_PROGRAM:
+                case AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
@@ -48,29 +48,29 @@ const Program = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case ProgramActionTypes.API_RESPONSE_ERROR: {
+        case AdmissionProgramActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case ProgramActionTypes.GET_PROGRAM:
+                case AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case ProgramActionTypes.STORE_PROGRAM:
-                    return {
-                        ...state,
-                        loading: false,
-                        error: action.payload.error,
-
-                    }
-                case ProgramActionTypes.UPDATE_PROGRAM:
+                case AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
 
                     }
-                case ProgramActionTypes.DESTROY_PROGRAM:
+                case AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM:
                     return {
                         ...state,
                         loading: false,
@@ -80,12 +80,12 @@ const Program = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case ProgramActionTypes.GET_PROGRAM:
+        case AdmissionProgramActionTypes.GET_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: true,
             }
-        case ProgramActionTypes.ADD_PROGRAM:
+        case AdmissionProgramActionTypes.ADD_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: false,
@@ -94,12 +94,12 @@ const Program = (state = INITIAL_STATE, action): any => {
                     edit: false,
                 }
             }
-        case ProgramActionTypes.STORE_PROGRAM:
+        case AdmissionProgramActionTypes.STORE_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: true,
             }
-        case ProgramActionTypes.SET_PROGRAM:
+        case AdmissionProgramActionTypes.SET_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: false,
@@ -109,17 +109,17 @@ const Program = (state = INITIAL_STATE, action): any => {
                     edit: action.payload.modal,
                 }
             }
-        case ProgramActionTypes.UPDATE_PROGRAM:
+        case AdmissionProgramActionTypes.UPDATE_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: true,
             }
-        case ProgramActionTypes.DESTROY_PROGRAM:
+        case AdmissionProgramActionTypes.DESTROY_ADMISSION_PROGRAM:
             return {
                 ...state,
                 loading: action.payload.params,
             }
-        case ProgramActionTypes.RESET:
+        case AdmissionProgramActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
@@ -132,4 +132,4 @@ const Program = (state = INITIAL_STATE, action): any => {
             return {...state}
     }
 }
-export default Program;
+export default admissionProgram;
