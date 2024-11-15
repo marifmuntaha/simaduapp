@@ -1,0 +1,13 @@
+export const StudentParentActionTypes = {
+    API_RESPONSE_SUCCESS: '@@studentParent/API_RESPONSE_SUCCESS',
+    API_RESPONSE_ERROR: '@@studentParent/API_RESPONSE_ERROR',
+
+    GET_STUDENT_PARENT: '@@studentParent/GET_STUDENT_PARENT',
+    ADD_STUDENT_PARENT: '@@studentParent/ADD_STUDENT_PARENT',
+    STORE_STUDENT_PARENT: '@@studentParent/STORE_STUDENT_PARENT',
+    SET_STUDENT_PARENT: '@@studentParent/SET_STUDENT_PARENT',
+    UPDATE_STUDENT_PARENT: '@@studentParent/UPDATE_STUDENT_PARENT',
+    DESTROY_STUDENT_PARENT: '@@studentParent/DESTROY_STUDENT_PARENT',
+
+    RESET: '@@studentParent/RESET',
+}

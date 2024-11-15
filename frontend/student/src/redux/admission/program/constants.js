@@ -1,0 +1,13 @@
+export const AdmissionProgramActionTypes = {
+    API_RESPONSE_SUCCESS: '@@admissionProgram/API_RESPONSE_SUCCESS',
+    API_RESPONSE_ERROR: '@@admissionProgram/API_RESPONSE_ERROR',
+
+    GET_ADMISSION_PROGRAM: '@@admissionProgram/GET_ADMISSION_PROGRAM',
+    ADD_ADMISSION_PROGRAM: '@@admissionProgram/ADD_ADMISSION_PROGRAM',
+    STORE_ADMISSION_PROGRAM: '@@admissionProgram/STORE_ADMISSION_PROGRAM',
+    SET_ADMISSION_PROGRAM: '@@admissionProgram/SET_ADMISSION_PROGRAM',
+    UPDATE_ADMISSION_PROGRAM: '@@admissionProgram/UPDATE_ADMISSION_PROGRAM',
+    DESTROY_ADMISSION_PROGRAM: '@@admissionProgram/DESTROY_ADMISSION_PROGRAM',
+
+    RESET: '@@admissionProgram/RESET',
+}
