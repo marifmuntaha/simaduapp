@@ -7,12 +7,12 @@ function get(params){
     return api.get(baseUrl, params)
 }
 
-function store(params: {institution_id: string, year_id: string, name: string, alias: string, description: string}){
+function store(params: {institution_id: string, year_id: string, name: string, alias: string, description: string; boarding: string}){
     const baseUrl = '/admission/program';
     return api.create(baseUrl, params)
 }
 
-function update(params: {id: string, institution: string, year: string, name: string, alias: string, description: string}){
+function update(params: {id: string, institution: string, year: string, name: string, alias: string, description: string; boarding: string}){
     const baseUrl = `/admission/program/${params.id}`;
     return api.update(baseUrl, params)
 }

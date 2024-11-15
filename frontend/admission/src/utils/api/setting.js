@@ -1,4 +1,4 @@
-import { APICore } from '../APICore'
+import { APICore } from './APICore'
 
 const api = new APICore()
 

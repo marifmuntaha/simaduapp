@@ -15,6 +15,7 @@ class SettingResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'institution_id' => $this->institution_id,
             'name' => $this->name,
             'alias' => $this->alias,

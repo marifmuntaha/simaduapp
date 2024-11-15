@@ -13,25 +13,21 @@ import {
 } from "../../../components";
 import Content from "../../../layout/content";
 import {useDispatch, useSelector} from "react-redux";
-import {APICore} from "../../../utils/api/APICore";
-import {getAdmissionSetting, resetAdmissionSetting, updateAdmissionSetting} from "../../../redux/admission/setting/actions";
+import {getSetting, resetSetting, updateSetting} from "../../../redux/setting/actions";
 import {Controller, useForm} from "react-hook-form";
 import {getYears} from "../../../redux/master/year/actions";
 import {Spinner} from "reactstrap";
 
 const Setting = () => {
     const dispatch = useDispatch();
-    const api = new APICore();
-    const user = api.getLoggedInUser();
-    const institution = user.institution;
-    const {loading, setting, loadData} = useSelector((state) => state.admissionSetting);
+    const {loading, settings} = useSelector((state) => state.setting);
     const {years} = useSelector((state) => state.year);
     const statusOption = [
         {value: '1', label: 'Dibuka'},
         {value: '2', label: 'Tutup'},
     ]
     const onSubmit = () => {
-        dispatch(updateAdmissionSetting({
+        dispatch(updateSetting({
             formData: getValues([
                 'id', 'institution_id', 'name', 'alias', 'year_id', 'brochure', 'status', 'youtube'
             ])
@@ -47,17 +43,19 @@ const Setting = () => {
     } = useForm();
 
     useEffect(() => {
-        loadData && dispatch(getYears({type: 'select', order: 'DESC'}));
-        loadData && dispatch(getAdmissionSetting({institution_id: institution.id}));
-        setValue('id', setting.length > 0 ? setting[0].id : null);
-        setValue('institution_id', institution.id);
-        setValue('name', setting.length > 0 ? setting[0].name : null);
-        setValue('alias', setting.length > 0 ? setting[0].alias : null);
-        setValue('year_id', setting.length > 0 ? setting[0].year_id : null);
-        setValue('status', setting.length > 0 ? setting[0].status : null);
-        setValue('youtube', setting.length > 0 ? setting[0].youtube : null);
-        resetAdmissionSetting();
-    }, [setting, loadData]);
+        dispatch(getYears({type: 'select', order: 'DESC'}));
+        dispatch(getSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION}));
+    }, [dispatch]);
+    useEffect(() => {
+        setValue('id', settings ? settings[0].id : null);
+        setValue('institution_id', process.env.REACT_APP_SERVICE_INSTITUTION);
+        setValue('name', settings ? settings[0].name : null);
+        setValue('alias', settings ? settings[0].alias : null);
+        setValue('year_id', settings ? settings[0].year_id : null);
+        setValue('status', settings ? settings[0].status : null);
+        setValue('youtube', settings ? settings[0].youtube : null);
+        resetSetting();
+    }, [settings]);
 
     return <>
         <Head title="PPDB Penganturan"/>

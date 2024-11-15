@@ -13,20 +13,24 @@ import {
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-// import Add from "./Add";
+import Add from "./Add";
 // import Edit from "./Edit";
 import {APICore} from "../../../utils/api/APICore";
 import {getYears} from "../../../redux/master/year/actions";
-import {getAdmissionSetting} from "../../../redux/admission/setting/actions";
 import {addProgram, destroyProgram, getPrograms, setProgram} from "../../../redux/master/program/actions";
+import {useSetting} from "../../../layout/provider/Setting";
+import {useInstitution} from "../../../layout/provider/Institution";
 
 const Program = () => {
     const dispatch = useDispatch();
+    const institution = useInstitution();
+    const setting = useSetting();
     const api = new APICore();
     const user = api.getLoggedInUser();
     const {loading, programs, success} = useSelector((state) => state.program);
     const {years} = useSelector((state) => state.year);
     const [sm, updateSm] = useState(false);
+    const [optionYear, setOptionYear] = useState([]);
     const ColumnAdministrator = [
         {
             name: "Lembaga",
@@ -79,9 +83,17 @@ const Program = () => {
     ]
     const Columns = user.role === '1' ? [...ColumnAdministrator, ...ColumnOther] : ColumnOther;
     useEffect(() => {
-        dispatch(getPrograms());
-        dispatch(getAdmissionSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION}))
-    }, [dispatch]);
+       dispatch(getYears())
+    }, [setting]);
+
+    useEffect(() => {
+        setOptionYear(() => years.map((year) => {
+            return {value: year.id, label: year.name};
+        }))
+    }, [years]);
+    useEffect(() => {
+        dispatch(getPrograms({institution_id: institution.id, year_id: setting.year_id}));
+    }, [dispatch, success]);
 
     return (
         <>
@@ -131,7 +143,7 @@ const Program = () => {
                 <PreviewCard>
                     <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                {/*<Add user={user} years={years}/>*/}
+                <Add user={user} years={years}/>
                 {/*<Edit user={user} years={years}/>*/}
             </Content>
         </>

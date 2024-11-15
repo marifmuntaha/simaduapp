@@ -8,6 +8,7 @@ import rootSaga from './sagas'
 import Institution from "./institution/reducers";
 import Year from "./master/year/reducers";
 import Program from "./master/program/reducers";
+import Setting from "./setting/reducers";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -19,6 +20,7 @@ export const store = configureStore({
         auth: Auth,
         institution: Institution,
         program: Program,
+        setting: Setting,
         year: Year,
     },
 

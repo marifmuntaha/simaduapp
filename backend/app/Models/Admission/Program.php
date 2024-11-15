@@ -10,6 +10,6 @@ class Program extends Model
     use HasFactory;
 
     protected $table = 'admission_programs';
-    protected $fillable = ['id', 'institution_id', 'year_id', 'name', 'alias', 'description'];
+    protected $fillable = ['id', 'institution_id', 'year_id', 'name', 'alias', 'description', 'boarding'];
     public $timestamps = false;
 }

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->unsignedBigInteger('year_id');
             $table->string('name');
             $table->string('alias');
+            $table->enum('boarding', [1, 2])->default(2)->comment('1. Boarding, 2. Optional');
             $table->string('description')->nullable();
         });
     }

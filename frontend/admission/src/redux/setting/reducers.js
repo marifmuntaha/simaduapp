@@ -1,43 +1,40 @@
-import {AdmissionSettingActionTypes} from "./constants";
+import {SettingActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
     setting: false,
     error: false,
-    success: false,
-    loadData: true
+    success: false
 }
-const admissionSetting = (state = INITIAL_STATE, action): any => {
+const Setting = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
-        case AdmissionSettingActionTypes.API_RESPONSE_SUCCESS: {
+        case SettingActionTypes.API_RESPONSE_SUCCESS: {
             switch (action.payload.actionType) {
-                case AdmissionSettingActionTypes.GET_ADMISSION_SETTING:
+                case SettingActionTypes.GET_SETTING:
                     return {
                         ...state,
-                        setting: action.payload.data.result,
+                        settings: action.payload.data.result,
                         loading: false,
-                        loadData: false,
                     }
-                case AdmissionSettingActionTypes.UPDATE_ADMISSION_SETTING:
+                case SettingActionTypes.UPDATE_SETTING:
                     return {
                         ...state,
                         loading: false,
                         success: action.payload.data.message,
-                        setting: action.payload.data.result,
-                        loadData: false
+                        setting: action.payload.data.result
                     }
                 default:
                     return {...state}
             }
         }
-        case AdmissionSettingActionTypes.API_RESPONSE_ERROR: {
+        case SettingActionTypes.API_RESPONSE_ERROR: {
             switch (action.payload.actionType) {
-                case AdmissionSettingActionTypes.GET_ADMISSION_SETTING:
+                case SettingActionTypes.GET_SETTING:
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                     }
-                case AdmissionSettingActionTypes.UPDATE_ADMISSION_SETTING:
+                case SettingActionTypes.UPDATE_SETTING:
                     return {
                         ...state,
                         loading: false,
@@ -48,26 +45,25 @@ const admissionSetting = (state = INITIAL_STATE, action): any => {
                     return {...state}
             }
         }
-        case AdmissionSettingActionTypes.GET_ADMISSION_SETTING:
+        case SettingActionTypes.GET_SETTING:
             return {
                 ...state,
                 loading: true,
             }
-        case AdmissionSettingActionTypes.UPDATE_ADMISSION_SETTING:
+        case SettingActionTypes.UPDATE_SETTING:
             return {
                 ...state,
                 loading: true,
             }
-        case AdmissionSettingActionTypes.RESET:
+        case SettingActionTypes.RESET:
             return {
                 ...state,
                 loading: false,
                 error: false,
-                success: false,
-                loadData: false
+                success: false
             }
         default:
             return {...state}
     }
 }
-export default admissionSetting;
+export default Setting;

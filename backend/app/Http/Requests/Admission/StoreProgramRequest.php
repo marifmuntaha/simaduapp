@@ -28,6 +28,7 @@ class StoreProgramRequest extends FormRequest
             'name' => ['required', 'string'],
             'alias' => ['required', 'string'],
             'description' => ['required', 'string'],
+            'boarding' => 'required'
         ];
     }
 
@@ -39,6 +40,7 @@ class StoreProgramRequest extends FormRequest
             'name' => 'Nama Program',
             'alias' => 'Nama Singkatan',
             'description' => 'Deskripsi Program',
+            'boarding' => 'Boarding'
         ];
     }
 }
