@@ -21,6 +21,8 @@ const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
 
 const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
 const OperatorSetting = React.lazy(() => import('../pages/operator/setting'));
+const OperatorStudent = React.lazy(() => import('../pages/operator/student'));
+const OperatorStudentAdd = React.lazy(() => import('../pages/operator/student/add'));
 
 const administratorRoute = [
     {
@@ -65,13 +67,13 @@ const operatorRoutes = [
     {
         path: '/operator/pendaftar',
         name: 'Data Pendaftar',
-        element: <Student/>,
+        element: <OperatorStudent/>,
         route: PrivateRoute,
     },
     {
         path: '/operator/pendaftar/tambah',
         name: 'Tambah Pendaftar',
-        element: <AddStudent/>,
+        element: <OperatorStudentAdd/>,
         route: PrivateRoute,
     },
     {

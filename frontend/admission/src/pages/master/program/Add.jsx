@@ -5,12 +5,18 @@ import {Controller, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {addProgram, resetProgram, storeProgram} from "../../../redux/master/program/actions";
 import {getInstitutions} from "../../../redux/institution/actions";
+import {useSetting} from "../../../layout/provider/Setting";
+import {useInstitution} from "../../../layout/provider/Institution";
 
 const Add = ({user, years}) => {
+    const setting = useSetting();
+    const institution = useInstitution();
     const {institutions} = useSelector((state) => state.institution);
     const {loading, modal, success} = useSelector((state) => state.program);
     const dispatch = useDispatch();
     const onSubmit = () => {
+        setValue('institution_id', institution.id);
+        setValue('year_id', setting.year_id);
         dispatch(storeProgram({
             formData: getValues([
                 'institution_id',
@@ -38,32 +44,19 @@ const Add = ({user, years}) => {
     const optionYear = years && years.map((year) => {
         return {value: year.id, label: year.name};
     })
-    const yearActive = years && years.filter((year) => {
-        return year.active === '1'
-    });
-
     const optionBoarding = [
         {value: 1, label: 'Boarding'},
         {value: 2, label: 'Opsional'},
     ]
 
     useEffect(() => {
-        dispatch(getInstitutions({type: 'select'}));
-    }, [dispatch]);
-
-    useEffect(() => {
-        user.role !== '1' && setValue('institution_id', process.env.REACT_APP_SERVICE_INSTITUTION);
-        user.role !== '1' && setValue('year_id', yearActive && yearActive[0].id)
-    }, [user, yearActive, setValue]);
+        parseInt(user.role) === 1 && institution && dispatch(getInstitutions({id: institution.id, type: 'select'}));
+    }, [dispatch, user]);
 
     useEffect(() => {
         success && dispatch(addProgram(false)) && dispatch(resetProgram());
         reset();
     }, [success, dispatch, reset]);
-
-    useEffect(() => {
-        console.log(years)
-    }, [years]);
 
     return (
         <>
@@ -94,8 +87,7 @@ const Add = ({user, years}) => {
                                                             placeholder="Pilih Lembaga"
                                                         />
                                                     )}/>
-                                                {errors.institution &&
-                                                    <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                                {errors.institution && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                             </div>
                                         </div>
                                     </Col>
@@ -165,10 +157,9 @@ const Add = ({user, years}) => {
                                             type="text"
                                             id="description"
                                             placeholder="Ex. Program Tahfidz"
-                                            {...register('description', {required: false})}
+                                            {...register('description', {required: true})}
                                         />
-                                        {errors.description &&
-                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -190,6 +181,7 @@ const Add = ({user, years}) => {
                                                     placeholder="Pilih Boarding"
                                                 />
                                             )}/>
+                                        <input type="hidden" id="boarding" className="form-control" />
                                         {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>

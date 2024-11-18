@@ -4,7 +4,7 @@ const api = new APICore()
 
 function get(params){
     const baseUrl = () => {
-        if (params.id){
+        if (params && params.id){
             return  `/master/year/${params.id}`
         }
         else {

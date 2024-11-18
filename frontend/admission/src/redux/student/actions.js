@@ -20,9 +20,9 @@ export const addStudent = (modal) => ({
     payload: {modal}
 })
 
-export const storeStudent = ({formData: [user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id]}) => ({
+export const storeStudent = ({formData: [user_id, institution_id, year_id, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email]}) => ({
     type: StudentActionTypes.STORE_STUDENT,
-    payload: {user_id, nism, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email, province_id, city_id, district_id, village_id, address, boarding, oneemis, onevervalpd, parent_id},
+    payload: {user_id, institution_id, year_id, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email},
 })
 
 export const setStudent = (student, modal) => ({
@@ -30,9 +30,9 @@ export const setStudent = (student, modal) => ({
     payload: {student, modal},
 })
 
-export const updateStudent = ({formData: [id, institution_id, year_id, level_id, major_id, name, fullname]}) => ({
+export const updateStudent = ({formData: [id, user_id, institution_id, year_id, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email]}) => ({
     type: StudentActionTypes.UPDATE_STUDENT,
-    payload: {id, institution_id, year_id, level_id, major_id, name, fullname},
+    payload: {id, user_id, institution_id, year_id, nisn, nik, name, birthplace, birthdate, gender, orderborn, sibling, phone, email},
 })
 
 export const destroyStudent = (params) => ({

@@ -22,7 +22,7 @@ export const operatorMenu = [
     {
         icon: "users",
         text: "Data Pendaftar",
-        link: "/operator/data-pendaftar",
+        link: "/operator/pendaftar",
     },
     {
         icon: "file-text",

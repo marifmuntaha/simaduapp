@@ -8,7 +8,6 @@ const INITIAL_STATE = {
     },
     error: false,
     success: false,
-    loadData: true
 }
 const Student = (state = INITIAL_STATE, action): any => {
     switch (action.type) {
@@ -26,7 +25,6 @@ const Student = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         student: action.payload.data.result,
-                        loadData: true
                     }
                 case StudentActionTypes.UPDATE_STUDENT:
                     return {
@@ -34,7 +32,6 @@ const Student = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         student: action.payload.data.result,
-                        loadData: true
                     }
                 case StudentActionTypes.DESTROY_STUDENT:
                     return {
@@ -42,7 +39,6 @@ const Student = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         student: action.payload.data.result,
-                        loadData: true
                     }
                 default:
                     return {...state}
@@ -126,7 +122,6 @@ const Student = (state = INITIAL_STATE, action): any => {
                 student: false,
                 error: false,
                 success: false,
-                loadData: false
             }
         default:
             return {...state}

@@ -9,6 +9,8 @@ import Institution from "./institution/reducers";
 import Year from "./master/year/reducers";
 import Program from "./master/program/reducers";
 import Setting from "./setting/reducers";
+import Student from "./student/reducers";
+import User from "./user/reducers";
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -21,6 +23,8 @@ export const store = configureStore({
         institution: Institution,
         program: Program,
         setting: Setting,
+        student: Student,
+        user: User,
         year: Year,
     },
 

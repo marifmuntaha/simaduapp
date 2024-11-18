@@ -3,15 +3,18 @@ import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap"
 import {Col, Row, RSelect} from "../../../components";
 import {useDispatch, useSelector} from "react-redux";
 import {Controller, useForm} from "react-hook-form";
-import {setProgram, updateProgram} from "../../../redux/institute/program/actions";
+import {setProgram, updateProgram} from "../../../redux/master/program/actions";
+import {getInstitutions} from "../../../redux/institution/actions";
+import {getYears} from "../../../redux/master/year/actions";
+import {resetProgram} from "../../../redux/master/program/actions";
 
 const Edit = ({user, years}) => {
     const dispatch = useDispatch();
     const {institutions} = useSelector((state) => state.institution);
     const {loading, modal, program} = useSelector((state) => state.program);
     const boardingOption = [
-        {value: '2', label: "Tidak"},
-        {value: '1', label: "Ya"},
+        {value: '1', label: "Boarding"},
+        {value: '2', label: "Opsional"},
     ]
     const onSubmit = () => {
         dispatch(updateProgram({
@@ -42,16 +45,14 @@ const Edit = ({user, years}) => {
         return {value: year.id, label: year.name};
     })
     useEffect(() => {
-        // dispatch(getInstitutions({type: 'select'}));
-        // dispatch(getYears({type: 'select'}));
-        // dispatch(resetProgram());
+        user.role === '1' && dispatch(getInstitutions({type: 'select'}));
+        dispatch(getYears({type: 'select'}));
+        dispatch(resetProgram());
     }, [dispatch]);
     useEffect(() => {
         program && Object.entries(program).map((program) => {
             return setValue(program[0], program[1])
         });
-        program && setValue('institution_id', program.institution ? program.institution.id : 0);
-        program && setValue('year_id', program.year ? program.year.id : 0);
     }, [program, setValue]);
 
     return (

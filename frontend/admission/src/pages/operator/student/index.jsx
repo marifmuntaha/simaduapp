@@ -1,125 +1,42 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
-import {
-    BackTo,
-    BlockBetween,
-    BlockHead,
-    BlockHeadContent,
-    BlockTitle,
-    Icon,
-    PreviewCard,
-    ReactDataTable
-} from "../../../components";
-import {
-    Badge,
-    Button,
-    ButtonGroup,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-    UncontrolledDropdown
-} from "reactstrap";
+import {BackTo, BlockBetween, BlockHead, BlockHeadContent, BlockTitle, Icon} from "../../../components";
+import {Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
-import Add from "./Add";
-import Edit from "./Edit";
-import {APICore} from "../../../utils/api/APICore";
-import {getYears} from "../../../redux/master/year/actions";
-import {addProgram, destroyProgram, getPrograms, setProgram} from "../../../redux/master/program/actions";
-import {useSetting} from "../../../layout/provider/Setting";
 import {useInstitution} from "../../../layout/provider/Institution";
+import {getYears} from "../../../redux/master/year/actions";
+import {useSetting} from "../../../layout/provider/Setting";
+import {getStudents} from "../../../redux/student/actions";
+import {useNavigate} from "react-router-dom";
 
-const Program = () => {
+const Student = () => {
     const dispatch = useDispatch();
     const institution = useInstitution();
     const setting = useSetting();
-    const api = new APICore();
-    const user = api.getLoggedInUser();
-    const {loading, programs, success} = useSelector((state) => state.program);
     const {years} = useSelector((state) => state.year);
+    const {loading, students, success} = useSelector((state) => state.student);
     const [sm, updateSm] = useState(false);
     const [yearSelected, setYearSelected] = useState([]);
-    const ColumnAdministrator = [
-        {
-            name: "Lembaga",
-            selector: (row) => row.institution && row.institution.withLadderAlias,
-            sortable: false,
-            hide: "sm",
-        },
-        {
-            name: "Tahun Pelajaran",
-            selector: (row) => row.year && row.year.name,
-            sortable: false,
-        }
-    ]
-    const ColumnOther = [
-        {
-            name: "Nama Program",
-            selector: (row) => row.name,
-            sortable: false,
-        },
-        {
-            name: "Singkatan",
-            selector: (row) => row.alias,
-            sortable: false,
-        },
-        {
-            name: "Boarding",
-            selector: (row) => row.boarding,
-            sortable: false,
-            cell: (row) => {
-                return row.boarding === '1' ? <Badge color="success" pill>Boarding</Badge> :
-                    <Badge color="danger" pill>Opsional</Badge>;
-            }
-        },
-        {
-            name: "Aksi",
-            selector: (row) => row.id,
-            sortable: false,
-            hide: "sm",
-            cell: (row) => (
-                <ButtonGroup size="sm">
-                    <Button
-                        color="outline-warning"
-                        onClick={() => {
-                            dispatch(setProgram(row, true));
-                        }}>
-                        <Icon name="edit"/>
-                    </Button>
-                    <Button
-                        color="outline-danger"
-                        onClick={() => {
-                            dispatch(destroyProgram(row.id));
-                        }}
-                        disabled={row.id === loading}>
-                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
-                    </Button>
-                </ButtonGroup>
-            )
-        },
-    ]
-    const Columns = user.role === '1' ? [...ColumnAdministrator, ...ColumnOther] : ColumnOther;
+    const navigate = useNavigate();
     useEffect(() => {
-        dispatch(getYears());
-    }, [dispatch]);
-    useEffect(() => {
-        const year = years && years.filter((year) => {
-            return year.id === setting.year_id
-        });
-        setYearSelected(year && year[0]);
-    }, [years]);
-    useEffect(() => {
-        (institution && yearSelected) && dispatch(getPrograms({
-            institution_id: institution.id,
-            year_id: yearSelected && yearSelected.id
-        }));
-    }, [dispatch, success, yearSelected]);
+        institution && dispatch(getYears({institution_id: institution.id}));
+    }, [institution]);
 
+    useEffect(() => {
+        let year = years && years.filter((year) => {
+            return year.id === setting.year_id;
+        });
+        year && setYearSelected(year[0]);
+    }, [years]);
+
+    useEffect(() => {
+        (institution && yearSelected) && dispatch(getStudents({institution_id: institution.id, year_id: setting.year_id}));
+    }, [institution, yearSelected])
     return (
-        <>
-            <Head title="Data Program"/>
-            <Content page="component">
+        <Suspense fallback={<div>Loading...</div>}>
+            <Head title="Data Pendaftar"/>
+            <Content>
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
                         <BackTo link="/" icon="arrow-left">
@@ -130,7 +47,7 @@ const Program = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Program</BlockTitle>
+                            <BlockTitle tag="h4">Data Pendaftar</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -177,7 +94,7 @@ const Program = () => {
                                         </li>
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addProgram(true))}
+                                            onClick={() => navigate('tambah')}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -190,13 +107,9 @@ const Program = () => {
                         </BlockHeadContent>
                     </BlockBetween>
                 </BlockHead>
-                <PreviewCard>
-                    <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
-                </PreviewCard>
-                <Add user={user} years={years}/>
-                <Edit user={user} years={years}/>
             </Content>
-        </>
+        </Suspense>
     )
 }
-export default Program;
+
+export default Student;

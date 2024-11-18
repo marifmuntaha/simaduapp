@@ -15,6 +15,8 @@ class ProgramController extends Controller
     public function index(Request $request)
     {
         $program = new Program();
+        $program = $request->has('institution_id') ? $program->whereInstitutionId($request->institution_id) : $program;
+        $program = $request->has('year_id') ? $program->whereYearId($request->year_id) : $program;
         return response([
             'success' => true,
             'message' => null,
