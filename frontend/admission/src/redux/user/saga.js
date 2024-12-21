@@ -21,7 +21,7 @@ function* store({payload: {fullname, email, username, password, role, phone, ima
         const data = response && response.data;
         yield put(userApiResponseSuccess(UserActionTypes.STORE_USER, data));
     } catch (error){
-        yield put(userApiResponseError(UserActionTypes.STORE_USER, error))
+        yield put(userApiResponseError(UserActionTypes.STORE_USER, error));
     }
 }
 

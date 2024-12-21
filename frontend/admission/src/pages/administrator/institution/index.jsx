@@ -99,8 +99,7 @@ const Institution = () => {
         return user.role !== '1'
             ? {with: ['ladder', 'user'], user_id: user.id}
             : {with: ['ladder', 'user']}
-    }, [user])
-
+    }, [user]);
     useEffect(() => {
         loadData && dispatch(getInstitutions(params())) && dispatch(resetInstitution());
         dispatch(getUsers({type: 'select', role: 5}));

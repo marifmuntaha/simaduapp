@@ -35,6 +35,11 @@ export const updateInstitution = ({formData: [id, user_id, ladder_id, name, alia
     payload: {id, user_id, ladder_id, name, alias, nsm, npsn, headmaster, logo},
 })
 
+export const showInstitutions = (params) => ({
+    type: InstitutionActionTypes.SHOW_INSTITUTION,
+    payload: {params},
+});
+
 export const destroyInstitution = (params) => ({
     type: InstitutionActionTypes.DESTROY_INSTITUTION,
     payload: {params},

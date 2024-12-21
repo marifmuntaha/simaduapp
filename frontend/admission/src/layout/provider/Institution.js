@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getInstitutions} from "../../redux/institution/actions";
+import {showInstitutions} from "../../redux/institution/actions";
 
 
 const InstitutionContext = createContext();
@@ -10,18 +10,18 @@ export function useInstitution() {
 
 const InstitutionProvider = ({ ...props }) => {
     const dispatch = useDispatch();
-    const {institutions} = useSelector((state) => state.institution);
-    const [institution, setInstitution] = useState([]);
+    const {institution} = useSelector((state) => state.institution);
+    const [institute, setInstitute] = useState()
 
     useEffect(() => {
-        dispatch(getInstitutions({id: process.env.REACT_APP_SERVICE_INSTITUTION}));
+        dispatch(showInstitutions({id: process.env.REACT_APP_SERVICE_INSTITUTION}));
     }, []);
 
     useEffect(() => {
-        setInstitution(institutions);
-    }, [institutions]);
+        setInstitute(institution);
+    }, [institution]);
     return (
-        <InstitutionContext.Provider value={institution}>
+        <InstitutionContext.Provider value={institute}>
             {props.children}
         </InstitutionContext.Provider>
     )

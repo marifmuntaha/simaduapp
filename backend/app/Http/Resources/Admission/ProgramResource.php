@@ -14,6 +14,25 @@ class ProgramResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $resource = [
+            'id' => $this['id'],
+            'institution' => $this['institution'],
+            'year' => $this['year'],
+            'name' => $this['name'],
+            'alias' => $this['alias'],
+            'description' => $this['description'],
+            'boarding' => $this['boarding'],
+        ];
+
+        if ($request->has('type')){
+            if ($request->type == 'select'){
+                $resource = [
+                    'value' => $this['id'],
+                    'label' => $this['name'],
+                ];
+            }
+        }
+
+        return $resource;
     }
 }

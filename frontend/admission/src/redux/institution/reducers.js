@@ -36,6 +36,12 @@ const Institution = (state = INITIAL_STATE, action): any => {
                         institution: action.payload.data.institution,
                         loadData: true
                     }
+                case InstitutionActionTypes.SHOW_INSTITUTION:
+                    return {
+                        ...state,
+                        institution: action.payload.data.result,
+                        loading: false,
+                    }
                 case InstitutionActionTypes.DESTROY_INSTITUTION:
                     return {
                         ...state,
@@ -64,6 +70,13 @@ const Institution = (state = INITIAL_STATE, action): any => {
 
                     }
                 case InstitutionActionTypes.UPDATE_INSTITUTION:
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+
+                    }
+                case InstitutionActionTypes.SHOW_INSTITUTION:
                     return {
                         ...state,
                         loading: false,

@@ -18,6 +18,7 @@ const Error404 = React.lazy(() => import('../pages/error/Error404'));
 const Error504 = React.lazy(() => import('../pages/error/Error504'));
 
 const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
+const Ladder = React.lazy(() => import("../pages/administrator/master/ladder"));
 
 const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
 const OperatorSetting = React.lazy(() => import('../pages/operator/setting'));
@@ -29,6 +30,12 @@ const administratorRoute = [
         path: '/administrator',
         name: 'Dashboard',
         element: <AdministratorDashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/administrator/master/jenjang',
+        name: 'Data Jenjang',
+        element: <Ladder/>,
         route: PrivateRoute,
     },
     {

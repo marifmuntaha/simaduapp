@@ -20,13 +20,13 @@ export const addStudentParent = (modal) => ({
     payload: {modal}
 })
 
-export const storeStudentParent = ({formData: [user_id, number_kk, head_family, father_status, father_name,
+export const storeStudentParent = ({formData: [user_id, student_id, number_kk, head_family, father_status, father_name,
     father_nik, father_birthplace, father_birthday, father_email, father_phone, mother_status, mother_name,
     mother_nik, mother_birthplace, mother_birthday, mother_email, mother_phone, guard_status, guard_name, guard_nik,
     guard_birthplace, guard_birthday, guard_email, guard_phone,
 ]}) => ({
     type: StudentParentActionTypes.STORE_STUDENT_PARENT,
-    payload: {user_id, number_kk, head_family, father_status, father_name,
+    payload: {user_id, student_id, number_kk, head_family, father_status, father_name,
         father_nik, father_birthplace, father_birthday, father_email, father_phone, mother_status, mother_name,
         mother_nik, mother_birthplace, mother_birthday, mother_email, mother_phone, guard_status, guard_name, guard_nik,
         guard_birthplace, guard_birthday, guard_email, guard_phone,},

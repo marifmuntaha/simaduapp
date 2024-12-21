@@ -25,16 +25,16 @@ export const operatorMenu = [
         link: "/operator/pendaftar",
     },
     {
+        icon: "file-check-fill",
+        text: "Verifikasi",
+        active: "false",
+        link: "/operator/verifikasi",
+    },
+    {
         icon: "file-text",
         text: "Laporan",
         active: "false",
         link: "/operator/laporan",
-    },
-    {
-        icon: "bell",
-        text: "Notifikasi",
-        active: "false",
-        link: "/notifikasi",
     },
     {
         icon: "user",

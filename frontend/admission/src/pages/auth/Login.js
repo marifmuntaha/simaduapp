@@ -35,7 +35,7 @@ const Login = () => {
     useEffect(() => {
         setValue('institution', process.env.REACT_APP_SERVICE_INSTITUTION);
         setValue('ability', process.env.REACT_APP_SERVICE_NAME);
-        setValue('role', JSON.stringify([1, 2, 3, 4, 5]))
+        setValue('role', JSON.stringify([1, 5, 6]));
     }, []);
     return (
         <>

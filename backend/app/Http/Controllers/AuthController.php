@@ -49,7 +49,7 @@ class AuthController extends Controller
                 'status' => false,
                 'message' => $exception->getMessage(),
                 'result' => null
-            ], $exception->getCode());
+            ]);
         }
     }
 

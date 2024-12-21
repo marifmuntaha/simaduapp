@@ -19,7 +19,6 @@ Route::group(['prefix' => 'auth'], function (){
     Route::post('change-password', AuthController::class. '@changePassword');
     Route::post('logout', AuthController::class. '@logout')->middleware('auth:sanctum');
 });
-
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'master'], function (){
         Route::apiResource('ladder', LadderController::class);
@@ -36,4 +35,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('student/parent', StudentParentController::class);
     Route::apiResource('user', UserController::class);
 });
+Route::apiResource('institution', InstitutionController::class)->only('show');
 Route::prefix('admission')->group(base_path('routes/admission.php'));

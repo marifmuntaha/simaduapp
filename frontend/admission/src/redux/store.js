@@ -6,6 +6,7 @@ import Auth from './auth/reducers'
 // saga
 import rootSaga from './sagas'
 import Institution from "./institution/reducers";
+import Ladder from "./master/ladder/reducers";
 import Year from "./master/year/reducers";
 import Program from "./master/program/reducers";
 import Setting from "./setting/reducers";
@@ -21,6 +22,7 @@ export const store = configureStore({
     reducer: {
         auth: Auth,
         institution: Institution,
+        ladder: Ladder,
         program: Program,
         setting: Setting,
         student: Student,

@@ -5,13 +5,16 @@ import classNames from "classnames";
 import {APICore} from "../../utils/api/APICore";
 import {rootMenu} from "./rootMenu";
 import {operatorMenu} from "./operatorMenu";
+import {treasurerMenu} from "./treasurerMenu";
 
 let menu = (user) => {
     switch (user.role) {
-        case 1 :
+        case '1' :
             return rootMenu
         case '5' :
             return operatorMenu
+        case '6' :
+            return treasurerMenu
         default :
             return rootMenu
     }

@@ -7,6 +7,7 @@ export const InstitutionActionTypes = {
     STORE_INSTITUTION: '@@institution/STORE_INSTITUTION',
     SET_INSTITUTION: '@@institution/SET_INSTITUTION',
     UPDATE_INSTITUTION: '@@institution/UPDATE_INSTITUTION',
+    SHOW_INSTITUTION: '@@institution/SHOW_INSTITUTION',
     DESTROY_INSTITUTION: '@@institution/DESTROY_INSTITUTION',
 
     RESET: '@@institution/RESET',

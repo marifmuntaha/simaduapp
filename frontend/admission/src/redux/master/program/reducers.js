@@ -1,6 +1,7 @@
 import {ProgramActionTypes} from "./constants";
 const INITIAL_STATE = {
     loading: false,
+    programs: [],
     program: false,
     modal : {
         add: false,

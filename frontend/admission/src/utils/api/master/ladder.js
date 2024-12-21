@@ -17,6 +17,11 @@ function update(params: {id: string, name: string, alias: string, description: s
     return api.update(baseUrl, params)
 }
 
+function show(id) {
+    const baseUrl = `/master/ladder/${id}`;
+    return api.get(baseUrl);
+}
+
 function destroy(params){
     const baseUrl = `/master/ladder/${params}`
     return api.delete(baseUrl);

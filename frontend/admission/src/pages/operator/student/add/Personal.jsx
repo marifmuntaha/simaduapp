@@ -1,55 +1,65 @@
-import React, {useEffect} from "react";
-import {Button, Col, PreviewCard, Row, RSelect} from "../../../../components";
+import React, {useState} from "react";
+import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "../../../../components";
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import DatePicker from "react-datepicker";
-import {useDispatch, useSelector} from "react-redux";
 import {useInstitution} from "../../../../layout/provider/Institution";
 import {useSetting} from "../../../../layout/provider/Setting";
-import {destroyUser, resetUser, storeUser} from "../../../../redux/user/actions";
-import {resetStudent, storeStudent} from "../../../../redux/student/actions";
+import {store as storeUser, destroy as destroyUser} from "../../../../utils/api/user";
+import {store as storeStudent} from "../../../../utils/api/student";
 
-const Personal = () => {
-    const dispatch = useDispatch();
+const Personal = ({setStudentID}) => {
     const institution = useInstitution();
     const setting = useSetting();
-    const {successUser, errorUser, user} = useSelector((state) => ({
-            successUser: state.user.success,
-            errorUser: state.user.error,
-            user: state.user.user
-        }
-    ));
-    const {loading, success, student} = useSelector((state) => state.student);
-    const {register, formState: {errors}, control, handleSubmit, getValues, setValue} = useForm()
+    const [loading, setLoading] = useState(false);
+    const {register, formState: {errors}, control, handleSubmit, getValues} = useForm()
     const genderOption = [
         {value: 'L', label: 'Laki-laki'},
         {value: 'P', label: 'Perempuan'},
     ]
-    const handleFormSubmit = () => {
-        const userFormData = {formData: [getValues('name'), getValues('email'), getValues('nisn'), getValues('nisn'), 8 , getValues('phone'), '']}
-        dispatch(storeUser(userFormData));
-        if (successUser) {
-            setValue('user_id', user.id);
-            setValue('institution_id', institution.id);
-            setValue('year_id', setting.year_id);
-            dispatch(storeStudent({
-                formData: getValues(['user_id', 'institution_id', 'year_id', 'nisn', 'nik', 'name', 'birthplace', 'birthdate', 'gender', 'orderborn', 'sibling', 'phone', 'email'])
-            }));
-            if (success){
-                console.log(student)
-            }
-            else {
-                dispatch(destroyUser(user.id))
-            }
+    const handleFormSubmit = async () => {
+        setLoading(true);
+        const userStudentParam = {
+            fullname: getValues('name'),
+            email: getValues('email'),
+            username: getValues('nisn'),
+            password: getValues('nisn'),
+            role: 8,
+            phone: getValues('phone'),
+            image: ''
         }
-        else {
-            console.log(errorUser)
-        }
+        await storeUser(userStudentParam).then(resp => {
+            const user = resp.data.result;
+            const studentParam = {
+                user_id: user.id,
+                institution_id: institution.id,
+                year_id: setting.year_id,
+                nisn: getValues('nisn'),
+                nik: getValues('nik'),
+                name: getValues('name'),
+                birthplace: getValues('birthplace'),
+                birthdate: getValues('birthdate'),
+                gender: getValues('gender'),
+                orderborn: getValues('orderborn'),
+                sibling: getValues('sibling'),
+                phone: getValues('phone'),
+                email: getValues('email'),
+            }
+            storeStudent(studentParam).then(resp => {
+                const student = resp.data.result;
+                setStudentID(student.id);
+                toastSuccess(resp.data.message);
+                setLoading(false);
+            }).catch(err => {
+                destroyUser(user.id);
+                toastError(err);
+                setLoading(false);
+            });
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        });
     }
-    useEffect(() => {
-        dispatch(resetUser());
-        dispatch(resetStudent());
-    }, [dispatch]);
     return <>
         <PreviewCard>
             <Row className="gy-2">
@@ -67,7 +77,7 @@ const Personal = () => {
                                             placeholder="Ex. 1234567890"
                                             {...register('nisn', {required: true})}
                                         />
-                                        {errors['nisn'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.nisn && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -82,7 +92,7 @@ const Personal = () => {
                                             placeholder="Ex. 1234512345123456"
                                             {...register('nik', {required: true})}
                                         />
-                                        {errors['nik'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.nik && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -97,7 +107,7 @@ const Personal = () => {
                                             placeholder="Ex. ACHMAD WIKRAMAWARDHANA"
                                             {...register('name', {required: true})}
                                         />
-                                        {errors['name'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.name && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -112,19 +122,18 @@ const Personal = () => {
                                             placeholder="Ex. KEBUMEN"
                                             {...register('birthplace', {required: true})}
                                         />
-                                        {errors['birthplace'] &&
-                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.birthplace && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-6">
                                 <div className="form-group">
-                                    <Label htmlFor="birthday" className="form-label">Tanggal Lahir</Label>
+                                    <Label htmlFor="birthdate" className="form-label">Tanggal Lahir</Label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" id="birthday" className="form-control"/>
+                                        <input type="hidden" id="birthdate" className="form-control"/>
                                         <Controller
                                             control={control}
-                                            name="birthday"
+                                            name="birthdate"
                                             render={({field: {onChange, value, ref}}) => (
                                                 <DatePicker
                                                     inputRef={ref}
@@ -133,7 +142,7 @@ const Personal = () => {
                                                     onChange={(val) => onChange(val)}
                                                 />
                                             )}/>
-                                        {errors.birthday && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.birthdate && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -156,7 +165,7 @@ const Personal = () => {
                                                     placeholder="Pilih Jenis Kelamin"
                                                 />
                                             )}/>
-                                        {errors['gender'] && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.gender && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -169,9 +178,9 @@ const Personal = () => {
                                             type="text"
                                             id="orderborn"
                                             placeholder="Ex. 1"
+                                            {...register('orderborn', {required: true})}
                                         />
-                                        {errors['orderborn'] &&
-                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.orderborn && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -184,9 +193,9 @@ const Personal = () => {
                                             type="text"
                                             id="sibling"
                                             placeholder="Ex. 3"
+                                            {...register('sibling', {required: true})}
                                         />
-                                        {errors['sibling'] &&
-                                            <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.sibling && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
@@ -229,7 +238,7 @@ const Personal = () => {
                     </Form>
                 </Col>
                 <Col className="col-md-4">
-                    Testing
+
                 </Col>
             </Row>
         </PreviewCard>

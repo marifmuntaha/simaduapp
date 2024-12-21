@@ -25,12 +25,17 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         try {
-            return ($user = User::create($request->all()))
-                ? response([
+            if ($user = User::create($request->all())) {
+                $user->institution()->sync($request->institution_id);
+                return response([
                     'success' => true,
                     'message' => 'Pengguna berhasil ditambahkan',
                     'result' => new UserResource($user)
-                ], 201) : throw new Exception("Gagal menyimpan pengguna");
+                ], 201);
+            }
+            else {
+                throw new Exception("Gagal menyimpan pengguna");
+            }
         } catch (Exception $exception){
             return response([
                 'success' => false,

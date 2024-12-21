@@ -2,7 +2,7 @@
 import {SagaIterator} from "redux-saga";
 import {institutionApiResponseError, institutionApiResponseSuccess} from "./actions";
 import {InstitutionActionTypes} from "./constants";
-import {get as getApi, store as storeApi, update as updateApi, destroy as destroyApi} from '../../utils/api/institution'
+import {get as getApi, store as storeApi, update as updateApi, show as showApi, destroy as destroyApi} from '../../utils/api/institution'
 import {all, call, fork, put, takeEvery} from "redux-saga/effects";
 
 function* get({payload: {params}}): SagaIterator {
@@ -35,6 +35,16 @@ function* update({payload: {id, user_id, ladder_id, name, alias, nsm, npsn, head
     }
 }
 
+function* show({payload: {params}}): SagaIterator {
+    try {
+        const response = yield call(showApi, params);
+        const data = response && response.data;
+        yield put(institutionApiResponseSuccess(InstitutionActionTypes.SHOW_INSTITUTION, data));
+    } catch (error){
+        yield put(institutionApiResponseError(InstitutionActionTypes.SHOW_INSTITUTION, error))
+    }
+}
+
 function* destroy({payload: {params}}): SagaIterator {
     try {
         const response = yield call(destroyApi, params);
@@ -57,11 +67,15 @@ export function* watchUpdateInstitution() {
     yield takeEvery(InstitutionActionTypes.UPDATE_INSTITUTION, update);
 }
 
+export function* watchShowInstitution() {
+    yield takeEvery(InstitutionActionTypes.SHOW_INSTITUTION, show);
+}
+
 export function* watchDestroyInstitution() {
     yield takeEvery(InstitutionActionTypes.DESTROY_INSTITUTION, destroy);
 }
 function* institutionSaga(){
-    yield all([fork(watchGetInstitutions), fork(watchStoreInstitution), fork(watchUpdateInstitution), fork(watchDestroyInstitution)])
+    yield all([fork(watchGetInstitutions), fork(watchStoreInstitution), fork(watchUpdateInstitution), fork(watchShowInstitution), fork(watchDestroyInstitution)])
 }
 
 export default institutionSaga;

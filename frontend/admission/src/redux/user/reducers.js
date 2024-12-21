@@ -26,7 +26,6 @@ const User = (state = INITIAL_STATE, action): any => {
                         loading: false,
                         success: action.payload.data.message,
                         user: action.payload.data.result,
-                        loadData: true
                     }
                 case UserActionTypes.UPDATE_USER:
                     return {

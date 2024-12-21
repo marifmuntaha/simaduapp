@@ -5,8 +5,12 @@ import Content from "../../../../layout/content";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import classnames from "classnames";
 import Personal from "./Personal";
+import Parent from "./Parent";
+import Address from "./Address";
+import Program from "./Program";
 
 const Add = () => {
+    const [studentID, setStudentID] = useState(2)
     const [activeIconTab, setActiveIconTab] = useState("1");
     const toggleIconTab = (icontab) => {
         if (activeIconTab !== icontab) setActiveIconTab(icontab);
@@ -115,7 +119,16 @@ const Add = () => {
                 </Nav>
                 <TabContent activeTab={activeIconTab}>
                     <TabPane tabId="1">
-                        <Personal/>
+                        <Personal studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="2">
+                        <Parent studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="3">
+                        <Address studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="4">
+                        <Program studentID={studentID} setStudentID={setStudentID}/>
                     </TabPane>
                 </TabContent>
             </Content>

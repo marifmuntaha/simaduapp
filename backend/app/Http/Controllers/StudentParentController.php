@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStudentParentRequest;
 use App\Http\Requests\UpdateStudentParentRequest;
-use App\Http\Resources\StudentParentResource;
+use App\Http\Resources\Admission\StudentParentResource;
 use App\Models\StudentParent;
 use Exception;
 

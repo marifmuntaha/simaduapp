@@ -15,13 +15,13 @@ function* get({payload: {params}}): SagaIterator {
     }
 }
 
-function* store({payload: {user_id, number_kk, head_family, father_status, father_name,
+function* store({payload: {user_id, student_id, number_kk, head_family, father_status, father_name,
     father_nik, father_birthplace, father_birthday, father_email, father_phone, mother_status, mother_name,
     mother_nik, mother_birthplace, mother_birthday, mother_email, mother_phone, guard_status, guard_name, guard_nik,
     guard_birthplace, guard_birthday, guard_email, guard_phone
 }}): SagaIterator {
     try {
-        const response = yield call(storeApi, {user_id, number_kk, head_family, father_status, father_name,
+        const response = yield call(storeApi, {user_id, student_id, number_kk, head_family, father_status, father_name,
             father_nik, father_birthplace, father_birthday, father_email, father_phone, mother_status, mother_name,
             mother_nik, mother_birthplace, mother_birthday, mother_email, mother_phone, guard_status, guard_name, guard_nik,
             guard_birthplace, guard_birthday, guard_email, guard_phone});
