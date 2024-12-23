@@ -8,9 +8,11 @@ import Personal from "./Personal";
 import Parent from "./Parent";
 import Address from "./Address";
 import Program from "./Program";
+import School from "./School";
+import File from "./File";
 
 const Add = () => {
-    const [studentID, setStudentID] = useState(2)
+    const [studentID, setStudentID] = useState(3);
     const [activeIconTab, setActiveIconTab] = useState("1");
     const toggleIconTab = (icontab) => {
         if (activeIconTab !== icontab) setActiveIconTab(icontab);
@@ -129,6 +131,12 @@ const Add = () => {
                     </TabPane>
                     <TabPane tabId="4">
                         <Program studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="5">
+                        <School studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="6">
+                        <File studentID={studentID} setStudentID={setStudentID}/>
                     </TabPane>
                 </TabContent>
             </Content>

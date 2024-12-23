@@ -33,6 +33,16 @@ return new class extends Migration
             $table->enum('boarding', [1, 2])->default(2)->comment('1. Boarding, 2. Optional');
             $table->string('description')->nullable();
         });
+        Schema::create('files', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('year_id');
+            $table->string('name');
+            $table->string('alias');
+            $table->enum('status', ['1', '2'])->default(1)->comment('1. Wajib 2. Optional');
+            $table->unsignedBigInteger('creator');
+            $table->unsignedBigInteger('updater');
+        });
         Schema::create('admission_students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -140,6 +150,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('admission_settings');
         Schema::dropIfExists('admission_programs');
+        Schema::dropIfExists('files');
         Schema::dropIfExists('admission_students');
         Schema::dropIfExists('admission_student_parents');
         Schema::dropIfExists('admission_student_parent');

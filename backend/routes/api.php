@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admission\FileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\InstitutionController;
@@ -21,6 +22,7 @@ Route::group(['prefix' => 'auth'], function (){
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'master'], function (){
+        Route::apiResource('file', FileController::class);
         Route::apiResource('ladder', LadderController::class);
         Route::apiResource('level', LevelController::class);
         Route::apiResource('major', MajorController::class);

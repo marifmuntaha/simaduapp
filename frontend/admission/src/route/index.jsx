@@ -5,6 +5,7 @@ import {Route} from "react-router-dom";
 const Dashboard = React.lazy(() => import("../pages/dashboard"));
 const Year = React.lazy(() => import('../pages/master/year'));
 const Program = React.lazy(() => import('../pages/master/program'));
+const File = React.lazy(() => import('../pages/master/file'));
 
 const User = React.lazy(() => import("../pages/user"));
 
@@ -69,6 +70,12 @@ const operatorRoutes = [
         path: '/operator/master/program',
         name: 'Program',
         element: <Program/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/master/berkas',
+        name: 'Berkas',
+        element: <File/>,
         route: PrivateRoute,
     },
     {

@@ -8,11 +8,11 @@ import {toastError, toastSuccess} from "../../../components";
 
 function* get({payload: {params}}): SagaIterator {
     try {
-        const response = yield call(getApi, params)
-        const data = response && response.data
-        yield put(ProgramApiResponseSuccess(ProgramActionTypes.GET_PROGRAM, data))
+        const response = yield call(getApi, params);
+        const data = response && response.data;
+        yield put(ProgramApiResponseSuccess(ProgramActionTypes.GET_PROGRAM, data));
     } catch (error){
-        yield put(ProgramApiResponseError(ProgramActionTypes.GET_PROGRAM, error))
+        yield put(ProgramApiResponseError(ProgramActionTypes.GET_PROGRAM, error));
     }
 }
 

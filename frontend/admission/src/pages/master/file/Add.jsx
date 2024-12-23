@@ -2,38 +2,41 @@ import React, {useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
-import {store as storeYear} from "../../../utils/api/master/year"
 import {useInstitution} from "../../../layout/provider/Institution";
+import {useSetting} from "../../../layout/provider/Setting";
+import {store as storeFile} from "../../../utils/api/master/file";
 
 const Add = ({...props}) => {
     const institution = useInstitution();
+    const setting = useSetting();
     const [loading, setLoading] = useState(false);
-    const activeOption = [
-        {value: '2', label: 'Tidak'},
-        {value: '1', label: 'Aktif'}
-    ]
+    const statusOption = [
+        {value: '1', label: 'Wajib'},
+        {value: '2', label: 'Optional'},
+    ];
+    const {register, handleSubmit, formState: {errors}, getValues, reset, control} = useForm();
     const onSubmit = async () => {
         setLoading(true);
         const params = {
             institution_id: institution.id,
+            year_id: setting.year_id,
             name: getValues('name'),
-            description: getValues('description'),
-            active: getValues('active'),
+            alias: getValues('alias'),
+            status: getValues('status'),
         }
-        await storeYear(params).then(resp => {
+        await storeFile(params).then(resp => {
             toastSuccess(resp.data.message);
-            toggle();
             setLoading(false);
+            toggle();
             props.setLoadData(true);
-        }).then(err => {
+        }).catch(err => {
             toastError(err);
-            setLoading(false)
+            setLoading(false);
         })
     }
-    const {register, handleSubmit, formState: {errors}, getValues, reset, control} = useForm();
     const toggle = () => {
         reset();
-        props.setModal('');
+        props.setModal(false);
     }
 
     return (
@@ -45,13 +48,13 @@ const Add = ({...props}) => {
                         <Row className="gy-2">
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="fullname" className="form-label">Nama</Label>
+                                    <Label htmlFor="name" className="form-label">Nama Berkas</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
                                             id="name"
-                                            placeholder="Ex. 2023/2024"
+                                            placeholder="Ex. Kartu Indonesia Pintar"
                                             {...register('name', {required: true})}
                                         />
                                         {errors.name && <span className="invalid">Kolom tidak boleh kosong.</span>}
@@ -60,41 +63,39 @@ const Add = ({...props}) => {
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
+                                    <Label htmlFor="alias" className="form-label">Singkatan</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
-                                            id="description"
-                                            placeholder="Ex. Tahun Pelajaran 2023/2024"
-                                            {...register('description', {required: false})}
+                                            id="alias"
+                                            placeholder="Ex. KIP"
+                                            {...register('alias', {required: false})}
                                         />
-                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.alias && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <label className="form-label" htmlFor="user">
-                                        Status
-                                    </label>
+                                    <Label htmlFor="status" className="form-label">Status</Label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
                                             className="form-control"
-                                            name="active"
+                                            name="status"
                                             rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={activeOption}
-                                                    value={activeOption.find((c) => c.value === value)}
+                                                    options={statusOption}
+                                                    value={statusOption !== undefined && statusOption.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Status"
                                                 />
                                             )}/>
-                                        {errors.active && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        <input type="hidden" id="boarding" className="form-control" />
+                                        {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>

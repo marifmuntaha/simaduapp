@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreStudentProgramRequest extends FormRequest
+class UpdateFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,25 +23,30 @@ class StoreStudentProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required',
-            'program_id' => 'required',
-            'boarding' => 'required'
+            'id' => 'required',
+            'institution_id' => 'required',
+            'year_id' => 'required',
+            'name' => 'required',
+            'alias' => 'required',
+            'status' => 'required',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'student_id' => 'ID Siswa',
-            'program_id' => 'Program Pilihan',
-            'boarding' => 'Boarding/Pondok'
+            'id' => 'ID Berkas',
+            'institution_id' => 'ID Institusi',
+            'year_id' => 'ID Tahun',
+            'name' => 'Nama Berkas',
+            'alias' => 'Singkatan',
+            'status' => 'Status Berkas',
         ];
     }
 
     public function prepareForValidation()
     {
         return $this->merge([
-            'creator' => $this->user('sanctum')->id,
             'updater' => $this->user('sanctum')->id,
         ]);
     }

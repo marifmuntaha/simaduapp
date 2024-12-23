@@ -1,83 +1,56 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../../components";
-import {useDispatch, useSelector} from "react-redux";
+import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
-import {setYear, updateYear} from "../../../redux/master/year/actions";
+import {update as updateYear} from "../../../utils/api/master/year"
 
-const Edit = ({user}) => {
-    const dispatch = useDispatch();
-    const {loading, modal, year, success} = useSelector((state) => state.year);
-    const {institutions} = useSelector((state) => state.institution);
+const Edit = ({...props}) => {
+    const [loading, setLoading] = useState(false);
     const activeOption = [
         {value: '2', label: 'Tidak'},
         {value: '1', label: 'Aktif'}
     ]
-    const onSubmit = () => {
-        dispatch(updateYear({
-            formData: getValues([
-                'id',
-                'institution_id',
-                'name',
-                'description',
-                'active'
-            ])
-        }))
+    const onSubmit = async () => {
+        setLoading(true);
+        const params = {
+            id: getValues('id'),
+            institution_id: getValues('institution_id'),
+            name: getValues('name'),
+            description: getValues('description'),
+            active: getValues('active'),
+        }
+        await updateYear(params).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+            props.setLoadData(true);
+            toggle();
+        }).then(error => {
+            toastError(error);
+            setLoading(false);
+        })
     }
     const {
         register, handleSubmit, formState: {errors}, setValue, getValues, reset, control
     } = useForm()
     const toggle = () => {
         reset();
-        dispatch(setYear({}, false));
+        props.setYear([]);
+        props.setModal('');
     }
     useEffect(() => {
+        const year = props.year;
         year && Object.entries(year).map((year) => {
             return setValue(year[0], year[1])
         });
-        user.role !== '1' && setValue('institution_id', process.env.REACT_APP_SERVICE_INSTITUTION);
-    }, [setValue, year, user]);
-
-    useEffect(() => {
-        success && dispatch(setYear({}, false));
-        reset();
-    }, [success, reset, dispatch]);
+    }, [setValue, props.year]);
 
     return (
         <>
-            <Modal isOpen={modal.edit} toggle={toggle}>
+            <Modal isOpen={props.modal === 'edit'} toggle={toggle}>
                 <ModalHeader>UBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
-                            {user.role === '1' && (
-                                <Col className="col-md-12">
-                                    <div className="form-group">
-                                        <label className="form-label" htmlFor="institution_id">
-                                            Lembaga
-                                        </label>
-                                        <div className="form-control-wrap">
-                                            <input type="hidden" className="form-control"/>
-                                            <Controller
-                                                control={control}
-                                                className="form-control"
-                                                name="institution_id"
-                                                rules={{required: true}}
-                                                render={({field: {onChange, value, ref}}) => (
-                                                    <RSelect
-                                                        inputRef={ref}
-                                                        options={institutions}
-                                                        value={institutions.find((c) => c.value === value)}
-                                                        onChange={(val) => onChange(val.value)}
-                                                        placeholder="Pilih Jenjang"
-                                                    />
-                                                )}/>
-                                            {errors.institution_id &&
-                                                <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                        </div>
-                                    </div>
-                                </Col>
-                            )}
                             <Col className="col-md-12">
                                 <div className="form-group">
                                     <Label htmlFor="name" className="form-label">Nama</Label>

@@ -17,6 +17,10 @@ export const operatorMenu = [
                 text: "Program",
                 link: "/operator/master/program",
             },
+            {
+                text: "Berkas",
+                link: "/operator/master/berkas",
+            },
         ],
     },
     {

@@ -16,8 +16,8 @@ class ProgramResource extends JsonResource
     {
         $resource = [
             'id' => $this['id'],
-            'institution' => $this['institution'],
-            'year' => $this['year'],
+            'institution_id' => $this['institution_id'],
+            'year_id' => $this['year_id'],
             'name' => $this['name'],
             'alias' => $this['alias'],
             'description' => $this['description'],

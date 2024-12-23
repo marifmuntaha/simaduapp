@@ -7,10 +7,12 @@ import settingSaga from "./setting/saga";
 import studentSaga from "./student/saga";
 import userSaga from "./user/saga";
 import ladderSaga from "./master/ladder/saga";
+import fileSaga from "./master/file/saga";
 
 export default function* rootSaga(){
     yield all([
         authSaga(),
+        fileSaga(),
         institutionSaga(),
         ladderSaga(),
         programSaga(),

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import {
@@ -9,19 +9,22 @@ import {
     BlockTitle,
     Icon,
     PreviewCard,
-    ReactDataTable
+    ReactDataTable, toastError, toastSuccess
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
-import {useDispatch, useSelector} from "react-redux";
-import {addYear, destroyYear, getYears, resetYear, setYear} from "../../../redux/master/year/actions";
 import Add from "./Add";
 import Edit from "./Edit";
-import {APICore} from "../../../utils/api/APICore";
+import {useInstitution} from "../../../layout/provider/Institution";
+import {get as getYears, destroy as destroyYear} from "../../../utils/api/master/year"
 
 const Year = () => {
-    const dispatch = useDispatch();
-    const {loading, years, success} = useSelector((state) => state.year);
+    const institution = useInstitution();
     const [sm, updateSm] = useState(false);
+    const [years, setYears] = useState([]);
+    const [year, setYear] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [modal, setModal] = useState('');
+    const [loadData, setLoadData] = useState(true);
     const Columns = [
         {
             name: "Nama",
@@ -53,14 +56,23 @@ const Year = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            dispatch(setYear(row, true));
+                            setModal('edit');
+                            setYear(row);
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyYear(row.id));
+                            setLoading(row.id);
+                            destroyYear(row.id).then((resp) => {
+                                toastSuccess(resp.data.message);
+                                setLoadData(true);
+                                setLoading(false);
+                            }).catch(error => {
+                                toastError(error);
+                                setLoading(false);
+                            });
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -69,17 +81,14 @@ const Year = () => {
             )
         },
     ];
-    const api = new APICore();
-    const user = api.getLoggedInUser();
-    const params = useCallback(() => {
-        return user.role !== '1'
-            ? {institution_id: process.env.REACT_APP_SERVICE_INSTITUTION}
-            : ''
-    }, [user]);
 
     useEffect(() => {
-        dispatch(getYears(params())) && dispatch(resetYear());
-    }, [dispatch, success]);
+        loadData === true && getYears({institution_id: institution.id, order: 'DESC'}).then(resp => {
+            setYears(resp.data.result);
+            setLoadData(false);
+        });
+    }, [loading, loadData, institution]);
+
     return (
         <>
             <Head title="Tahun Pelajaran"/>
@@ -112,7 +121,7 @@ const Year = () => {
                                     <ul className="nk-block-tools g-3">
                                         <li
                                             className="nk-block-tools-opt"
-                                            onClick={() => dispatch(addYear(true))}
+                                            onClick={() => setModal('add')}
                                         >
                                             <Button color="secondary">
                                                 <Icon name="plus"/>
@@ -128,8 +137,8 @@ const Year = () => {
                 <PreviewCard>
                     <ReactDataTable data={years} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add user={user}/>
-                <Edit user={user}/>
+                <Add modal={modal} setModal={setModal} setLoadData={setLoadData} />
+                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} year={year} setYear={setYear}/>
             </Content>
         </>
     )

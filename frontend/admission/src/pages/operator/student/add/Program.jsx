@@ -1,11 +1,12 @@
-import {Col, PreviewCard, Row, RSelect} from "../../../../components";
-import {Form, Label} from "reactstrap";
+import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "../../../../components";
+import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getPrograms} from "../../../../redux/master/program/actions";
 import {useInstitution} from "../../../../layout/provider/Institution";
 import {useSetting} from "../../../../layout/provider/Setting";
+import {store as storeProgram} from "../../../../utils/api/studentProgram";
 
 const Program = ({studentID}) => {
     const institution = useInstitution();
@@ -13,17 +14,31 @@ const Program = ({studentID}) => {
     const dispatch = useDispatch();
     const {programs, success, error} = useSelector((state) => state.program);
     const {handleSubmit, formState: {errors}, control, watch, getValues, setValue} = useForm();
-    const [programOptions, setProgramOptions] = useState([])
+    const [programOptions, setProgramOptions] = useState([]);
+    const [lockBoarding, setLockBoarding] = useState(false);
+    const [loading, setLoading] = useState(false);
     const boardingOptions = [
-        {value: 1, label: 'Boarding'},
-        {value: 2, label: 'Non Boarding'},
+        {value: "1", label: 'Boarding'},
+        {value: "2", label: 'Non Boarding'},
     ]
-    const handleSubmitForm = () => {
-
+    const handleSubmitForm = async () => {
+        setLoading(true)
+        const programParam = {
+            student_id: studentID,
+            program_id: getValues('program_id'),
+            boarding: getValues('boarding'),
+        }
+        await storeProgram(programParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(error => {
+            toastError(error);
+            setLoading(false);
+        });
     }
 
     useEffect(() => {
-        dispatch(getPrograms({institution_id: institution.id, year_id: setting.year_id}))
+        dispatch(getPrograms({institution_id: institution && institution.id, year_id: setting.year_id}))
     }, []);
 
     useEffect(() => {
@@ -36,10 +51,12 @@ const Program = ({studentID}) => {
         const program = programs.filter((program) => {
             return program.id === getValues('program_id');
         })
-        if (program[0].boarding === "1") {
-            setValue('boarding', "1")
+        if (program.length > 0 && program[0].boarding === "1") {
+            setValue('boarding', "1");
+            setLockBoarding(true);
         } else {
-            setValue('boarding', 0)
+            setValue('boarding', 0);
+            setLockBoarding(false);
         }
     }, [watch('program_id')])
 
@@ -89,11 +106,17 @@ const Program = ({studentID}) => {
                                                     value={boardingOptions.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Boarding"
+                                                    isDisabled={lockBoarding}
                                                 />
                                             )}/>
                                         {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
+                            </Col>
+                            <Col className="col-md-12 d-flex justify-content-end">
+                                <Button className="col-3 text-center justify-content-center" type="submit" color="primary" size="md" disabled={loading}>
+                                    {loading ? <Spinner size="sm" color="light"/> : <span>Simpan</span>}
+                                </Button>
                             </Col>
                         </Row>
                     </Form>

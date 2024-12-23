@@ -23,27 +23,28 @@ import {
 } from "reactstrap";
 import Add from "./Add";
 import Edit from "./Edit";
-import {useSetting} from "../../../layout/provider/Setting";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {get as getYears} from "../../../utils/api/master/year";
-import {get as getPrograms, destroy as destroyProgram} from "../../../utils/api/master/program";
+import {useSetting} from "../../../layout/provider/Setting";
+import {get as getYears} from "../../../utils/api/master/year"
+import {get as getFiles, destroy as destroyFile} from "../../../utils/api/master/file"
 
-const Program = () => {
+const File = () => {
     const institution = useInstitution();
     const setting = useSetting();
     const [sm, updateSm] = useState(false);
-    const [yearSelected, setYearSelected] = useState();
     const [years, setYears] = useState([]);
-    const [programs, setPrograms] = useState([]);
-    const [program, setProgram] = useState([]);
-    const [loadData, setLoadData] = useState(true);
+    const [yearSelected, setYearSelected] = useState([]);
     const [modal, setModal] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loadData, setLoadData] = useState(true);
+    const [files, setFiles] = useState([]);
+    const [file, setFile] = useState([]);
     const Columns = [
         {
-            name: "Nama Program",
+            name: "Nama",
             selector: (row) => row.name,
             sortable: false,
+            hide: "sm",
         },
         {
             name: "Singkatan",
@@ -51,13 +52,12 @@ const Program = () => {
             sortable: false,
         },
         {
-            name: "Boarding",
-            selector: (row) => row.boarding,
+            name: "Status",
+            selector: (row) => row.status,
             sortable: false,
-            cell: (row) => {
-                return row.boarding === '1' ? <Badge color="success" pill>Boarding</Badge> :
-                    <Badge color="warning" pill>Opsional</Badge>;
-            }
+            cell: (row) => (
+                row.status === '1' ? <Badge color="success">Wajib</Badge> : <Badge color="warning">Opsional</Badge>
+            )
         },
         {
             name: "Aksi",
@@ -69,23 +69,23 @@ const Program = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            setProgram(row);
-                            setModal('edit')
+                            setFile(row);
+                            setModal('edit');
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            setLoading(row.id)
-                            destroyProgram(row.id).then(resp => {
+                            setLoading(row.id);
+                            destroyFile(row.id).then(resp => {
                                 toastSuccess(resp.data.message);
                                 setLoadData(true);
                                 setLoading(false);
                             }).catch(err => {
                                 toastError(err);
-                                setLoading(false);
-                            });
+                                setLoadData(false);
+                            })
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -93,35 +93,30 @@ const Program = () => {
                 </ButtonGroup>
             )
         },
-    ]
-
+    ];
     useEffect(() => {
         getYears({institution_id: institution.id, order: 'DESC', limit: 5}).then(resp => {
             const years = resp.data.result;
             const active = years.filter((year) => {
                 return year.id === setting.year_id;
             })
-            setYears(years);
             setYearSelected(active[0]);
+            setYears(years);
         })
     }, []);
 
     useEffect(() => {
-        yearSelected !== undefined && loadData && getPrograms({
-            institution_id: institution.id,
-            year_id: yearSelected.id
-        }).then(resp => {
-            setPrograms(resp.data.result);
+        yearSelected !== undefined && loadData && getFiles({institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
+            setFiles(resp.data.result);
+            setLoadData(false)
+        }).catch(error => {
+            toastError(error);
             setLoadData(false);
-        }).catch(err => {
-            toastError(err);
-            setLoadData(false);
-        });
-    }, [yearSelected, loadData]);
-
+        })
+    }, [loadData, yearSelected]);
     return (
         <>
-            <Head title="Data Program"/>
+            <Head title="Data Berkas"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
@@ -133,7 +128,7 @@ const Program = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Program</BlockTitle>
+                            <BlockTitle tag="h4">Data Berkas</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -155,7 +150,8 @@ const Program = () => {
                                                     tag="a"
                                                     className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
                                                     <Icon className="d-none d-sm-inline" name="calender-date"/>
-                                                    <span><span className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
+                                                    <span><span
+                                                        className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
                                                     <Icon className="dd-indc" name="chevron-right"/>
                                                 </DropdownToggle>
                                                 <DropdownMenu end>
@@ -195,12 +191,12 @@ const Program = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={files} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add modal={modal} setModal={setModal} setLoadData={setLoadData} />
-                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={program}/>
+                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} file={file}/>
             </Content>
         </>
     )
 }
-export default Program;
+export default File;

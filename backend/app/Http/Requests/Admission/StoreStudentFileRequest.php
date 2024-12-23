@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreStudentProgramRequest extends FormRequest
+class StoreStudentFileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class StoreStudentProgramRequest extends FormRequest
     {
         return [
             'student_id' => 'required',
-            'program_id' => 'required',
-            'boarding' => 'required'
+            'file_id' => 'required',
+            'number' => 'required',
+            'value' => 'required',
         ];
     }
 
@@ -33,8 +34,9 @@ class StoreStudentProgramRequest extends FormRequest
     {
         return [
             'student_id' => 'ID Siswa',
-            'program_id' => 'Program Pilihan',
-            'boarding' => 'Boarding/Pondok'
+            'file_id' => 'Berkas',
+            'number' => 'Nomor Berkas',
+            'value' => 'Berkas',
         ];
     }
 

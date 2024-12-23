@@ -1,10 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 
-import Auth from './auth/reducers'
-
-// saga
 import rootSaga from './sagas'
+import Auth from './auth/reducers'
+import File from './master/file/reducers';
 import Institution from "./institution/reducers";
 import Ladder from "./master/ladder/reducers";
 import Year from "./master/year/reducers";
@@ -21,6 +20,7 @@ const middleware = [sagaMiddleware]
 export const store = configureStore({
     reducer: {
         auth: Auth,
+        file: File,
         institution: Institution,
         ladder: Ladder,
         program: Program,
