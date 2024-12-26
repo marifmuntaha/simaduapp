@@ -26,7 +26,7 @@ class StoreStudentFileRequest extends FormRequest
             'student_id' => 'required',
             'file_id' => 'required',
             'number' => 'required',
-            'value' => 'required',
+            'image' => 'required',
         ];
     }
 
@@ -36,7 +36,7 @@ class StoreStudentFileRequest extends FormRequest
             'student_id' => 'ID Siswa',
             'file_id' => 'Berkas',
             'number' => 'Nomor Berkas',
-            'value' => 'Berkas',
+            'image' => 'Berkas',
         ];
     }
 

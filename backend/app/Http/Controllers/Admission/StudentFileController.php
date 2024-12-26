@@ -26,6 +26,11 @@ class StudentFileController extends Controller
     public function store(StoreStudentFileRequest $request)
     {
         try {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = $request->file_id . '.' . $extension;
+            $file->storeAs('public/admission/student/'. $request->student_id, $fileName);
+            $request->request->add(['value' => $fileName]);
             if ($file = StudentFile::create($request->all())) {
                 return response([
                     'success' => true,

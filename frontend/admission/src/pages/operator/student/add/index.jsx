@@ -9,7 +9,7 @@ import Parent from "./Parent";
 import Address from "./Address";
 import Program from "./Program";
 import School from "./School";
-import File from "./File";
+import Index from "./File";
 
 const Add = () => {
     const [studentID, setStudentID] = useState(3);
@@ -136,7 +136,7 @@ const Add = () => {
                         <School studentID={studentID} setStudentID={setStudentID}/>
                     </TabPane>
                     <TabPane tabId="6">
-                        <File studentID={studentID} setStudentID={setStudentID}/>
+                        <Index studentID={studentID} setStudentID={setStudentID}/>
                     </TabPane>
                 </TabContent>
             </Content>

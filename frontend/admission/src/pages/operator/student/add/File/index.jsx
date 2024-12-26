@@ -1,25 +1,39 @@
-import React, {useState} from "react";
-import {Col, Icon, PreviewCard, ReactDataTable, Row, toastError, toastSuccess} from "../../../../components";
+import React, {useEffect, useState} from "react";
+import {Col, Icon, PreviewCard, ReactDataTable, Row, toastError, toastSuccess} from "../../../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
+import {get as getFiles} from "../../../../../utils/api/studentFile"
+import Add from "./Add";
 
-const File = ({studentID}) => {
+const Index = ({studentID}) => {
     const [loading, setLoading] = useState(false);
     const [files, setFiles] = useState([]);
+    const [loadData, setLoadData] = useState(true);
+    const [modal, setModal] = useState('');
+
+    useEffect(() => {
+        loadData && getFiles({student_id: studentID, with: 'file'}).then(resp => {
+            setFiles(resp.data.result)
+            setLoadData(false);
+        }).catch(err => {
+            toastError(err);
+            setLoadData(false);
+        })
+    }, [loadData]);
 
     const Columns = [
         {
-            name: "Nama",
-            selector: (row) => row.name,
+            name: "Nama Dokumen",
+            selector: (row) => row.file.name,
             sortable: false,
             hide: "sm",
         },
         {
-            name: "Singkatan",
-            selector: (row) => row.alias,
+            name: "Nomor",
+            selector: (row) => row.number,
             sortable: false,
         },
         {
-            name: "Status",
+            name: "Berkas",
             selector: (row) => row.status,
             sortable: false,
             cell: (row) => (
@@ -56,11 +70,18 @@ const File = ({studentID}) => {
         <PreviewCard>
             <Row className="gy-2">
                 <Col className="col-md-8">
-                    <ReactDataTable data={[]} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={files} columns={Columns} pagination className="nk-tb-list"/>
+                </Col>
+                <Col className="col-md-8">
+                    <Button color="secondary" onClick={() => setModal('add')}>
+                        <Icon name="plus"/>
+                        <span>Tambah</span>
+                    </Button>
                 </Col>
             </Row>
+            <Add modal={modal} setModal={setModal} setLoadData={setLoadData} studentID={studentID}/>
         </PreviewCard>
     )
 }
 
-export default File;
+export default Index;

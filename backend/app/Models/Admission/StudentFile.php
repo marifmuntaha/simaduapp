@@ -17,4 +17,13 @@ class StudentFile extends Model
         'creator',
         'updater',
     ];
+
+    public function file(): object
+    {
+        return $this->hasOne(
+            File::class,
+            'id',
+            'file_id'
+        );
+    }
 }
