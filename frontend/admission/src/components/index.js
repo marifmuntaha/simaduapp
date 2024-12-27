@@ -12,6 +12,7 @@ import Button from "./button";
 import {Col, Row} from "./grid";
 import DataTablePagination from "./pagination/DataTablePagination";
 import Icon from "./icon";
+import ImageContainer from "./partials/galery/ImageContainer";
 import {LinkItem, LinkList} from "./links";
 import {OverlineTitle} from "./text";
 import {PreviewCard, PreviewAltCard} from "./preview"
@@ -40,6 +41,7 @@ export {
     Col,
     DataTablePagination,
     Icon,
+    ImageContainer,
     LinkItem,
     LinkList,
     OverlineTitle,

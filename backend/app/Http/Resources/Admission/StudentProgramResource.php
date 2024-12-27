@@ -14,6 +14,15 @@ class StudentProgramResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $resource = [
+            'id' => $this['id'],
+            'student_id' => $this['student_id'],
+            'program_id' => $this['program_id'],
+            'boarding' => $this['boarding'],
+            'creator' => $this['creator'],
+            'updater' => $this['updater'],
+            'program' => $this->program,
+        ];
+        return $resource;
     }
 }

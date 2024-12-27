@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Col, Icon, PreviewCard, ReactDataTable, Row, toastError, toastSuccess} from "../../../../../components";
-import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
-import {get as getFiles} from "../../../../../utils/api/studentFile"
 import Add from "./Add";
+import {Col, Icon, PreviewCard, ReactDataTable, Row, toastError, toastSuccess, ImageContainer} from "../../../../../components";
+import {Button, ButtonGroup, Spinner} from "reactstrap";
+import {get as getFiles, destroy as destroyFile} from "../../../../../utils/api/studentFile"
 
 const Index = ({studentID}) => {
     const [loading, setLoading] = useState(false);
@@ -34,10 +34,12 @@ const Index = ({studentID}) => {
         },
         {
             name: "Berkas",
-            selector: (row) => row.status,
+            selector: (row) => row.value,
             sortable: false,
             cell: (row) => (
-                row.status === '1' ? <Badge color="success">Wajib</Badge> : <Badge color="warning">Opsional</Badge>
+                <div className={{textAlign: "center"}}>
+                    <ImageContainer img={row.value} icon="file-img" />
+                </div>
             )
         },
         {
@@ -48,16 +50,17 @@ const Index = ({studentID}) => {
             cell: (row) => (
                 <ButtonGroup size="sm">
                     <Button
-                        color="outline-warning"
-                        onClick={() => {
-
-                        }}>
-                        <Icon name="edit"/>
-                    </Button>
-                    <Button
                         color="outline-danger"
                         onClick={() => {
-
+                            setLoading(row.id);
+                            destroyFile(row.id).then(resp => {
+                                toastSuccess(resp.data.message);
+                                setLoading(false);
+                                setLoadData(true);
+                            }).catch(err => {
+                                toastError(err);
+                                setLoading(false);
+                            });
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}

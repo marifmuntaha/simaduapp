@@ -15,6 +15,8 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $student = new Student();
+        $student = $request->has('institution_id') ? $student->whereInstitutionId($request->input('institution_id')) : $student;
+        $student = $request->has('year_id') ? $student->whereYearId($request->input('year_id')) : $student;
         return response([
             'success' => true,
             'message' => null,

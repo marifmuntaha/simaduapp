@@ -1,38 +1,158 @@
 import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
-import {BackTo, BlockBetween, BlockHead, BlockHeadContent, BlockTitle, Icon} from "../../../components";
-import {Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
-import {useDispatch, useSelector} from "react-redux";
+import {
+    BackTo,
+    BlockBetween,
+    BlockHead,
+    BlockHeadContent,
+    BlockTitle,
+    Icon,
+    PreviewCard,
+    ReactDataTable, toastError, toastSuccess
+} from "../../../components";
+import {
+    Badge,
+    Button,
+    ButtonGroup,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Spinner,
+    UncontrolledDropdown
+} from "reactstrap";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {getYears} from "../../../redux/master/year/actions";
 import {useSetting} from "../../../layout/provider/Setting";
-import {getStudents} from "../../../redux/student/actions";
 import {useNavigate} from "react-router-dom";
+import {get as getYears} from "../../../utils/api/master/year"
+import {get as getStudents} from "../../../utils/api/student";
+import moment from "moment";
+import "moment/locale/id"
 
 const Student = () => {
-    const dispatch = useDispatch();
     const institution = useInstitution();
     const setting = useSetting();
-    const {years} = useSelector((state) => state.year);
-    const {loading, students, success} = useSelector((state) => state.student);
     const [sm, updateSm] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [years, setYears] = useState([]);
     const [yearSelected, setYearSelected] = useState([]);
+    const [students, setStudents] = useState([]);
+    const [loadData, setLoadData] = useState(false);
     const navigate = useNavigate();
+    const Columns = [
+        {
+            name: "NISN",
+            selector: (row) => row.nisn,
+            sortable: false,
+            width: '130px'
+        },
+        {
+            name: "Nama Lengkap",
+            selector: (row) => row.name,
+            sortable: false,
+        },
+        {
+            name: "Tempat, Tanggal Lahir",
+            selector: (row) => row.birthplace,
+            sortable: false,
+            cell: row => (
+                row.birthplace + ', ' + moment(row.birthdate).locale('id').format("D MMMM Y")
+            )
+        },
+        {
+            name: "L/P",
+            selector: (row) => row.gender,
+            sortable: false,
+            width: '110px',
+            cell: row => (
+                row.gender === 'L' ? "Laki-laki" : "Perempuan"
+            )
+        },
+        {
+            name: "Nama Wali",
+            selector: (row) => row.parent,
+            sortable: false,
+            cell: row => (
+                row.parent && row.parent.guard_name
+            )
+        },
+        {
+            name: "Alamat",
+            selector: (row) => row.address,
+            sortable: false,
+            cell: row => (
+                row.address && row.address.address
+            )
+        },
+        {
+            name: "Program",
+            selector: (row) => row.program,
+            sortable: false,
+            width: '110px',
+            cell: row => (
+                row.program && row.program.program.name
+            )
+        },
+        {
+            name: "Boarding",
+            selector: (row) => row.program,
+            sortable: false,
+            width: '90px',
+            cell: row => (
+                row.program && row.program.boarding === "1"
+                    ? <span className="text-success"><Icon name="check-thick"/></span>
+                    : <span className="text-danger"><Icon name="cross"/></span>
+            )
+        },
+        {
+            name: "Aksi",
+            selector: (row) => row.id,
+            sortable: false,
+            cell: (row) => (
+                <ButtonGroup size="sm">
+                    <Button
+                        color="outline-info"
+                        onClick={() => {
+                            navigate(`/operator/pendaftar/${row.id}/detail`);
+                        }}>
+                        <Icon name="eye"/>
+                    </Button>
+                    <Button
+                        color="outline-warning"
+                        onClick={() => {
+                        }}>
+                        <Icon name="edit"/>
+                    </Button>
+                    <Button
+                        color="outline-danger"
+                        onClick={() => {
+
+                        }}
+                        disabled={row.id === loading}>
+                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
+                    </Button>
+                </ButtonGroup>
+            )
+        },
+    ];
+
     useEffect(() => {
-        institution && dispatch(getYears({institution_id: institution.id}));
+        institution && getYears({institution_id: institution.id}). then(resp => {
+            let year = resp.data.result.filter((year) => {
+                return year.id === setting.year_id
+            })
+            setYears(resp.data.result);
+            setYearSelected(year[0]);
+            setLoadData(true);
+        });
     }, [institution]);
 
     useEffect(() => {
-        let year = years && years.filter((year) => {
-            return year.id === setting.year_id;
-        });
-        year && setYearSelected(year[0]);
-    }, [years]);
-
-    useEffect(() => {
-        (institution && yearSelected) && dispatch(getStudents({institution_id: institution.id, year_id: setting.year_id}));
-    }, [institution, yearSelected])
+        loadData && getStudents({institution_id: institution.id, year_id: yearSelected.id, with: 'parent,address,program'}).then(resp => {
+            setStudents(resp.data.result);
+            setLoadData(false);
+        })
+    }, [loadData])
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Head title="Data Pendaftar"/>
@@ -80,7 +200,8 @@ const Student = () => {
                                                                     tag="a"
                                                                     onClick={(ev) => {
                                                                         ev.preventDefault();
-                                                                        setYearSelected(year)
+                                                                        setYearSelected(year);
+                                                                        setLoadData(true);
                                                                     }}
                                                                     href="#!"
                                                                 >
@@ -107,6 +228,9 @@ const Student = () => {
                         </BlockHeadContent>
                     </BlockBetween>
                 </BlockHead>
+                <PreviewCard>
+                    <ReactDataTable data={students} columns={Columns} pagination className="nk-tb-list"/>
+                </PreviewCard>
             </Content>
         </Suspense>
     )

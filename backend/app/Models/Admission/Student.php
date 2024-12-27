@@ -4,6 +4,7 @@ namespace App\Models\Admission;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Student extends Model
 {
@@ -28,4 +29,24 @@ class Student extends Model
         'creator',
         'updater'
     ];
+
+    public function parent(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            StudentParent::class,
+            'admission_student_parent',
+            'student_id',
+            'parent_id'
+        );
+    }
+
+    public function address(): object
+    {
+        return $this->hasOne(StudentAddress::class, 'student_id', 'id');
+    }
+
+    public function program(): object
+    {
+        return $this->hasOne(StudentProgram::class, 'student_id', 'id');
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Resources\Admission\StudentFileResource;
 use App\Models\Admission\StudentFile;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class StudentFileController extends Controller
 {
@@ -29,7 +30,7 @@ class StudentFileController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $fileName = $request->file_id . '.' . $extension;
-            $file->storeAs('public/admission/student/'. $request->student_id, $fileName);
+            $file->storeAs('public/admission/images/student/'. $request->student_id, $fileName);
             $request->request->add(['value' => $fileName]);
             if ($file = StudentFile::create($request->all())) {
                 return response([
@@ -58,14 +59,14 @@ class StudentFileController extends Controller
         ]);
     }
 
-    public function update(UpdateStudentFileRequest $request, StudentFile $studentFile)
+    public function update(UpdateStudentFileRequest $request, StudentFile $file)
     {
         try {
-            return ($studentFile->update(array_filter($request->all())))
+            return ($file->update(array_filter($request->all())))
                 ? response([
                     'success' => true,
                     'message' => 'Data berkas berhasil diperbarui',
-                    'result' => new StudentFileResource($studentFile)
+                    'result' => new StudentFileResource($file)
                 ]) : throw new Exception('Data berkas gagal diperbarui');
         } catch (Exception $exception) {
             return response([
@@ -76,15 +77,19 @@ class StudentFileController extends Controller
         }
     }
 
-    public function destroy(StudentFile $studentFile)
+    public function destroy(StudentFile $file)
     {
         try {
-            return ($studentFile->delete())
-                ? response([
+            if ($file->delete()) {
+                Storage::delete('public/admission/images/student/'. $file->id . '/'.$file->value);
+                return response([
                     'success' => true,
                     'message' => 'Data berkas berhasil dihapus',
-                    'result' => new StudentFileResource($studentFile)
-                ]) : throw new Exception('Data berkas gagal dihapus');
+                    'result' => new StudentFileResource($file)
+                ]);
+            } else {
+                throw new Exception($file);
+            }
         } catch (Exception $exception) {
             return response([
                 'success' => false,

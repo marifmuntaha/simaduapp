@@ -53,7 +53,6 @@ const Parent = ({studentID}) => {
                 updater: getValues('updater'),
             }
             storeParent(parentParam).then(resp => {
-                console.log(resp.data.result);
                 toastSuccess(resp.data.message);
                 setLoading(false);
             }).catch(err => {

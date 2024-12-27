@@ -26,6 +26,11 @@ function store(params: {
     return api.create(baseUrl, params)
 }
 
+function show(params){
+    const baseUrl = `/admission/student/${params.id}`;
+    return api.get(baseUrl, params)
+}
+
 function update(params: {
     id: string,
     user_id: string,
@@ -50,4 +55,4 @@ function destroy(params){
     const baseUrl = `/admission/student/${params}`
     return api.delete(baseUrl);
 }
-export { get, store, update, destroy }
+export { get, store, show,  update, destroy }

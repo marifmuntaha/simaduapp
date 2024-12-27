@@ -30,7 +30,7 @@ function show(params) {
     return api.get(baseUrl, params);
 }
 function destroy(params) {
-    const baseUrl = `/student/${params}`
+    const baseUrl = `admission/student/file/${params}`
     return api.delete(baseUrl);
 }
 

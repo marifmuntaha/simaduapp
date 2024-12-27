@@ -16,10 +16,11 @@ class StudentFileResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resource = [
+            'id' => $this['id'],
             'student_id' => $this['student_id'],
             'file_id' => $this['file_id'],
             'number' => $this['number'],
-            'value' => $this['value'],
+            'value' => asset('/storage/admission/images/student/'. $this['student_id'].'/'.$this['value']),
             'creator' => $this['creator'],
             'updater' => $this['updater'],
         ];

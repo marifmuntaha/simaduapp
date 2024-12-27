@@ -12,7 +12,7 @@ import School from "./School";
 import Index from "./File";
 
 const Add = () => {
-    const [studentID, setStudentID] = useState(3);
+    const [studentID, setStudentID] = useState();
     const [activeIconTab, setActiveIconTab] = useState("1");
     const toggleIconTab = (icontab) => {
         if (activeIconTab !== icontab) setActiveIconTab(icontab);
