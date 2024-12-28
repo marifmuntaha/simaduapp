@@ -47,7 +47,6 @@ class StudentController extends Controller
         return response([
             'success' => true,
             'message' => null,
-            'result' => new StudentResource($student)
         ]);
     }
 

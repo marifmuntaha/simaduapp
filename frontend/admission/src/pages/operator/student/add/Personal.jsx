@@ -137,9 +137,10 @@ const Personal = ({setStudentID}) => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <DatePicker
                                                     inputRef={ref}
-                                                    selected={new Date()}
+                                                    selected={value}
                                                     className="form-control date-picker"
                                                     onChange={(val) => onChange(val)}
+                                                    dateFormat="dd/MM/yyyy"
                                                 />
                                             )}/>
                                         {errors.birthdate && <span className="invalid">Kolom tidak boleh kosong.</span>}

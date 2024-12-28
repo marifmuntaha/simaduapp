@@ -97,7 +97,7 @@ const View = () => {
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link disabled"
+                                            className="nav-link"
                                             href="#transactions"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
@@ -230,145 +230,40 @@ const View = () => {
                             <Sidebar toggleState={sideBar}>
                                 <div className="card-inner">
                                     <div className="user-card user-card-s2 mt-5 mt-xxl-0">
-                                        {/*<UserAvatar className="lg" theme="primary" text={findUpper(student && student.name)} />*/}
+                                        <UserAvatar className="lg" theme="primary" text={student && findUpper(student.name)} />
                                         <div className="user-info">
-                                            <Badge color="outline-light" pill className="ucap">{student.user.role}</Badge>
-                                            <h5>{student.name}</h5>
-                                            <span className="sub-text">{student.email}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-inner card-inner-sm">
-                                    <ul className="btn-toolbar justify-center gx-1">
-                                        <li>
-                                            <Button
-                                                href="#tool"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                                className="btn-trigger btn-icon"
-                                            >
-                                                <Icon name="shield-off"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li>
-                                            <Button
-                                                href="#mail"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                                className="btn-trigger btn-icon"
-                                            >
-                                                <Icon name="mail"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li>
-                                            <Button
-                                                href="#download"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                                className="btn-trigger btn-icon"
-                                            >
-                                                <Icon name="download-cloud"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li>
-                                            <Button
-                                                href="#bookmark"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                                className="btn-trigger btn-icon"
-                                            >
-                                                <Icon name="bookmark"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li>
-                                            <Button
-                                                href="#cancel"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                                className="btn-trigger btn-icon text-danger"
-                                            >
-                                                <Icon name="na"></Icon>
-                                            </Button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="card-inner">
-                                    <div className="overline-title-alt mb-2">In Account</div>
-                                    <div className="profile-balance">
-                                        <div className="profile-balance-group gx-4">
-                                            <div className="profile-balance-sub">
-                                                <div className="profile-balance-amount">
-                                                    <div className="number">
-                                                        2,500.00 <small className="currency currency-usd">USD</small>
-                                                    </div>
-                                                </div>
-                                                <div className="profile-balance-subtitle">Invested Amount</div>
-                                            </div>
-                                            <div className="profile-balance-sub">
-                          <span className="profile-balance-plus text-soft">
-                            <Icon className="ni-plus"></Icon>
-                          </span>
-                                                <div className="profile-balance-amount">
-                                                    <div className="number">1,643.76</div>
-                                                </div>
-                                                <div className="profile-balance-subtitle">Profit Earned</div>
-                                            </div>
+                                            <Badge color="outline-light" pill className="ucap">Calon Peserta Didik Baru</Badge>
+                                            <h5>{student && student.name}</h5>
+                                            <span className="sub-text">{student && student.nisn}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="card-inner">
-                                    <Row className="text-center">
-                                        <Col size="4">
-                                            <div className="profile-stats">
-                                                <span className="amount">task</span>
-                                                <span className="sub-text">Total Order</span>
-                                            </div>
-                                        </Col>
-                                        <Col size="4">
-                                            <div className="profile-stats">
-                                                <span className="amount">project</span>
-                                                <span className="sub-text">Complete</span>
-                                            </div>
-                                        </Col>
-                                        <Col size="4">
-                                            <div className="profile-stats">
-                                                <span className="amount">performed</span>
-                                                <span className="sub-text">Progress</span>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </div>
-                                <div className="card-inner">
-                                    <h6 className="overline-title-alt mb-2">Additional</h6>
+                                    <h6 className="overline-title-alt mb-2">Tambahan</h6>
                                     <Row className="g-3">
                                         <Col size="6">
-                                            <span className="sub-text">User ID:</span>
-                                            <span>UD003054</span>
+                                            <span className="sub-text">Nama Pengguna:</span>
+                                            <span></span>
                                         </Col>
                                         <Col size="6">
                                             <span className="sub-text">Last Login:</span>
-                                            <span>{student.nik} 01:02 PM</span>
+                                            <span>{student && student.nik} 01:02 PM</span>
                                         </Col>
                                         <Col size="6">
                                             <span className="sub-text">KYC Status:</span>
-                                            <span
-                                                className={`lead-text text-${
-                                                    student.status === "success"
-                                                        ? "success"
-                                                        : student.status === "pending"
-                                                            ? "info"
-                                                            : student.status === "warning"
-                                                                ? "warning"
-                                                                : "secondary"
-                                                }`}
-                                            >
-                          {student.status?.toUpperCase()}
-                        </span>
+                        {/*                    <span*/}
+                        {/*                        className={`lead-text text-${*/}
+                        {/*                            student && student.nisn === "success"*/}
+                        {/*                                ? "success"*/}
+                        {/*                                : student.nisn === "pending"*/}
+                        {/*                                    ? "info"*/}
+                        {/*                                    : student.nisn === "warning"*/}
+                        {/*                                        ? "warning"*/}
+                        {/*                                        : "secondary"*/}
+                        {/*                        }`}*/}
+                        {/*                    >*/}
+                        {/*  {student.nisn?.toUpperCase()}*/}
+                        {/*</span>*/}
                                         </Col>
                                         <Col size="6">
                                             <span className="sub-text">Register At:</span>

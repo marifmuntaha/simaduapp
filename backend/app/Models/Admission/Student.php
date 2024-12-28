@@ -2,6 +2,7 @@
 
 namespace App\Models\Admission;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -48,5 +49,10 @@ class Student extends Model
     public function program(): object
     {
         return $this->hasOne(StudentProgram::class, 'student_id', 'id');
+    }
+
+    public function user(): object
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

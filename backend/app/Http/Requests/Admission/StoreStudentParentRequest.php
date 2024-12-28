@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admission;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class StoreStudentParentRequest extends FormRequest
 {
@@ -22,25 +23,11 @@ class StoreStudentParentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'user_id' => 'required',
             'student_id' => 'required',
             'number_kk' => 'required',
             'head_family' => 'required',
-            'father_status' => 'required',
-            'father_name' => 'required',
-            'father_nik' => 'required',
-            'father_birthplace' => 'required',
-            'father_birthdate' => 'required',
-            'father_email' => 'required',
-            'father_phone' => 'required',
-            'mother_status' => 'required',
-            'mother_name' => 'required',
-            'mother_nik' => 'required',
-            'mother_birthplace' => 'required',
-            'mother_birthdate' => 'required',
-            'mother_email' => 'required',
-            'mother_phone' => 'required',
             'guard_status' => 'required',
             'guard_name' => 'required',
             'guard_nik' => 'required',
@@ -49,6 +36,30 @@ class StoreStudentParentRequest extends FormRequest
             'guard_email' => 'required',
             'guard_phone' => 'required',
         ];
+
+        if ($this->input('father_status') === '1') {
+            $rules = array_merge($rules, [
+                'father_status' => 'required',
+                'father_name' => 'required',
+                'father_nik' => 'required',
+                'father_birthplace' => 'required',
+                'father_birthdate' => 'required',
+                'father_email' => 'required',
+                'father_phone' => 'required',
+            ]);
+        }
+        if ($this->input('mother_status') === '1') {
+            $rules = array_merge($rules, [
+                'mother_status' => 'required',
+                'mother_name' => 'required',
+                'mother_nik' => 'required',
+                'mother_birthplace' => 'required',
+                'mother_birthdate' => 'required',
+                'mother_email' => 'required',
+                'mother_phone' => 'required',
+            ]);
+        }
+        return $rules;
     }
 
     public function attributes(): array

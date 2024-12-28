@@ -289,9 +289,10 @@ const Parent = ({studentID}) => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <DatePicker
                                                     inputRef={ref}
-                                                    selected={new Date()}
+                                                    selected={value}
                                                     className="form-control date-picker"
                                                     onChange={(val) => onChange(val)}
+                                                    dateFormat="dd/MM/yyyy"
                                                 />
                                             )}/>
                                         {errors.father_birthdate && <span className="invalid">Kolom tidak boleh kosong.</span>}
@@ -325,9 +326,10 @@ const Parent = ({studentID}) => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <DatePicker
                                                     inputRef={ref}
-                                                    selected={new Date()}
+                                                    selected={value}
                                                     className="form-control date-picker"
                                                     onChange={(val) => onChange(val)}
+                                                    dateFormat="dd/MM/yyyy"
                                                 />
                                             )}/>
                                         {errors.mother_birthdate && <span className="invalid">Kolom tidak boleh kosong.</span>}
@@ -477,9 +479,10 @@ const Parent = ({studentID}) => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <DatePicker
                                                     inputRef={ref}
-                                                    selected={new Date()}
+                                                    selected={value}
                                                     className="form-control date-picker"
                                                     onChange={(val) => onChange(val)}
+                                                    dateFormat="dd/MM/yyyy"
                                                 />
                                             )}/>
                                         {errors.guard_birthdate && <span className="invalid">Kolom tidak boleh kosong.</span>}
