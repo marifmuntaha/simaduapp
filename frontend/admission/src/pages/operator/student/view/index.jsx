@@ -1,6 +1,6 @@
 import Head from "../../../../layout/head";
 import {
-    BackTo, Block,
+    Block,
     BlockBetween,
     BlockDes,
     BlockHead,
@@ -20,13 +20,16 @@ import {findUpper} from "../../../../utils/Utils";
 
 const View = () => {
     const {id} = useParams();
-    const [sm, updateSm] = useState();
     const [student, setStudent] = useState();
     const [sideBar, setSidebar] = useState(false);
+    const [activeIconTab, setActiveIconTab] = useState('1')
     const navigate = useNavigate();
     const toggle = () => {
         setSidebar(!sideBar);
     };
+    const toggleIconTab = (icontab) => {
+        if (activeIconTab !== icontab) setActiveIconTab(icontab);
+    }
     useEffect(() => {
         showStudent({id: id}).then((resp) => {
             setStudent(resp.data.result);
@@ -85,10 +88,11 @@ const View = () => {
                                 <ul className="nav nav-tabs nav-tabs-mb-icon nav-tabs-card">
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link active"
+                                            className={`nav-link ${activeIconTab === '1' && 'active'}`}
                                             href="#personal"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
+                                                toggleIconTab("1");
                                             }}
                                         >
                                             <Icon name="user-circle"></Icon>
@@ -97,50 +101,54 @@ const View = () => {
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link"
+                                            className={`nav-link ${activeIconTab === '2' && 'active'}`}
                                             href="#transactions"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
+                                                toggleIconTab("2");
                                             }}
                                         >
-                                            <Icon name="repeat"></Icon>
-                                            <span>Transactions</span>
+                                            <Icon name="users"></Icon>
+                                            <span>Data Orangtua</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link disabled"
+                                            className={`nav-link ${activeIconTab === '3' && 'active'}`}
                                             href="#documents"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
+                                                toggleIconTab("3");
                                             }}
                                         >
-                                            <Icon name="file-text"></Icon>
-                                            <span>Documents</span>
+                                            <Icon name="map-pin"></Icon>
+                                            <span>Alamat</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link disabled"
+                                            className={`nav-link ${activeIconTab === '4' && 'active'}`}
                                             href="#notifications"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
+                                                toggleIconTab("4");
                                             }}
                                         >
-                                            <Icon name="bell"></Icon>
-                                            <span>Notifications</span>
+                                            <Icon name="list"></Icon>
+                                            <span>Program Pilihan</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a
-                                            className="nav-link disabled"
+                                            className={`nav-link ${activeIconTab === '5' && 'active'}`}
                                             href="#activities"
                                             onClick={(ev) => {
                                                 ev.preventDefault();
+                                                toggleIconTab("5");
                                             }}
                                         >
-                                            <Icon name="activity"></Icon>
-                                            <span>Activities</span>
+                                            <Icon name="building"></Icon>
+                                            <span>Sekolah Asal</span>
                                         </a>
                                     </li>
                                     <li className="nav-item nav-item-trigger d-xxl-none">
@@ -243,14 +251,14 @@ const View = () => {
                                     <Row className="g-3">
                                         <Col size="6">
                                             <span className="sub-text">Nama Pengguna:</span>
-                                            <span></span>
+                                            <span>{student && student.user.username}</span>
                                         </Col>
                                         <Col size="6">
-                                            <span className="sub-text">Last Login:</span>
-                                            <span>{student && student.nik} 01:02 PM</span>
+                                            <span className="sub-text">NIK</span>
+                                            <span>{student && student.nik}</span>
                                         </Col>
                                         <Col size="6">
-                                            <span className="sub-text">KYC Status:</span>
+                                            <span className="sub-text">Verifikasi:</span>
                         {/*                    <span*/}
                         {/*                        className={`lead-text text-${*/}
                         {/*                            student && student.nisn === "success"*/}
@@ -266,7 +274,7 @@ const View = () => {
                         {/*</span>*/}
                                         </Col>
                                         <Col size="6">
-                                            <span className="sub-text">Register At:</span>
+                                            <span className="sub-text">Tanggal Pendaftaran</span>
                                             <span>Nov 24, 2019</span>
                                         </Col>
                                     </Row>

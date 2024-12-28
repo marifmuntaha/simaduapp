@@ -4,13 +4,12 @@ import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import {store as storeUser, destroy as destroyUser} from "../../../../utils/api/user";
-import {store as storeParent} from "../../../../utils/api/studentParent"
+import {store as storeParent, update as updateParent} from "../../../../utils/api/studentParent"
 import {useInstitution} from "../../../../layout/provider/Institution";
 
-const Parent = ({studentID}) => {
+const Parent = ({parent, studentID}) => {
     const institution = useInstitution();
-    const handleSubmitForm = async () => {
-        setLoading(true);
+    const storeSubmit = async () => {
         const userParentParam = {
             institution_id: institution.id,
             fullname: getValues('guard_name'),
@@ -49,8 +48,6 @@ const Parent = ({studentID}) => {
                 guard_birthdate: getValues('guard_birthdate'),
                 guard_email: getValues('guard_email'),
                 guard_phone: getValues('guard_phone'),
-                creator: getValues('creator'),
-                updater: getValues('updater'),
             }
             storeParent(parentParam).then(resp => {
                 toastSuccess(resp.data.message);
@@ -65,25 +62,89 @@ const Parent = ({studentID}) => {
             setLoading(false);
         });
     }
+    const updateSubmit = async () => {
+        const parentParam = {
+            id: getValues('id'),
+            number_kk: getValues('number_kk'),
+            head_family: getValues('head_family'),
+            father_status: getValues('father_status'),
+            father_name: getValues('father_name'),
+            father_nik: getValues('father_nik'),
+            father_birthplace: getValues('father_birthplace'),
+            father_birthdate: getValues('father_birthdate'),
+            father_email: getValues('father_email'),
+            father_phone: getValues('father_phone'),
+            mother_status: getValues('mother_status'),
+            mother_name: getValues('mother_name'),
+            mother_nik: getValues('mother_nik'),
+            mother_birthplace: getValues('mother_birthplace'),
+            mother_birthdate: getValues('mother_birthdate'),
+            mother_email: getValues('mother_email'),
+            mother_phone: getValues('mother_phone'),
+            guard_status: getValues('guard_status'),
+            guard_name: getValues('guard_name'),
+            guard_nik: getValues('guard_nik'),
+            guard_birthplace: getValues('guard_birthplace'),
+            guard_birthdate: getValues('guard_birthdate'),
+            guard_email: getValues('guard_email'),
+            guard_phone: getValues('guard_phone'),
+        }
+        updateParent(parentParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        })
+    }
+    const handleSubmitForm = async () => {
+        setLoading(true);
+        parent !== null ? await updateSubmit() : await storeSubmit();
+    }
     const {control,formState: {errors}, register, handleSubmit, watch, setValue, getValues} = useForm();
     const [loading, setLoading] = useState();
     const [fatherStatus, setFatherStatus] = useState(true);
     const [motherStatus, setMotherStatus] = useState(true);
     const [guardStatus, setGuardStatus] = useState(0);
     const parentStatusOption = [
-        {value: 1, label: 'Masih Hidup'},
-        {value: 2, label: 'Meninggal'},
-        {value: 3, label: 'Tidak Diketahui'},
+        {value: '1', label: 'Masih Hidup'},
+        {value: '2', label: 'Meninggal'},
+        {value: '3', label: 'Tidak Diketahui'},
     ];
     const guardStatusOption = [
-        {value: 1, label: 'Sama dengan Ayah Kandung'},
-        {value: 2, label: 'Sama dengan Ibu Kandung'},
-        {value: 3, label: 'Lainnya'}
+        {value: '1', label: 'Sama dengan Ayah Kandung'},
+        {value: '2', label: 'Sama dengan Ibu Kandung'},
+        {value: '3', label: 'Lainnya'}
     ];
-
+    useEffect(() => {
+        parent && setValue('id', parent.id)
+        parent && setValue('number_kk', parent.number_kk);
+        parent && setValue('head_family', parent.head_family);
+        parent && setValue('father_status', parent.father_status);
+        parent && setValue('father_name', parent.father_name);
+        parent && setValue('father_nik', parent.father_nik);
+        parent && setValue('father_birthplace', parent.father_birthplace);
+        parent && setValue('father_birthdate', parent.father_birthdate && new Date(parent.father_birthdate));
+        parent && setValue('father_email', parent.father_email);
+        parent && setValue('father_phone', parent.father_phone);
+        parent && setValue('mother_status', parent.mother_status);
+        parent && setValue('mother_name', parent.mother_name);
+        parent && setValue('mother_nik', parent.mother_nik);
+        parent && setValue('mother_birthplace', parent.mother_birthplace);
+        parent && setValue('mother_birthdate', parent.mother_birthdate && new Date(parent.mother_birthdate));
+        parent && setValue('mother_email', parent.mother_email);
+        parent && setValue('mother_phone', parent.mother_phone);
+        parent && setValue('guard_status', parent.guard_status);
+        parent && setValue('guard_name', parent.guard_name);
+        parent && setValue('guard_nik', parent.guard_nik);
+        parent && setValue('guard_birthplace', parent.guard_birthplace);
+        parent && setValue('guard_birthdate', parent.guard_birthdate && new Date(parent.guard_birthdate));
+        parent && setValue('guard_email', parent.guard_email);
+        parent && setValue('guard_phone', parent.guard_phone);
+    }, [parent]);
     useEffect(() => {
         switch (guardStatus) {
-            case 1 :
+            case '1' :
                 setValue('guard_nik', getValues('father_nik'));
                 setValue('guard_name', getValues('father_name'));
                 setValue('guard_email', getValues('father_email'));
@@ -91,7 +152,7 @@ const Parent = ({studentID}) => {
                 setValue('guard_birthdate', getValues('father_birthdate'));
                 setValue('guard_phone', getValues('father_phone'));
                 break;
-            case 2 :
+            case '2' :
                 setValue('guard_nik', getValues('mother_nik'));
                 setValue('guard_name', getValues('mother_name'));
                 setValue('guard_email', getValues('mother_email'));
@@ -108,11 +169,10 @@ const Parent = ({studentID}) => {
                 setValue('guard_phone', '');
         }
     }, [guardStatus]);
-
     useEffect(() => {
         const subscription = watch((value) => {
-            value['father_status'] !== 1 ? setFatherStatus(false) : setFatherStatus(true);
-            value['mother_status'] !== 1 ? setMotherStatus(false) : setMotherStatus(true);
+            value['father_status'] !== '1' ? setFatherStatus(false) : setFatherStatus(true);
+            value['mother_status'] !== '1' ? setMotherStatus(false) : setMotherStatus(true);
             value['guard_status'] && setGuardStatus(value['guard_status']);
         })
         return () => subscription.unsubscribe()

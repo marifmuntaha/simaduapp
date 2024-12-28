@@ -3,26 +3,24 @@ import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getPrograms} from "../../../../redux/master/program/actions";
 import {useInstitution} from "../../../../layout/provider/Institution";
 import {useSetting} from "../../../../layout/provider/Setting";
-import {store as storeProgram} from "../../../../utils/api/studentProgram";
+import {get as getPrograms} from "../../../../utils/api/master/program"
+import {store as storeProgram, update as updateProgram} from "../../../../utils/api/studentProgram";
 
-const Program = ({studentID}) => {
+const Program = ({program, studentID}) => {
     const institution = useInstitution();
     const setting = useSetting();
-    const dispatch = useDispatch();
-    const {programs, success, error} = useSelector((state) => state.program);
     const {handleSubmit, formState: {errors}, control, watch, getValues, setValue} = useForm();
     const [programOptions, setProgramOptions] = useState([]);
     const [lockBoarding, setLockBoarding] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [programs, setPrograms] = useState([]);
     const boardingOptions = [
         {value: "1", label: 'Boarding'},
         {value: "2", label: 'Non Boarding'},
     ]
-    const handleSubmitForm = async () => {
-        setLoading(true)
+    const storeSubmit = async () => {
         const programParam = {
             student_id: studentID,
             program_id: getValues('program_id'),
@@ -36,9 +34,35 @@ const Program = ({studentID}) => {
             setLoading(false);
         });
     }
+    const updateSubmit = async () => {
+        const programParam = {
+            id: program.id,
+            program_id: getValues('program_id'),
+            boarding: getValues('boarding'),
+        }
+        await updateProgram(programParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(error => {
+            toastError(error);
+            setLoading(false);
+        });
+    }
+    const handleSubmitForm = async () => {
+        setLoading(true)
+        program !== null ? await updateSubmit() : await storeSubmit();
+    }
 
     useEffect(() => {
-        dispatch(getPrograms({institution_id: institution && institution.id, year_id: setting.year_id}))
+        program && setValue('id', program.id);
+        program && setValue('program_id', program.program_id);
+        program && setValue('boarding', program.boarding);
+    }, [program]);
+
+    useEffect(() => {
+        getPrograms({institution_id: institution && institution.id, year_id: setting.year_id}).then(resp => {
+            setPrograms(resp.data.result)
+        })
     }, []);
 
     useEffect(() => {

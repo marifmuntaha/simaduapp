@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admission\StoreStudentRequest;
 use App\Http\Requests\Admission\UpdateStudentRequest;
 use App\Http\Resources\Admission\StudentResource;
+use App\Http\Resources\UserResource;
 use App\Models\Admission\Student;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class StudentController extends Controller
 {
@@ -42,11 +44,12 @@ class StudentController extends Controller
         }
     }
 
-    public function show(Student $student)
+    public function show(Request $request, Student $student)
     {
         return response([
             'success' => true,
             'message' => null,
+            'result' => new StudentResource($student)
         ]);
     }
 

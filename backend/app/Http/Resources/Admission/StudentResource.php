@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Admission;
 
-use App\Models\Admission\StudentAddress;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
@@ -47,7 +46,9 @@ class StudentResource extends JsonResource
             if (in_array('program', $with)){
                 $resource = Arr::add($resource, 'program', new StudentProgramResource($this->program));
             }
-
+            if (in_array('school', $with)){
+                $resource = Arr::add($resource, 'school', new StudentSchoolResource($this->school));
+            }
             if (in_array('user', $with)){
                 $resource = Arr::add($resource, 'user', new StudentProgramResource($this->user));
             }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "../../../../components";
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
@@ -6,19 +6,18 @@ import DatePicker from "react-datepicker";
 import {useInstitution} from "../../../../layout/provider/Institution";
 import {useSetting} from "../../../../layout/provider/Setting";
 import {store as storeUser, destroy as destroyUser} from "../../../../utils/api/user";
-import {store as storeStudent} from "../../../../utils/api/student";
+import {store as storeStudent, update as updateStudent} from "../../../../utils/api/student";
 
-const Personal = ({setStudentID}) => {
+const Personal = ({student, setStudentID}) => {
     const institution = useInstitution();
     const setting = useSetting();
     const [loading, setLoading] = useState(false);
-    const {register, formState: {errors}, control, handleSubmit, getValues} = useForm()
+    const {register, formState: {errors}, control, setValue, handleSubmit, getValues} = useForm()
     const genderOption = [
         {value: 'L', label: 'Laki-laki'},
         {value: 'P', label: 'Perempuan'},
     ]
-    const handleFormSubmit = async () => {
-        setLoading(true);
+    const storePersonal = async () => {
         const userStudentParam = {
             fullname: getValues('name'),
             email: getValues('email'),
@@ -60,6 +59,45 @@ const Personal = ({setStudentID}) => {
             setLoading(false);
         });
     }
+    const updatePersonal = async () => {
+        const studentParam = {
+            id: getValues('id'),
+            nisn: getValues('nisn'),
+            nik: getValues('nik'),
+            name: getValues('name'),
+            birthplace: getValues('birthplace'),
+            birthdate: getValues('birthdate'),
+            gender: getValues('gender'),
+            orderborn: getValues('orderborn'),
+            sibling: getValues('sibling'),
+            phone: getValues('phone'),
+            email: getValues('email'),
+        }
+        updateStudent(studentParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        });
+    }
+    const handleFormSubmit = async () => {
+        setLoading(true);
+        student === null ? await storePersonal() : await updatePersonal();
+    }
+    useEffect(() => {
+        student && setValue('id',student.id);
+        student && setValue('nisn', student.nisn);
+        student && setValue('nik', student.nik);
+        student && setValue('name', student.name);
+        student && setValue('birthplace', student.birthplace);
+        student && setValue('birthdate', student.birthdate && new Date(student.birthdate));
+        student && setValue('gender', student.gender);
+        student && setValue('orderborn', student.orderborn);
+        student && setValue('sibling', student.sibling);
+        student && setValue('phone', student.phone);
+        student && setValue('email', student.email);
+    }, [student]);
     return <>
         <PreviewCard>
             <Row className="gy-2">

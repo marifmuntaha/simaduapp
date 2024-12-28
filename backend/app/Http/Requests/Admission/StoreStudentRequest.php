@@ -39,6 +39,25 @@ class StoreStudentRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'user_id' => 'ID Pengguna',
+            'institution_id' => 'ID Lembaga',
+            'year_id' => 'ID Tahun Aktif',
+            'nisn' => 'NISN',
+            'nik' => 'NIK',
+            'name' => 'Nama Lengkap',
+            'birthplace' => 'Tempat Lahir',
+            'birthdate' => 'Tanggal Lahir',
+            'gender' => 'Jenis Kelamin',
+            'orderborn' => 'Anak Ke',
+            'sibling' => 'Jumlah Saudara',
+            'phone' => 'Nomor Whatsapp',
+            'email' => 'alamat Email',
+        ];
+    }
+
     public function prepareForValidation()
     {
         return $this->merge([

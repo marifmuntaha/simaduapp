@@ -51,6 +51,11 @@ class Student extends Model
         return $this->hasOne(StudentProgram::class, 'student_id', 'id');
     }
 
+    public function school(): object
+    {
+        return $this->hasOne(StudentSchool::class, 'student_id', 'id');
+    }
+
     public function user(): object
     {
         return $this->hasOne(User::class, 'id', 'user_id');

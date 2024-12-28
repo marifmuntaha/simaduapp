@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateStudentProgramRequest extends FormRequest
+class UpdateStudentSchoolRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,19 @@ class UpdateStudentProgramRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'program_id' => 'required',
-            'boarding' => 'required'
+            'npsn' => 'required',
+            'name' => 'required',
+            'address' => 'required',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'id' => 'ID Program',
-            'program_id' => 'Program Pilihan',
-            'boarding' => 'Boarding/Pondok'
+            'id' => 'ID',
+            'npsn' => 'NPSN',
+            'name' => 'Nama Sekolah',
+            'address' => 'Alamat Sekolah',
         ];
     }
 

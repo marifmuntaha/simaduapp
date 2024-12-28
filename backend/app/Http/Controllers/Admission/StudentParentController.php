@@ -41,7 +41,20 @@ class StudentParentController extends Controller
 
     public function update(UpdateStudentParentRequest $request, StudentParent $parent)
     {
-
+        try {
+            return $parent->update(array_filter($request->all()))
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Orangtua berhasil diperbarui.',
+                    'result' => new StudentParentResource($parent)
+                ]) : throw new Exception('Data Orangtua gagal diperbarui.');
+        } catch (Exception $exception){
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], $exception->getCode());
+        }
     }
 
     public function show(StudentParent $parent)

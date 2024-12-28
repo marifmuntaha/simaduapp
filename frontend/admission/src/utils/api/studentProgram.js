@@ -12,16 +12,8 @@ function store(params: { student_id: string, program_id: string, boarding: strin
     return api.create(baseUrl, params)
 }
 
-function update(params: {
-    id: string,
-    institution_id: string,
-    year_id: string,
-    level_id: string,
-    major_id: string,
-    name: string,
-    fullname: string
-}) {
-    const baseUrl = `/student/${params.id}`;
+function update(params: { id: string, program_id: string, boarding: string }) {
+    const baseUrl = `admission/student/program/${params.id}`;
     return api.update(baseUrl, params)
 }
 

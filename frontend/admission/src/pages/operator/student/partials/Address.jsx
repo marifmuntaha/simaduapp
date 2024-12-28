@@ -1,18 +1,18 @@
+import React, {useEffect, useState} from "react";
 import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "../../../../components";
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
-import React, {useEffect, useState} from "react";
-import {store as storeAddress} from "../../../../utils/api/studentAddress"
+import {store as storeAddress, update as updateAddress} from "../../../../utils/api/studentAddress"
+import axios from "axios";
 
-const Address = ({studentID}) => {
-    const {register, watch, formState: {errors}, control, handleSubmit, getValues} = useForm();
+const Address = ({address, studentID}) => {
+    const {register, watch, formState: {errors}, control, setValue, handleSubmit, getValues} = useForm();
     const [loading, setLoading] = useState(false);
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [districtOptions, setDistrictOptions] = useState([]);
     const [subDistrictOptions, setSubDistrictOptions] = useState([]);
     const [villageOptions, setVillageOptions] = useState([]);
-    const handleSubmitForm = async () => {
-        setLoading(true);
+    const storeSubmit = async () => {
         const studentParam = {
             student_id: studentID,
             province_id: getValues('province_id'),
@@ -29,6 +29,35 @@ const Address = ({studentID}) => {
             setLoading(false);
         });
     }
+    const updateSubmit = async () => {
+        const studentParam = {
+            id: getValues('id'),
+            province_id: getValues('province_id'),
+            district_id: getValues('district_id'),
+            subdistrict_id: getValues('subdistrict_id'),
+            village_id: getValues('village_id'),
+            address: getValues('address'),
+        }
+        await updateAddress(studentParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(error => {
+            toastError(error);
+            setLoading(false);
+        });
+    }
+    const handleSubmitForm = async () => {
+        setLoading(true);
+        address !== null ? await updateSubmit() : await storeSubmit();
+    }
+    useEffect(() => {
+        address && setValue('id', address.id);
+        address && setValue('province_id', String(address.province_id));
+        address && setValue('district_id', String(address.district_id));
+        address && setValue('subdistrict_id', String(address.subdistrict_id));
+        address && setValue('village_id', String(address.village_id));
+        address && setValue('address', address.address);
+    }, [address]);
     useEffect(() => {
         fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json").then(response => response.json())
             .then(resp => {
@@ -49,9 +78,9 @@ const Address = ({studentID}) => {
                 })
                 setDistrictOptions(regencies);
             });
-    }, [watch('province_id')]);
+    }, [getValues('province_id')]);
     useEffect(() => {
-        getValues('district_id') !== undefined && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${getValues('district_id')}.json`)
+        getValues('district_id') !== '' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${getValues('district_id')}.json`)
             .then(response => response.json())
             .then(resp => {
                 const districts = resp.map((district) => {
@@ -61,7 +90,7 @@ const Address = ({studentID}) => {
             });
     }, [watch('district_id')]);
     useEffect(() => {
-        getValues('subdistrict_id') !== undefined && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${getValues('subdistrict_id')}.json`)
+        getValues('subdistrict_id') !== '' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${getValues('subdistrict_id')}.json`)
             .then(response => response.json())
             .then(resp => {
                 const villages = resp.map((village) => {

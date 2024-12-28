@@ -21,14 +21,13 @@ function store(params: {
 
 function update(params: {
     id: string,
-    institution_id: string,
-    year_id: string,
-    level_id: string,
-    major_id: string,
-    name: string,
-    fullname: string
+    province_id: string,
+    district_id: string,
+    subdistrict_id: string,
+    village_id: string,
+    address: string,
 }) {
-    const baseUrl = `/student/${params.id}`;
+    const baseUrl = `admission/student/address/${params.id}`;
     return api.update(baseUrl, params)
 }
 

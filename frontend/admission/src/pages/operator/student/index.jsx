@@ -120,6 +120,7 @@ const Student = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
+                            navigate(`/operator/pendaftar/${row.id}/ubah`);
                         }}>
                         <Icon name="edit"/>
                     </Button>

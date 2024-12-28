@@ -21,15 +21,13 @@ function store(params: {
 }
 
 function update(params: {
-    id: string,
-    institution_id: string,
-    year_id: string,
-    level_id: string,
-    major_id: string,
-    name: string,
-    fullname: string
+    id: string, number_kk: string, head_family: string, father_status: string, father_name: string, father_nik: string,
+    father_birthplace: string, father_birthdate: string, father_email: string, father_phone: string,
+    mother_status: string, mother_name: string, mother_nik: string, mother_birthplace: string, mother_birthdate: string,
+    mother_email: string, mother_phone: string, guard_status: string, guard_name: string, guard_nik: string,
+    guard_birthplace: string, guard_birthdate: string, guard_email: string, guard_phone: string,
 }) {
-    const baseUrl = `/student/${params.id}`;
+    const baseUrl = `admission/student/parent/${params.id}`;
     return api.update(baseUrl, params)
 }
 
