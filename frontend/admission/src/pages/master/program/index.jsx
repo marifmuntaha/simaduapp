@@ -19,17 +19,14 @@ import {
     ButtonGroup,
     Spinner
 } from "reactstrap";
-import {useSetting} from "../../../layout/provider/Setting";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {get as getYears} from "../../../utils/api/master/year";
 import {get as getPrograms, destroy as destroyProgram} from "../../../utils/api/master/program";
-import YearBlockHead from "../../../components/partials/YearBlockHead";
+import YearDropdown from "../../../components/partials/YearDropdown";
 
 const Program = () => {
     const institution = useInstitution();
-    const setting = useSetting();
+    const [sm, updateSm] = useState(false);
     const [yearSelected, setYearSelected] = useState([]);
-    const [years, setYears] = useState([]);
     const [programs, setPrograms] = useState([]);
     const [program, setProgram] = useState([]);
     const [loadData, setLoadData] = useState(false);
@@ -92,18 +89,6 @@ const Program = () => {
     ]
 
     useEffect(() => {
-        getYears({institution_id: institution.id, order: 'DESC', limit: 5}).then(resp => {
-            const years = resp.data.result;
-            const active = years.filter((year) => {
-                return year.id === setting.year_id;
-            })
-            setYears(years);
-            setYearSelected(active[0]);
-            setLoadData(true);
-        })
-    }, []);
-
-    useEffect(() => {
         loadData && yearSelected.id !== undefined && getPrograms({
             institution_id: institution.id,
             year_id: yearSelected.id
@@ -136,13 +121,38 @@ const Program = () => {
                                 react dashlite.
                             </p>
                         </BlockHeadContent>
-                        <YearBlockHead yearSelected={yearSelected} setYearSelected={setYearSelected} years={years} setModal={setModal} setLoadData={setLoadData} />
+                        <BlockHeadContent>
+                            <div className="toggle-wrap nk-block-tools-toggle">
+                                <Button
+                                    className={`btn-icon btn-trigger toggle-expand me-n1 ${sm ? "active" : ""}`}
+                                    onClick={() => updateSm(!sm)}
+                                >
+                                    <Icon name="menu-alt-r"></Icon>
+                                </Button>
+                                <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
+                                    <ul className="nk-block-tools g-3">
+                                        <li>
+                                            <YearDropdown yearSelected={yearSelected} setYearSelected={setYearSelected} setLoadData={setLoadData}/>
+                                        </li>
+                                        <li
+                                            className="nk-block-tools-opt"
+                                            onClick={() => setModal('add')}
+                                        >
+                                            <Button color="secondary">
+                                                <Icon name="plus"/>
+                                                <span>Tambah</span>
+                                            </Button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </BlockHeadContent>
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
                     <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add modal={modal} setModal={setModal} setLoadData={setLoadData} />
+                <Add modal={modal} setModal={setModal} setLoadData={setLoadData}/>
                 <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={program}/>
             </Content>
         </>

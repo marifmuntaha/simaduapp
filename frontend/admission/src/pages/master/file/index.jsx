@@ -15,24 +15,17 @@ import {
     Badge,
     Button,
     ButtonGroup,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-    UncontrolledDropdown
+    Spinner
 } from "reactstrap";
 import Add from "./Add";
 import Edit from "./Edit";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {useSetting} from "../../../layout/provider/Setting";
-import {get as getYears} from "../../../utils/api/master/year"
 import {get as getFiles, destroy as destroyFile} from "../../../utils/api/master/file"
+import YearDropdown from "../../../components/partials/YearDropdown";
 
 const File = () => {
     const institution = useInstitution();
-    const setting = useSetting();
     const [sm, updateSm] = useState(false);
-    const [years, setYears] = useState([]);
     const [yearSelected, setYearSelected] = useState([]);
     const [modal, setModal] = useState('');
     const [loading, setLoading] = useState(false);
@@ -94,17 +87,6 @@ const File = () => {
             )
         },
     ];
-    useEffect(() => {
-        getYears({institution_id: institution.id, order: 'DESC', limit: 5}).then(resp => {
-            const years = resp.data.result;
-            const active = years.filter((year) => {
-                return year.id === setting.year_id;
-            })
-            setYearSelected(active[0]);
-            setYears(years);
-            setLoadData(true);
-        })
-    }, []);
 
     useEffect(() => {
         yearSelected.id !== undefined && loadData && getFiles({institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
@@ -146,35 +128,7 @@ const File = () => {
                                 <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
                                     <ul className="nk-block-tools g-3">
                                         <li>
-                                            <UncontrolledDropdown>
-                                                <DropdownToggle
-                                                    tag="a"
-                                                    className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
-                                                    <Icon className="d-none d-sm-inline" name="calender-date"/>
-                                                    <span><span
-                                                        className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
-                                                    <Icon className="dd-indc" name="chevron-right"/>
-                                                </DropdownToggle>
-                                                <DropdownMenu end>
-                                                    <ul className="link-list-opt no-bdr">
-                                                        {years && years.map((year, idx) => (
-                                                            <li key={idx}>
-                                                                <DropdownItem
-                                                                    tag="a"
-                                                                    onClick={(ev) => {
-                                                                        ev.preventDefault();
-                                                                        setYearSelected(year);
-                                                                        setLoadData(true);
-                                                                    }}
-                                                                    href="#!"
-                                                                >
-                                                                    <span>TP {year.name}</span>
-                                                                </DropdownItem>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </DropdownMenu>
-                                            </UncontrolledDropdown>
+                                            <YearDropdown yearSelected={yearSelected} setYearSelected={setYearSelected} setLoadData={setLoadData}/>
                                         </li>
                                         <li
                                             className="nk-block-tools-opt"

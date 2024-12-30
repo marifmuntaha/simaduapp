@@ -135,7 +135,7 @@ const Add = ({...props}) => {
                                                         <span
                                                             className="dz-message-text">Tarik dan Letakkan Disini</span>
                                                         <span className="dz-message-or">atau</span>
-                                                        <Button color="primary">PILIH BERKAS</Button>
+                                                        <Button type="button" color="primary">PILIH BERKAS</Button>
                                                     </div>
                                                 )}
                                                 {file.map((file) => (

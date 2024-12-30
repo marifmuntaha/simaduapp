@@ -3,7 +3,7 @@ import {APICore} from './APICore'
 const api = new APICore()
 
 function get(params) {
-    const baseUrl = '/student'
+    const baseUrl = 'admission/student/school'
     return api.get(baseUrl, params)
 }
 
@@ -18,7 +18,7 @@ function update(params: { id: string, npsn: string, name: string, address: strin
 }
 
 function destroy(params) {
-    const baseUrl = `/student/${params}`
+    const baseUrl = `admission/student/school/${params}`
     return api.delete(baseUrl);
 }
 

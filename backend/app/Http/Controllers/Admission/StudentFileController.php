@@ -81,7 +81,7 @@ class StudentFileController extends Controller
     {
         try {
             if ($file->delete()) {
-                Storage::delete('public/admission/images/student/'. $file->id . '/'.$file->value);
+                Storage::delete('public/admission/images/student/'. $file->student_id . '/'.$file->value);
                 return response([
                     'success' => true,
                     'message' => 'Data berkas berhasil dihapus',

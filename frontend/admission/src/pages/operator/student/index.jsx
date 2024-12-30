@@ -1,6 +1,8 @@
 import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
+import YearDropdown from "../../../components/partials/YearDropdown";
+import moment from "moment";
 import {
     BackTo,
     BlockBetween,
@@ -12,29 +14,21 @@ import {
     ReactDataTable, toastError, toastSuccess
 } from "../../../components";
 import {
-    Badge,
     Button,
     ButtonGroup,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-    UncontrolledDropdown
+    Spinner
 } from "reactstrap";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {useSetting} from "../../../layout/provider/Setting";
 import {useNavigate} from "react-router-dom";
-import {get as getYears} from "../../../utils/api/master/year"
 import {get as getStudents} from "../../../utils/api/student";
-import moment from "moment";
+import {get as getFile, destroy as destroyFile} from "../../../utils/api/studentFile";
+import {get as getSchool, destroy as destroySchool} from "../../../utils/api/studentSchool";
 import "moment/locale/id"
 
 const Student = () => {
     const institution = useInstitution();
-    const setting = useSetting();
     const [sm, updateSm] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [years, setYears] = useState([]);
     const [yearSelected, setYearSelected] = useState([]);
     const [students, setStudents] = useState([]);
     const [loadData, setLoadData] = useState(false);
@@ -127,7 +121,8 @@ const Student = () => {
                     <Button
                         color="outline-danger"
                         onClick={() => {
-
+                            setLoadData(row.id);
+                            destroyStudent(row.id).then(setLoading(false));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -137,16 +132,25 @@ const Student = () => {
         },
     ];
 
-    useEffect(() => {
-        institution && getYears({institution_id: institution.id}). then(resp => {
-            let year = resp.data.result.filter((year) => {
-                return year.id === setting.year_id
+    const destroyStudent = async (id) => {
+        await getFile({student_id: id}).then((resp) => {
+            const files = resp.data.result;
+            files.map((file) => {
+                destroyFile(file.id).then().catch(err => toastError(err));
             })
-            setYears(resp.data.result);
-            setYearSelected(year[0]);
-            setLoadData(true);
+        }).catch((err) => {
+            toastError(err);
+        }).then(() => {
+            getSchool({student_id: id}).then((resp) => {
+                const schools = resp.data.result;
+                schools.map((school) => {
+                    destroySchool(school.id).then().catch(err => toastError(err));
+                })
+            }).catch(err => toastError(err));
+        }).then(() => {
+
         });
-    }, [institution]);
+    }
 
     useEffect(() => {
         loadData && getStudents({institution_id: institution.id, year_id: yearSelected.id, with: 'parent,address,program'}).then(resp => {
@@ -185,34 +189,7 @@ const Student = () => {
                                 <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
                                     <ul className="nk-block-tools g-3">
                                         <li>
-                                            <UncontrolledDropdown>
-                                                <DropdownToggle
-                                                    tag="a"
-                                                    className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
-                                                    <Icon className="d-none d-sm-inline" name="calender-date"/>
-                                                    <span><span className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
-                                                    <Icon className="dd-indc" name="chevron-right"/>
-                                                </DropdownToggle>
-                                                <DropdownMenu end>
-                                                    <ul className="link-list-opt no-bdr">
-                                                        {years && years.map((year, idx) => (
-                                                            <li key={idx}>
-                                                                <DropdownItem
-                                                                    tag="a"
-                                                                    onClick={(ev) => {
-                                                                        ev.preventDefault();
-                                                                        setYearSelected(year);
-                                                                        setLoadData(true);
-                                                                    }}
-                                                                    href="#!"
-                                                                >
-                                                                    <span>TP {year.name}</span>
-                                                                </DropdownItem>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </DropdownMenu>
-                                            </UncontrolledDropdown>
+                                            <YearDropdown yearSelected={yearSelected} setYearSelected={setYearSelected} setLoadData={setLoadData}/>
                                         </li>
                                         <li
                                             className="nk-block-tools-opt"
