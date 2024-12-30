@@ -19,6 +19,9 @@ class StudentController extends Controller
         $student = new Student();
         $student = $request->has('institution_id') ? $student->whereInstitutionId($request->input('institution_id')) : $student;
         $student = $request->has('year_id') ? $student->whereYearId($request->input('year_id')) : $student;
+        $student = $request->has('gender') ? $student->whereGender($request->input('gender')) : $student;
+        $student = $request->has('program') ? $student->program->whereId($request->input('program')) : $student;
+        $student = $request->has('boarding') ? $student->program->whereBoarding($request->input('boarding')) : $student;
         return response([
             'success' => true,
             'message' => null,

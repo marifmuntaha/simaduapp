@@ -7,7 +7,7 @@ function get(params){
     return api.get(baseUrl, params)
 }
 
-function update(params: {id: number, institution_id: number, name: string, alias: string, year_id: string, brochure: string, status: string, youtube: string}) {
+function update(params: {id: number, name: string, alias: string, year_id: string, brochure: string, status: string, youtube: string}) {
     const baseUrl = `/admission/setting/${params.id}`;
     return api.update(baseUrl, params)
 }

@@ -13,19 +13,19 @@ axios.interceptors.response.use(
         let message
 
         if (error && error.response && error.response.status === 404) {
-            message = 'Sorry! the data you are looking for could not be found'
+            message = 'Maaf! data yang anda cari tidak ditemukan'
         } else if (error && error.response && error.response.status === 403) {
-            message = 'Access Forbidden'
+            message = 'Anda tidak memiliki akses ke halaman tersebut'
         } else {
             switch (error.response.status) {
                 case 401:
-                    message = 'Invalid credentials'
+                    message = 'Nama Pengguna atau sandi salah'
                     break
                 case 403:
-                    message = 'Access Forbidden'
+                    message = 'Anda tidak memiliki akses ke halaman tersebut'
                     break
                 case 404:
-                    message = 'Sorry! the data you are looking for could not be found'
+                    message = 'Maaf! data yang anda cari tidak ditemukan'
                     break
                 default: {
                     message = error.response && error.response.data ? error.response.data['message'] : error.message || error

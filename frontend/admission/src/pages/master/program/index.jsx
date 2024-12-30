@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
+import Add from "./Add";
+import Edit from "./Edit";
 import {
     BackTo,
     BlockBetween,
@@ -15,28 +17,22 @@ import {
     Badge,
     Button,
     ButtonGroup,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Spinner,
-    UncontrolledDropdown
+    Spinner
 } from "reactstrap";
-import Add from "./Add";
-import Edit from "./Edit";
 import {useSetting} from "../../../layout/provider/Setting";
 import {useInstitution} from "../../../layout/provider/Institution";
 import {get as getYears} from "../../../utils/api/master/year";
 import {get as getPrograms, destroy as destroyProgram} from "../../../utils/api/master/program";
+import YearBlockHead from "../../../components/partials/YearBlockHead";
 
 const Program = () => {
     const institution = useInstitution();
     const setting = useSetting();
-    const [sm, updateSm] = useState(false);
-    const [yearSelected, setYearSelected] = useState();
+    const [yearSelected, setYearSelected] = useState([]);
     const [years, setYears] = useState([]);
     const [programs, setPrograms] = useState([]);
     const [program, setProgram] = useState([]);
-    const [loadData, setLoadData] = useState(true);
+    const [loadData, setLoadData] = useState(false);
     const [modal, setModal] = useState('');
     const [loading, setLoading] = useState(false);
     const Columns = [
@@ -103,11 +99,12 @@ const Program = () => {
             })
             setYears(years);
             setYearSelected(active[0]);
+            setLoadData(true);
         })
     }, []);
 
     useEffect(() => {
-        yearSelected !== undefined && loadData && getPrograms({
+        loadData && yearSelected.id !== undefined && getPrograms({
             institution_id: institution.id,
             year_id: yearSelected.id
         }).then(resp => {
@@ -117,7 +114,7 @@ const Program = () => {
             toastError(err);
             setLoadData(false);
         });
-    }, [yearSelected, loadData]);
+    }, [loadData]);
 
     return (
         <>
@@ -139,59 +136,7 @@ const Program = () => {
                                 react dashlite.
                             </p>
                         </BlockHeadContent>
-                        <BlockHeadContent>
-                            <div className="toggle-wrap nk-block-tools-toggle">
-                                <Button
-                                    className={`btn-icon btn-trigger toggle-expand me-n1 ${sm ? "active" : ""}`}
-                                    onClick={() => updateSm(!sm)}
-                                >
-                                    <Icon name="menu-alt-r"></Icon>
-                                </Button>
-                                <div className="toggle-expand-content" style={{display: sm ? "block" : "none"}}>
-                                    <ul className="nk-block-tools g-3">
-                                        <li>
-                                            <UncontrolledDropdown>
-                                                <DropdownToggle
-                                                    tag="a"
-                                                    className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
-                                                    <Icon className="d-none d-sm-inline" name="calender-date"/>
-                                                    <span><span className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
-                                                    <Icon className="dd-indc" name="chevron-right"/>
-                                                </DropdownToggle>
-                                                <DropdownMenu end>
-                                                    <ul className="link-list-opt no-bdr">
-                                                        {years && years.map((year, idx) => (
-                                                            <li key={idx}>
-                                                                <DropdownItem
-                                                                    tag="a"
-                                                                    onClick={(ev) => {
-                                                                        ev.preventDefault();
-                                                                        setYearSelected(year);
-                                                                        setLoadData(true);
-                                                                    }}
-                                                                    href="#!"
-                                                                >
-                                                                    <span>TP {year.name}</span>
-                                                                </DropdownItem>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </DropdownMenu>
-                                            </UncontrolledDropdown>
-                                        </li>
-                                        <li
-                                            className="nk-block-tools-opt"
-                                            onClick={() => setModal('add')}
-                                        >
-                                            <Button color="secondary">
-                                                <Icon name="plus"/>
-                                                <span>Tambah</span>
-                                            </Button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </BlockHeadContent>
+                        <YearBlockHead yearSelected={yearSelected} setYearSelected={setYearSelected} years={years} setModal={setModal} setLoadData={setLoadData} />
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>

@@ -2,13 +2,28 @@ import React, {useEffect, useState} from "react";
 import {Button, Col, PreviewCard, Row, toastError, toastSuccess} from "../../../../components";
 import {Form, Label, Spinner} from "reactstrap";
 import {useForm} from "react-hook-form";
-import {update as updateSchool} from "../../../../utils/api/studentSchool";
+import {store as storeSchool, update as updateSchool} from "../../../../utils/api/studentSchool";
 
-const School = ({school}) => {
+
+const School = ({school, studentID}) => {
     const {formState: {errors}, register, handleSubmit, setValue, getValues} = useForm();
     const [loading, setLoading] = useState(false);
-    const handleSubmitForm = async () => {
-        setLoading(true);
+    const storeSubmit = async () => {
+        const schoolParam = {
+            student_id: studentID,
+            npsn: getValues("npsn"),
+            name: getValues("name"),
+            address: getValues("address")
+        }
+        await storeSchool(schoolParam).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(error => {
+            toastError(error);
+            setLoading(false);
+        });
+    }
+    const updateSubmit = async () => {
         const schoolParam = {
             id: school.id,
             npsn: getValues("npsn"),
@@ -23,12 +38,18 @@ const School = ({school}) => {
             setLoading(false);
         });
     }
+    const handleSubmitForm = async () => {
+        setLoading(true);
+        school !== undefined ? await updateSubmit() : await storeSubmit();
+    }
+
     useEffect(() => {
-        setValue('id', school.id);
-        setValue('npsn', school.npsn);
-        setValue('name', school.name);
-        setValue('address', school.address);
-    })
+        school && setValue('id', school.id);
+        school && setValue('npsn', school.npsn);
+        school && setValue('name', school.name);
+        school && setValue('address', school.address);
+    }, [school])
+
     return (
         <PreviewCard>
             <Row className="gy-2">

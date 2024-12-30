@@ -3,7 +3,6 @@ import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import {store as storeAddress, update as updateAddress} from "../../../../utils/api/studentAddress"
-import axios from "axios";
 
 const Address = ({address, studentID}) => {
     const {register, watch, formState: {errors}, control, setValue, handleSubmit, getValues} = useForm();
@@ -48,7 +47,7 @@ const Address = ({address, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        address !== null ? await updateSubmit() : await storeSubmit();
+        address !== undefined ? await updateSubmit() : await storeSubmit();
     }
     useEffect(() => {
         address && setValue('id', address.id);
@@ -68,9 +67,9 @@ const Address = ({address, studentID}) => {
             }).catch(err => {
             toastError(err)
         })
-    }, []);
+    }, [address]);
     useEffect(() => {
-        getValues('province_id') !== undefined && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${getValues('province_id')}.json`)
+        getValues('province_id') !== undefined && getValues('province_id') !== 'undefined' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${getValues('province_id')}.json`)
             .then(response => response.json())
             .then(resp => {
                 const regencies = resp.map((regency) => {
@@ -78,9 +77,9 @@ const Address = ({address, studentID}) => {
                 })
                 setDistrictOptions(regencies);
             });
-    }, [getValues('province_id')]);
+    }, [watch('province_id')]);
     useEffect(() => {
-        getValues('district_id') !== '' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${getValues('district_id')}.json`)
+        getValues('province_id') !== undefined && getValues('province_id') !== 'undefined' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${getValues('district_id')}.json`)
             .then(response => response.json())
             .then(resp => {
                 const districts = resp.map((district) => {
@@ -90,7 +89,7 @@ const Address = ({address, studentID}) => {
             });
     }, [watch('district_id')]);
     useEffect(() => {
-        getValues('subdistrict_id') !== '' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${getValues('subdistrict_id')}.json`)
+        getValues('province_id') !== undefined && getValues('province_id') !== 'undefined' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${getValues('subdistrict_id')}.json`)
             .then(response => response.json())
             .then(resp => {
                 const villages = resp.map((village) => {

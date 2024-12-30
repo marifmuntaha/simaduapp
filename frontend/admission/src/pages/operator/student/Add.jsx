@@ -2,14 +2,14 @@ import React, {Suspense, useState} from "react";
 import Head from "../../../layout/head";
 import {BackTo, BlockBetween, BlockHead, BlockHeadContent, BlockTitle} from "../../../components";
 import Content from "../../../layout/content";
-import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import {TabContent, TabPane} from "reactstrap";
 import Personal from "./partials/Personal";
 import Tabs from "./partials/Tabs";
 import Parent from "./partials/Parent";
 import Address from "./partials/Address";
 import Program from "./partials/Program";
-// import School from "./School";
-// import Index from "./File";
+import School from "./partials/School";
+import Index from "./partials/File";
 
 const Add = () => {
     const [studentID, setStudentID] = useState();
@@ -53,12 +53,12 @@ const Add = () => {
                     <TabPane tabId="4">
                         <Program studentID={studentID} setStudentID={setStudentID}/>
                     </TabPane>
-                    {/*<TabPane tabId="5">*/}
-                    {/*    <School studentID={studentID} setStudentID={setStudentID}/>*/}
-                    {/*</TabPane>*/}
-                    {/*<TabPane tabId="6">*/}
-                    {/*    <Index studentID={studentID} setStudentID={setStudentID}/>*/}
-                    {/*</TabPane>*/}
+                    <TabPane tabId="5">
+                        <School studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
+                    <TabPane tabId="6">
+                        <Index studentID={studentID} setStudentID={setStudentID}/>
+                    </TabPane>
                 </TabContent>
             </Content>
         </Suspense>

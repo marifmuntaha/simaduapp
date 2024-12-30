@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import {
     BackTo,
@@ -7,31 +7,45 @@ import {
     BlockHeadContent,
     BlockTitle,
     Button,
-    Col,
+    Col, Icon,
     PreviewCard,
-    Row, RSelect
+    Row, RSelect, toastError, toastSuccess
 } from "../../../components";
 import Content from "../../../layout/content";
-import {useDispatch, useSelector} from "react-redux";
-import {getSetting, resetSetting, updateSetting} from "../../../redux/setting/actions";
 import {Controller, useForm} from "react-hook-form";
-import {getYears} from "../../../redux/master/year/actions";
 import {Spinner} from "reactstrap";
+import {get as getYears} from "../../../utils/api/master/year";
+import {get as getSetting} from "../../../utils/api/setting"
+import {update as updateSetting} from "../../../utils/api/setting"
+import {useInstitution} from "../../../layout/provider/Institution";
 
 const Setting = () => {
-    const dispatch = useDispatch();
-    const {loading, settings} = useSelector((state) => state.setting);
-    const {years} = useSelector((state) => state.year);
+    const institution = useInstitution();
+    const [yearOptions, setYearOptions] = useState([]);
+    const [setting, setSetting] = useState([]);
+    const [loading, setLoading] = useState(false);
     const statusOption = [
         {value: '1', label: 'Dibuka'},
         {value: '2', label: 'Tutup'},
     ]
-    const onSubmit = () => {
-        dispatch(updateSetting({
-            formData: getValues([
-                'id', 'institution_id', 'name', 'alias', 'year_id', 'brochure', 'status', 'youtube'
-            ])
-        }))
+    const onSubmit = async () => {
+        setLoading(true);
+        const params = {
+            id: getValues('id'),
+            name: getValues('name'),
+            alias: getValues('alias'),
+            year_id: getValues('year_id'),
+            brochure: getValues('brochure'),
+            status: getValues('status'),
+            youtube: getValues('youtube'),
+        }
+        updateSetting(params).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        });
     }
     const {
         register,
@@ -43,19 +57,26 @@ const Setting = () => {
     } = useForm();
 
     useEffect(() => {
-        dispatch(getYears({type: 'select', order: 'DESC'}));
-        dispatch(getSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION}));
-    }, [dispatch]);
+        getYears({institution_id: institution.id, order: 'DESC', type: 'select'}).then(resp => {
+            setYearOptions(resp.data.result);
+        }).catch(error => {
+            toastError((error))
+        });
+        getSetting({institution_id: institution.id}).then(resp => {
+            setSetting(resp.data.result[0]);
+        }).catch(error => {
+            toastError((error))
+        })
+    }, []);
     useEffect(() => {
-        setValue('id', settings ? settings[0].id : null);
-        setValue('institution_id', process.env.REACT_APP_SERVICE_INSTITUTION);
-        setValue('name', settings ? settings[0].name : null);
-        setValue('alias', settings ? settings[0].alias : null);
-        setValue('year_id', settings ? settings[0].year_id : null);
-        setValue('status', settings ? settings[0].status : null);
-        setValue('youtube', settings ? settings[0].youtube : null);
-        resetSetting();
-    }, [settings]);
+        setValue('id', setting ? setting.id : null);
+        setValue('institution_id', institution.id);
+        setValue('name', setting ? setting.name : null);
+        setValue('alias', setting ? setting.alias : null);
+        setValue('year_id', setting ? setting.year_id : null);
+        setValue('status', setting ? setting.status : null);
+        setValue('youtube', setting ? setting.youtube : null);
+    }, [setting]);
 
     return <>
         <Head title="PPDB Penganturan"/>
@@ -141,8 +162,8 @@ const Setting = () => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={years}
-                                                    value={years !== undefined && years.find((c) => c.value === value)}
+                                                    options={yearOptions}
+                                                    value={yearOptions !== undefined && yearOptions.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Tahun Pelajaran"
                                                 />
@@ -226,8 +247,8 @@ const Setting = () => {
                         <Row className="g-3">
                             <Col lg="7" className="offset-lg-5">
                                 <div className="form-group mt-2">
-                                    <Button className="col-3 text-center align-content-center" type="submit" color="primary" size="md" disabled={loading}>
-                                        {loading === undefined ? <Spinner size="sm" color="light"/> : <span>Simpan</span> }
+                                    <Button type="submit" className="col-md-3" color="primary" disabled={loading}>
+                                        {loading ? <Spinner size="sm" color="light"/> : <Icon name="save"/>} <span> SIMPAN < /span>
                                     </Button>
                                 </div>
                             </Col>

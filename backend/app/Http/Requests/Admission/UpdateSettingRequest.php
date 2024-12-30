@@ -24,7 +24,6 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'institution_id' => 'required|string',
             'name' => 'required|string',
             'alias' => 'required|string',
             'year_id' => 'required|integer',
@@ -37,7 +36,6 @@ class UpdateSettingRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'institution_id' => 'Instansi',
             'name' => 'Nama Aplikasi',
             'alias' => 'Nama Singkatan',
             'year_id' => 'Tahun Pelajaran',

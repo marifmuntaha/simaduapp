@@ -5,10 +5,10 @@ import Personal from "./partials/Personal";
 import Parent from "./partials/Parent";
 import Address from "./partials/Address";
 import Program from "./partials/Program";
-// import School from "./School";
-// import File from "./File";
-import {BackTo, BlockBetween, BlockHead, BlockHeadContent, BlockTitle, Icon} from "../../../components";
-import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
+import School from "./partials/School";
+import File from "./partials/File";
+import {BackTo, BlockBetween, BlockHead, BlockHeadContent, BlockTitle} from "../../../components";
+import {TabContent, TabPane} from "reactstrap";
 import {useParams} from "react-router-dom";
 import {show as showStudent} from "../../../utils/api/student";
 import Tabs from "./partials/Tabs";
@@ -48,7 +48,7 @@ const Edit = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h5">Ubah Pendaftar</BlockTitle>
+                            <BlockTitle tag="h5">UBAH PENDAFTAR</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -70,12 +70,12 @@ const Edit = () => {
                     <TabPane tabId="4">
                         <Program program={program}/>
                     </TabPane>
-                    {/*<TabPane tabId="5">*/}
-                    {/*    <School school={school}/>*/}
-                    {/*</TabPane>*/}
-                    {/*<TabPane tabId="6">*/}
-                    {/*    <File studentID={id}/>*/}
-                    {/*</TabPane>*/}
+                    <TabPane tabId="5">
+                        <School school={school}/>
+                    </TabPane>
+                    <TabPane tabId="6">
+                        <File studentID={id}/>
+                    </TabPane>
                 </TabContent>
             </Content>
         </>

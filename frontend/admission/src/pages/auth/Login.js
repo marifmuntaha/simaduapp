@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Logo from "../../images/limitless/logo.png";
 import LogoDark from "../../images/limitless/logo-dark.png";
 import Head from "../../layout/head";
@@ -11,35 +11,58 @@ import {
     BlockTitle,
     Button,
     Icon,
-    PreviewCard
+    PreviewCard, toastError, toastSuccess
 } from "../../components";
 import {Form, Spinner} from "reactstrap";
-import {Link, Navigate, useLocation} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {loginUser, resetAuth} from "../../redux/actions";
+import {Link, useNavigate} from "react-router-dom";
 import {useForm} from "react-hook-form";
+import {login as loginUser} from "../../utils/api/auth";
+import {useInstitution} from "../../layout/provider/Institution";
+import {APICore, setAuthorization} from "../../utils/api/APICore";
 
 const Login = () => {
-    const dispatch = useDispatch();
-    const {loading, success, user} = useSelector(state => state.auth);
+    const api = new APICore();
+    const institution = useInstitution();
+    const navigate = useNavigate();
+    const {register, handleSubmit, formState: {errors}, getValues} = useForm();
+    const [loading, setLoading] = useState(false);
     const [passState, setPassState] = useState(false);
-    const handleFormSubmit = () => {
-        dispatch(loginUser({formData: getValues(['username', 'password', 'institution', 'ability', 'role'])}));
+    const handleFormSubmit = async () => {
+        setLoading(true);
+        const params = {
+            username: getValues('username'),
+            password: getValues('password'),
+            institution: institution.id,
+            ability: process.env.REACT_APP_SERVICE_NAME,
+            role: JSON.stringify([1, 5, 6])
+        }
+        await loginUser(params).then(resp => {
+            const user = resp.data.result;
+            api.setLoggedInUser(user);
+            setAuthorization(user.token);
+            toastSuccess(resp.data.message);
+            setLoading(false);
+            switch (user.role) {
+                case '1' :
+                    navigate('/administrator')
+                    break;
+                case '5' :
+                    navigate('/operator')
+                    break;
+                case '6' :
+                    navigate('/bendahara')
+                    break;
+                default :
+                    navigate('/')
+            }
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        });
     }
-    const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
-    const location = useLocation()
-    const redirectUrl = location?.search?.slice(6) || '/'
-    useEffect(() => {
-        dispatch(resetAuth())
-    }, [dispatch]);
-    useEffect(() => {
-        setValue('institution', process.env.REACT_APP_SERVICE_INSTITUTION);
-        setValue('ability', process.env.REACT_APP_SERVICE_NAME);
-        setValue('role', JSON.stringify([1, 5, 6]));
-    }, []);
+
     return (
         <>
-            {(success || user) && <Navigate to={redirectUrl}/>}
             <Head title="Masuk"/>
             <Block className="nk-block-middle nk-auth-body  wide-xs">
                 <div className="brand-logo pb-4 text-center">

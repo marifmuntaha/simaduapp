@@ -1,14 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../components";
+import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
-import {addUser, storeUser} from "../../redux/user/actions";
+import {update as updateUser} from "../../../utils/api/user"
 
-const Add = () => {
-    const dispatch = useDispatch();
-    const selector = useSelector((state) => state.user);
-    const {loading, modal, success} = selector
+const Edit = ({modal, setModal, setLoadData, user, setUser}) => {
+    const [loading, setLoading] = useState(false);
     const roleOption = [
         {value: 1, label: "Administrator"},
         {value: 2, label: "Kepala Madrasah"},
@@ -20,32 +17,46 @@ const Add = () => {
         {value: 8, label: "Siswa"},
         {value: 9, label: "Orang Tua"}
     ];
-    const onSubmit = () => {
-        dispatch(storeUser({
-            formData: getValues([
-                'fullname',
-                'email',
-                'username',
-                'password',
-                'role',
-                'phone',
-                'image'
-            ])
-        }));
+    const onSubmit = async () => {
+        setLoading(true);
+        const params = {
+            id: user.id,
+            fullname: getValues('fullname'),
+            email: getValues('email'),
+            username: getValues('username'),
+            password: getValues('password'),
+            role: getValues('role'),
+            phone: getValues('phone'),
+            image: getValues('image'),
+        }
+        await updateUser(params).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+            setLoadData(true);
+            toggle();
+        }).catch(err => {
+            toastError(err);
+        });
     }
-    const {register, handleSubmit, formState: {errors}, getValues, control, reset} = useForm();
+    const {register, handleSubmit, formState: {errors}, setValue, getValues, control, reset} = useForm()
     const toggle = () => {
         reset();
-        dispatch(addUser(false));
+        setModal('');
+        setUser([]);
     }
 
     useEffect(() => {
-        success && dispatch(addUser(false)) && reset();
-    }, [success, dispatch, reset])
+        setValue('fullname', user.name);
+        setValue('email', user.email);
+        setValue('username', user.username);
+        setValue('role', user.role);
+        setValue('phone', user.phone);
+        setValue('image', user.image);
+    }, [user]);
 
     return (
         <>
-            <Modal isOpen={modal.add} toggle={toggle}>
+            <Modal isOpen={modal === 'edit'} toggle={toggle}>
                 <ModalHeader>TAMBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
@@ -105,7 +116,7 @@ const Add = () => {
                                             type="password"
                                             id="password"
                                             placeholder="Ex. *********"
-                                            {...register('password', {required: true})}
+                                            {...register('password', {required: false})}
                                         />
                                         {errors.password && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
@@ -121,7 +132,7 @@ const Add = () => {
                                             id="repassword"
                                             placeholder="Ex. *********"
                                             {...register('repassword', {
-                                                required: true,
+                                                required: false,
                                                 validate: (val) => {
                                                     if (getValues('password') !== val) {
                                                         return 'Sandi tidak sama.'
@@ -143,17 +154,14 @@ const Add = () => {
                                         Hak Akses
                                     </label>
                                     <div className="form-control-wrap">
-                                        <input type="hidden" className="form-control"/>
                                         <Controller
                                             control={control}
-                                            className="form-control"
                                             name="role"
-                                            rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
                                                     options={roleOption}
-                                                    value={roleOption.find((c) => c.value === value)}
+                                                    value={roleOption.find((c) => c.value === parseInt(value))}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Hak Akses"
                                                 />
@@ -203,4 +211,4 @@ const Add = () => {
         </>
     )
 }
-export default Add;
+export default Edit;

@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useCallback, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
+import Add from "./Add";
+import Edit from "./Edit";
 import {
     BackTo,
     BlockBetween,
@@ -12,7 +14,6 @@ import {
     ReactDataTable, toastError, toastSuccess
 } from "../../../components";
 import {
-    Badge,
     Button,
     ButtonGroup,
     DropdownItem,
@@ -21,24 +22,29 @@ import {
     Spinner,
     UncontrolledDropdown
 } from "reactstrap";
-import Add from "./Add";
-import Edit from "./Edit";
-import {useInstitution} from "../../../layout/provider/Institution";
-import {useSetting} from "../../../layout/provider/Setting";
-import {get as getYears} from "../../../utils/api/master/year"
-import {get as getFiles, destroy as destroyFile} from "../../../utils/api/master/file"
+import {Role} from "../../../utils/Utils";
+import {get as getUsers, destroy as destroyUser} from '../../../utils/api/user';
 
-const File = () => {
-    const institution = useInstitution();
-    const setting = useSetting();
+const User = () => {
     const [sm, updateSm] = useState(false);
-    const [years, setYears] = useState([]);
-    const [yearSelected, setYearSelected] = useState([]);
-    const [modal, setModal] = useState('');
     const [loading, setLoading] = useState(false);
-    const [loadData, setLoadData] = useState(false);
-    const [files, setFiles] = useState([]);
-    const [file, setFile] = useState([]);
+    const [roleSelected, setRoleSelected] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState([]);
+    const [modal, setModal] = useState('');
+    const [loadData, setLoadData] = useState(true);
+    const roleOptions = [
+        {value: undefined, name: 'Semua'},
+        {value: '1', name: "Administrator"},
+        {value: '2', name: "Kepala Madrasah"},
+        {value: '3', name: "Wakil Kepala"},
+        {value: '4', name: "Guru"},
+        {value: '5', name: "Operator"},
+        {value: '6', name: "Bendahara"},
+        {value: '7', name: "Teller"},
+        {value: '8', name: "Siswa"},
+        {value: '9', name: "Orang Tua"},
+    ]
     const Columns = [
         {
             name: "Nama",
@@ -47,17 +53,29 @@ const File = () => {
             hide: "sm",
         },
         {
-            name: "Singkatan",
-            selector: (row) => row.alias,
+            name: "Alamat Email",
+            selector: (row) => row.email,
             sortable: false,
         },
         {
-            name: "Status",
-            selector: (row) => row.status,
+            name: "Nama Pengguna",
+            selector: (row) => row.username,
             sortable: false,
+        },
+        {
+            name: "Hak Akses",
+            selector: (row) => row.role,
+            sortable: false,
+            hide: "sm",
             cell: (row) => (
-                row.status === '1' ? <Badge color="success">Wajib</Badge> : <Badge color="warning">Opsional</Badge>
+                Role(row.role)
             )
+        },
+        {
+            name: "Nomor Telepon",
+            selector: (row) => row.phone,
+            sortable: false,
+            hide: "sm"
         },
         {
             name: "Aksi",
@@ -69,8 +87,8 @@ const File = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            setFile(row);
                             setModal('edit');
+                            setUser(row);
                         }}>
                         <Icon name="edit"/>
                     </Button>
@@ -78,14 +96,14 @@ const File = () => {
                         color="outline-danger"
                         onClick={() => {
                             setLoading(row.id);
-                            destroyFile(row.id).then(resp => {
+                            destroyUser(row.id).then(resp => {
                                 toastSuccess(resp.data.message);
                                 setLoadData(true);
                                 setLoading(false);
                             }).catch(err => {
                                 toastError(err);
-                                setLoadData(false);
-                            })
+                                setLoading(false);
+                            });
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -94,31 +112,29 @@ const File = () => {
             )
         },
     ];
-    useEffect(() => {
-        getYears({institution_id: institution.id, order: 'DESC', limit: 5}).then(resp => {
-            const years = resp.data.result;
-            const active = years.filter((year) => {
-                return year.id === setting.year_id;
+    const data = useCallback(() => {
+        let data = users;
+        if (roleSelected.value !== undefined) {
+            data = data.filter((user) => {
+                return user.role === roleSelected.value;
             })
-            setYearSelected(active[0]);
-            setYears(years);
-            setLoadData(true);
-        })
-    }, []);
+        }
+        return data;
+    }, [users, roleSelected]);
 
     useEffect(() => {
-        yearSelected.id !== undefined && loadData && getFiles({institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
-            setFiles(resp.data.result);
-            setLoadData(false)
+        loadData && getUsers().then(resp => {
+            setUsers(resp.data.result);
+            setLoadData(false);
         }).catch(error => {
             toastError(error);
-            setLoadData(false);
         })
     }, [loadData]);
+
     return (
-        <>
-            <Head title="Data Berkas"/>
-            <Content page="component">
+        <Suspense fallback={<div>Loading...</div>}>
+            <Head title="Data Pengguna"/>
+            <Content>
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
                         <BackTo link="/" icon="arrow-left">
@@ -129,7 +145,7 @@ const File = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Berkas</BlockTitle>
+                            <BlockTitle tag="h4">Data Pengguna</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -150,25 +166,24 @@ const File = () => {
                                                 <DropdownToggle
                                                     tag="a"
                                                     className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
-                                                    <Icon className="d-none d-sm-inline" name="calender-date"/>
+                                                    <Icon className="d-none d-sm-inline" name="lock-alt"/>
                                                     <span><span
-                                                        className="d-none d-md-inline">TP</span> {yearSelected && yearSelected.name}</span>
+                                                        className="d-none d-md-inline"></span>{roleSelected.value !== undefined ? roleSelected.name : 'Hak Akses'}</span>
                                                     <Icon className="dd-indc" name="chevron-right"/>
                                                 </DropdownToggle>
                                                 <DropdownMenu end>
                                                     <ul className="link-list-opt no-bdr">
-                                                        {years && years.map((year, idx) => (
+                                                        {roleOptions && roleOptions.map((role, idx) => (
                                                             <li key={idx}>
                                                                 <DropdownItem
                                                                     tag="a"
                                                                     onClick={(ev) => {
                                                                         ev.preventDefault();
-                                                                        setYearSelected(year);
-                                                                        setLoadData(true);
+                                                                        setRoleSelected(role);
                                                                     }}
                                                                     href="#!"
                                                                 >
-                                                                    <span>TP {year.name}</span>
+                                                                    <span>{role.name}</span>
                                                                 </DropdownItem>
                                                             </li>
                                                         ))}
@@ -192,12 +207,12 @@ const File = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={files} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={data()} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add modal={modal} setModal={setModal} setLoadData={setLoadData} />
-                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} file={file}/>
+                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} user={user} setUser={setUser}/>
             </Content>
-        </>
+        </Suspense>
     )
 }
-export default File;
+export default User

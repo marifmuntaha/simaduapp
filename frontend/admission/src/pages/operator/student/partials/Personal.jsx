@@ -83,7 +83,7 @@ const Personal = ({student, setStudentID}) => {
     }
     const handleFormSubmit = async () => {
         setLoading(true);
-        student === null ? await storePersonal() : await updatePersonal();
+        student !== undefined ? await updatePersonal() :await storePersonal();
     }
     useEffect(() => {
         student && setValue('id',student.id);

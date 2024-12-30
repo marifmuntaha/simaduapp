@@ -7,16 +7,15 @@ const Year = React.lazy(() => import('../pages/master/year'));
 const Program = React.lazy(() => import('../pages/master/program'));
 const File = React.lazy(() => import('../pages/master/file'));
 
-const User = React.lazy(() => import("../pages/user"));
-
-const Student = React.lazy(() => import("../pages/student"));
-const AddStudent = React.lazy(() => import("../pages/student/Add"));
 const Institution = React.lazy(() => import('../pages/administrator/institution'))
 
 const Login = React.lazy(() => import("../pages/auth/Login"));
 const Logout = React.lazy(() => import("../pages/auth/Logout"));
 const Error404 = React.lazy(() => import('../pages/error/Error404'));
 const Error504 = React.lazy(() => import('../pages/error/Error504'));
+
+
+const MasterUser = React.lazy(() => import('../pages/master/user'));
 
 const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
 const Ladder = React.lazy(() => import("../pages/administrator/master/ladder"));
@@ -27,6 +26,8 @@ const OperatorStudent = React.lazy(() => import('../pages/operator/student'));
 const OperatorStudentView = React.lazy(() => import('../pages/operator/student/view'));
 const OperatorStudentAdd = React.lazy(() => import('../pages/operator/student/Add'));
 const OperatorStudentEdit = React.lazy(() => import('../pages/operator/student/Edit'));
+const OperatorReport = React.lazy(() => import('../pages/operator/report'));
+
 
 const administratorRoute = [
     {
@@ -47,11 +48,10 @@ const administratorRoute = [
         element: <Institution/>,
         route: PrivateRoute,
     },
-
     {
         path: '/administrator/pengguna',
         name: 'Data Pengguna',
-        element: <User/>,
+        element: <MasterUser/>,
         route: PrivateRoute,
     },
 ]
@@ -105,9 +105,15 @@ const operatorRoutes = [
         route: PrivateRoute,
     },
     {
-        path: '/operator/pendaftar/ubah',
-        name: 'Ubah Pendaftar',
-        element: <AddStudent/>,
+        path: '/operator/laporan',
+        name: 'Laporan',
+        element: <OperatorReport/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/operator/pengguna',
+        name: 'Pengguna',
+        element: <MasterUser/>,
         route: PrivateRoute,
     },
     {

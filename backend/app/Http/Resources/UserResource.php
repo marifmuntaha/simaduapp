@@ -14,7 +14,18 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $resource = [];
+        $resource = [
+            'id' => $this['id'],
+            'name' => $this['fullname'],
+            'email' => $this['email'],
+            'username' => $this['username'],
+            'password' => $this['password'],
+            'role' => $this['role'],
+            'ability' => $this['ability'],
+            'phone' => $this['phone'],
+            'image' => $this['image'],
+        ];
+
         if ($request->has('type')) {
             switch ($request->type) {
                 case 'select':
@@ -25,9 +36,8 @@ class UserResource extends JsonResource
                     break;
                 default:
             }
-        } else {
-            $resource = parent::toArray($request);
         }
+
         return $resource;
     }
 }

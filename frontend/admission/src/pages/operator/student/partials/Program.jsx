@@ -2,7 +2,6 @@ import {Button, Col, PreviewCard, Row, RSelect, toastError, toastSuccess} from "
 import {Form, Label, Spinner} from "reactstrap";
 import {Controller, useForm} from "react-hook-form";
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
 import {useInstitution} from "../../../../layout/provider/Institution";
 import {useSetting} from "../../../../layout/provider/Setting";
 import {get as getPrograms} from "../../../../utils/api/master/program"
@@ -50,7 +49,7 @@ const Program = ({program, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true)
-        program !== null ? await updateSubmit() : await storeSubmit();
+        program !== undefined ? await updateSubmit() : await storeSubmit();
     }
 
     useEffect(() => {
@@ -79,7 +78,6 @@ const Program = ({program, studentID}) => {
             setValue('boarding', "1");
             setLockBoarding(true);
         } else {
-            setValue('boarding', 0);
             setLockBoarding(false);
         }
     }, [watch('program_id')])

@@ -99,7 +99,7 @@ const Parent = ({parent, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        parent !== null ? await updateSubmit() : await storeSubmit();
+        parent !== undefined ? await updateSubmit() : await storeSubmit();
     }
     const {control,formState: {errors}, register, handleSubmit, watch, setValue, getValues} = useForm();
     const [loading, setLoading] = useState();

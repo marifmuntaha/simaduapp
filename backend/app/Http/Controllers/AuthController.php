@@ -38,18 +38,18 @@ class AuthController extends Controller
                         ]);
                     }
                     else {
-                        throw new Exception('Akses Ditolak', 442);
+                        return throw new Exception('Akses Ditolak', 403);
                     }
                 }
             } else {
-                throw new Exception('Nama Pengguna atau sandi salah', 442);
+                throw new Exception('Nama Pengguna atau sandi salah', 401);
             }
         } catch (Exception $exception) {
             return response([
                 'status' => false,
                 'message' => $exception->getMessage(),
                 'result' => null
-            ]);
+            ], $exception->getCode());
         }
     }
 
@@ -71,13 +71,4 @@ class AuthController extends Controller
         }
     }
 
-    public function resetPassword(Request $request)
-    {
-
-    }
-
-    public function changePassword(Request $request)
-    {
-
-    }
 }

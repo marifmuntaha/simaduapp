@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
+import Add from "./Add";
+import Edit from "./Edit";
 import {
     BackTo,
     BlockBetween,
@@ -12,8 +14,6 @@ import {
     ReactDataTable, toastError, toastSuccess
 } from "../../../components";
 import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
-import Add from "./Add";
-import Edit from "./Edit";
 import {useInstitution} from "../../../layout/provider/Institution";
 import {get as getYears, destroy as destroyYear} from "../../../utils/api/master/year"
 

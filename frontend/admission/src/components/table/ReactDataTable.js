@@ -33,11 +33,11 @@ const Export = ({data}) => {
     return (
         <React.Fragment>
             <div className="dt-export-buttons d-flex align-center">
-                <div className="dt-export-title d-none d-md-inline-block">Export</div>
+                <div className="dt-export-title d-none d-md-inline-block"></div>
                 <div className="dt-buttons btn-group flex-wrap">
                     <CopyToClipboard text={JSON.stringify(data)}>
                         <Button className="buttons-copy buttons-html5" onClick={() => copyToClipboard()}>
-                            <span>Copy</span>
+                            <span>Salin</span>
                         </Button>
                     </CopyToClipboard>{" "}
                     <button className="btn btn-secondary buttons-csv buttons-html5" type="button"
@@ -164,6 +164,7 @@ const ReactDataTable = ({data, columns, pagination, actions, className, selectab
                                             <option value="25">25</option>
                                             <option value="40">40</option>
                                             <option value="50">50</option>
+                                            <option value="100">100</option>
                                         </select>{" "}
                                     </div>
                                 </label>

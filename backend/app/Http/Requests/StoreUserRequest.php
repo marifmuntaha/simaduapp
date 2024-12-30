@@ -23,6 +23,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'institution_id' => 'required',
             'fullname' => 'required|string',
             'email' => 'required|string|email|unique:users,email',
             'username' => 'required|string|unique:users,username',
@@ -36,6 +37,7 @@ class StoreUserRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'institution_id' => 'ID Institusi',
             'fullname' => 'Nama Lengkap',
             'email' => 'Alamat Email',
             'username' => 'Nama Pengguna',

@@ -6,7 +6,7 @@ import {
     BlockHead,
     BlockHeadContent,
     BlockTitle, Col,
-    Icon, OverlineTitle, Row, Sidebar,
+    Icon, Row, Sidebar,
     toastError, UserAvatar
 } from "../../../../components";
 import {Badge, Button, Card} from "reactstrap";
@@ -14,9 +14,11 @@ import React, {useEffect, useState} from "react";
 import Content from "../../../../layout/content";
 import {useNavigate, useParams} from "react-router-dom";
 import {show as showStudent} from "../../../../utils/api/student";
-import moment from "moment/moment";
 import "moment/locale/id";
 import {findUpper} from "../../../../utils/Utils";
+import Personal from "./partials/Personal";
+import Parent from "./partials/Parent";
+import Address from "./partials/Address";
 
 const View = () => {
     const {id} = useParams();
@@ -30,8 +32,15 @@ const View = () => {
     const toggleIconTab = (icontab) => {
         if (activeIconTab !== icontab) setActiveIconTab(icontab);
     }
+    const Tabs = [
+        {number: '1', icon: 'user-circle', name: 'Data Pribadi'},
+        {number: '2', icon: 'users', name: 'Data Orangtua'},
+        {number: '3', icon: 'map-pin', name: 'Data Alamat'},
+        {number: '4', icon: 'list', name: 'Program Pilihan'},
+        {number: '5', icon: 'building', name: 'Sekolah Asal'},
+    ]
     useEffect(() => {
-        showStudent({id: id}).then((resp) => {
+        showStudent({id: id, with: 'user,parent,address,program'}).then((resp) => {
             setStudent(resp.data.result);
         }).catch(err => {
             toastError(err);
@@ -66,10 +75,10 @@ const View = () => {
                             onClick={() => navigate(-1)}
                         >
                             <Icon name="arrow-left"></Icon>
-                            <span>Back</span>
+                            <span>Kembali</span>
                         </Button>
                         <a
-                            href="#back"
+                            href="#"
                             onClick={(ev) => {
                                 ev.preventDefault();
                                 navigate(-1);
@@ -86,161 +95,57 @@ const View = () => {
                         <div className="card-aside-wrap" id="user-detail-block">
                             <div className="card-content">
                                 <ul className="nav nav-tabs nav-tabs-mb-icon nav-tabs-card">
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link ${activeIconTab === '1' && 'active'}`}
-                                            href="#personal"
-                                            onClick={(ev) => {
-                                                ev.preventDefault();
-                                                toggleIconTab("1");
-                                            }}
-                                        >
-                                            <Icon name="user-circle"></Icon>
-                                            <span>Data Pribadi</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link ${activeIconTab === '2' && 'active'}`}
-                                            href="#transactions"
-                                            onClick={(ev) => {
-                                                ev.preventDefault();
-                                                toggleIconTab("2");
-                                            }}
-                                        >
-                                            <Icon name="users"></Icon>
-                                            <span>Data Orangtua</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link ${activeIconTab === '3' && 'active'}`}
-                                            href="#documents"
-                                            onClick={(ev) => {
-                                                ev.preventDefault();
-                                                toggleIconTab("3");
-                                            }}
-                                        >
-                                            <Icon name="map-pin"></Icon>
-                                            <span>Alamat</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link ${activeIconTab === '4' && 'active'}`}
-                                            href="#notifications"
-                                            onClick={(ev) => {
-                                                ev.preventDefault();
-                                                toggleIconTab("4");
-                                            }}
-                                        >
-                                            <Icon name="list"></Icon>
-                                            <span>Program Pilihan</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link ${activeIconTab === '5' && 'active'}`}
-                                            href="#activities"
-                                            onClick={(ev) => {
-                                                ev.preventDefault();
-                                                toggleIconTab("5");
-                                            }}
-                                        >
-                                            <Icon name="building"></Icon>
-                                            <span>Sekolah Asal</span>
-                                        </a>
-                                    </li>
+                                    {Tabs.map((tab, index) => (
+                                        <li className="nav-item" key={index}>
+                                            <a
+                                                className={`nav-link ${activeIconTab === tab.number && 'active'}`}
+                                                href="#"
+                                                onClick={(ev) => {
+                                                    ev.preventDefault();
+                                                    toggleIconTab(tab.number);
+                                                }}
+                                            >
+                                                <Icon name={tab.icon}></Icon>
+                                                <span>{tab.name}</span>
+                                            </a>
+                                        </li>
+                                    ))}
+                                    {student && student.program && student.program.boarding === '1' && (
+                                        <li className="nav-item">
+                                            <a
+                                                className={`nav-link ${activeIconTab === '6' && 'active'}`}
+                                                href="#boarding"
+                                                onClick={(ev) => {
+                                                    ev.preventDefault();
+                                                    toggleIconTab("6");
+                                                }}
+                                            >
+                                                <Icon name="notify"></Icon>
+                                                <span>Boarding</span>
+                                            </a>
+                                        </li>
+                                    )}
                                     <li className="nav-item nav-item-trigger d-xxl-none">
                                         <Button className={`toggle btn-icon btn-trigger ${sideBar && "active"}`}
                                                 onClick={toggle}>
                                             <Icon name="user-list-fill"></Icon>
                                         </Button>
                                     </li>
+
                                 </ul>
                                 <div className="card-inner">
-                                    <Block>
-                                        <BlockHead>
-                                            <BlockTitle tag="h5">Informasi Pribadi</BlockTitle>
-                                            <p>Info dasar, seperti nama dan alamat Anda Pendaftar.</p>
-                                        </BlockHead>
-                                        <div className="profile-ud-list">
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Nama Lengkap</span>
-                                                    <span className="profile-ud-value">{student && student.name}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">NISN</span>
-                                                    <span className="profile-ud-value">{student && student.nisn}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Tempat</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && student.birthplace}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">NIK</span>
-                                                    <span className="profile-ud-value">{student && student.nik}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Tanggal Lahir</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && moment(student.birthdate).locale('id').format("D MMMM Y")}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Email Address</span>
-                                                    <span className="profile-ud-value">{student && student.email}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Jenis Kelamin</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && student.gender === "L" ? "Laki-laki" : "Perempuan"}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Nomor Telepon</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && student.phone}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Anak Ke-</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && student.orderborn}</span>
-                                                </div>
-                                            </div>
-                                            <div className="profile-ud-item">
-                                                <div className="profile-ud wider">
-                                                    <span className="profile-ud-label">Jumlah Saudara</span>
-                                                    <span
-                                                        className="profile-ud-value">{student && student.sibling}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Block>
+                                    {activeIconTab === '1' && (<Personal student={student}/>)}
+                                    {activeIconTab === '2' && (<Parent parent={student.parent}/>)}
+                                    {activeIconTab === '3' && (<Address address={student.address}/>)}
                                 </div>
                             </div>
                             <Sidebar toggleState={sideBar}>
                                 <div className="card-inner">
                                     <div className="user-card user-card-s2 mt-5 mt-xxl-0">
-                                        <UserAvatar className="lg" theme="primary" text={student && findUpper(student.name)} />
+                                        <UserAvatar className="lg" theme="primary"
+                                                    text={student && findUpper(student.name)}/>
                                         <div className="user-info">
-                                            <Badge color="outline-light" pill className="ucap">Calon Peserta Didik Baru</Badge>
+                                        <Badge color="outline-light" pill className="ucap">Calon Peserta Didik Baru</Badge>
                                             <h5>{student && student.name}</h5>
                                             <span className="sub-text">{student && student.nisn}</span>
                                         </div>
@@ -258,7 +163,7 @@ const View = () => {
                                             <span>{student && student.nik}</span>
                                         </Col>
                                         <Col size="6">
-                                            <span className="sub-text">Verifikasi:</span>
+                                            <span className="sub-text">Tagihan:</span>
                         {/*                    <span*/}
                         {/*                        className={`lead-text text-${*/}
                         {/*                            student && student.nisn === "success"*/}
@@ -280,77 +185,10 @@ const View = () => {
                                     </Row>
                                 </div>
                                 <div className="card-inner">
-                                    <OverlineTitle tag="h6" className="mb-3">
-                                        Groups
-                                    </OverlineTitle>
-                                    <ul className="g-1">
-                                        <li className="btn-group">
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                investor
-                                            </Button>
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-icon btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                <Icon className="ni-cross"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li className="btn-group">
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                support
-                                            </Button>
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-icon btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                <Icon className="ni-cross"></Icon>
-                                            </Button>
-                                        </li>
-                                        <li className="btn-group">
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                another tag
-                                            </Button>
-                                            <Button
-                                                color="light"
-                                                size="xs"
-                                                className="btn-icon btn-dim"
-                                                onClick={(ev) => {
-                                                    ev.preventDefault();
-                                                }}
-                                            >
-                                                <Icon className="ni-cross"></Icon>
-                                            </Button>
-                                        </li>
-                                    </ul>
+                                    <div className="col-12 between-center">
+                                        <Button className="btn btn-success"><Icon name="printer"/><span>CETAK KARTU</span></Button>
+                                        <Button className="btn btn-success"><Icon name="whatsapp"/><span>KIRIM PESAN</span></Button>
+                                    </div>
                                 </div>
                             </Sidebar>
                             {sideBar && <div className="toggle-overlay" onClick={() => toggle()}></div>}
