@@ -19,6 +19,7 @@ const Personal = ({student, setStudentID}) => {
     ]
     const storePersonal = async () => {
         const userStudentParam = {
+            institution_id: institution.id,
             fullname: getValues('name'),
             email: getValues('email'),
             username: getValues('nisn'),

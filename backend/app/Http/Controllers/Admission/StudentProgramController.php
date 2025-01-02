@@ -12,6 +12,16 @@ use Illuminate\Http\Request;
 
 class StudentProgramController extends Controller
 {
+    public function index(Request $request)
+    {
+        $program = new StudentProgram();
+        $program = $request->has('student_id') ? $program->whereStudentId($request->input('student_id')) : $program;
+        return response([
+            'success' => true,
+            'message' => null,
+            'result' => StudentProgramResource::collection($program->get()),
+        ]);
+    }
     public function store(StoreStudentProgramRequest $request)
     {
         try {
@@ -48,6 +58,24 @@ class StudentProgramController extends Controller
                     'message' => 'Data Program berhasil diubah',
                     'result' => new StudentProgramResource($program)
                 ]) : throw new Exception('Data Program gagal diubah');
+        } catch (Exception $exception) {
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], $exception->getCode());
+        }
+    }
+
+    public function destroy(StudentProgram $program)
+    {
+        try {
+            return $program->delete()
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Program berhasil dihapus',
+                    'result' => new StudentProgramResource($program)
+                ]) : throw new Exception('Data Program gagal dihapus');
         } catch (Exception $exception) {
             return response([
                 'success' => false,

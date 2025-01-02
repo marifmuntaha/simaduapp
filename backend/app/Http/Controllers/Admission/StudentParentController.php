@@ -12,9 +12,17 @@ use Illuminate\Http\Request;
 
 class StudentParentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
+        $parent = new StudentParent();
+        $parent = $request->has('student_id') ? $parent->whereHas('student', function ($q) use ($request) {
+            $q->where('student_id', $request->student_id);
+        }) : $parent;
+        return response([
+            'success' => true,
+            'message' => null,
+            'result' => StudentParentResource::collection($parent->get())
+        ]);
     }
 
     public function store(StoreStudentParentRequest $request)
@@ -67,6 +75,19 @@ class StudentParentController extends Controller
     }
     public function destroy(StudentParent $parent)
     {
-
+        try {
+            return $parent->delete()
+                ? response([
+                    'success' => true,
+                    'message' => 'Data Orangtua berhasil dihapus.',
+                    'result' => new StudentParentResource($parent)
+                ]) : throw new Exception('Data Orangtua gagal dihapus.');
+        } catch (Exception $exception) {
+            return response([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'result' => null
+            ], $exception->getCode());
+        }
     }
 }

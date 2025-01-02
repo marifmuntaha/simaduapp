@@ -14,6 +14,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = new User();
+        $users = $request->has('institution_id') ? $users->whereHas('institution', function ($q) use ($request) {
+            $q->where('institution_id', $request->input('institution_id'));
+        }) : $users;
         $users = $request->has('role') ? $users->whereRole($request->role) : $users;
         return response([
             'success' => true,

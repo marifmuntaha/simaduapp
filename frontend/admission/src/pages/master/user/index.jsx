@@ -24,8 +24,10 @@ import {
 } from "reactstrap";
 import {Role} from "../../../utils/Utils";
 import {get as getUsers, destroy as destroyUser} from '../../../utils/api/user';
+import {useInstitution} from "../../../layout/provider/Institution";
 
 const User = () => {
+    const institution = useInstitution();
     const [sm, updateSm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [roleSelected, setRoleSelected] = useState([]);
@@ -123,7 +125,7 @@ const User = () => {
     }, [users, roleSelected]);
 
     useEffect(() => {
-        loadData && getUsers().then(resp => {
+        loadData && getUsers({institution_id: institution.id}).then(resp => {
             setUsers(resp.data.result);
             setLoadData(false);
         }).catch(error => {

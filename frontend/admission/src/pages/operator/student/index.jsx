@@ -20,9 +20,13 @@ import {
 } from "reactstrap";
 import {useInstitution} from "../../../layout/provider/Institution";
 import {useNavigate} from "react-router-dom";
-import {get as getStudents} from "../../../utils/api/student";
+import {get as getStudents, destroy as destroyStudent} from "../../../utils/api/student";
 import {get as getFile, destroy as destroyFile} from "../../../utils/api/studentFile";
 import {get as getSchool, destroy as destroySchool} from "../../../utils/api/studentSchool";
+import {get as getProgram, destroy as destroyProgram} from "../../../utils/api/studentProgram";
+import {get as getAddress, destroy as destroyAddress} from "../../../utils/api/studentAddress";
+import {get as getParent, destroy as destroyParent} from "../../../utils/api/studentParent";
+import {destroy as destroyUser} from "../../../utils/api/user";
 import "moment/locale/id"
 
 const Student = () => {
@@ -122,7 +126,7 @@ const Student = () => {
                         color="outline-danger"
                         onClick={() => {
                             setLoadData(row.id);
-                            destroyStudent(row.id).then(setLoading(false));
+                            destroyStudentSubmit(row.id).then(setLoading(false));
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -132,7 +136,7 @@ const Student = () => {
         },
     ];
 
-    const destroyStudent = async (id) => {
+    const destroyStudentSubmit = async (id) => {
         await getFile({student_id: id}).then((resp) => {
             const files = resp.data.result;
             files.map((file) => {
@@ -148,7 +152,36 @@ const Student = () => {
                 })
             }).catch(err => toastError(err));
         }).then(() => {
-
+            getProgram({student_id: id}).then((resp) => {
+                const programs = resp.data.result;
+                programs.map((program) => {
+                    destroyProgram(program.id).then().catch(err => toastError(err));
+                })
+            })
+        }).then(() => {
+            getAddress({student_id: id}).then((resp) => {
+                const address = resp.data.result;
+                address.map((address) => {
+                    destroyAddress(address.id).then().catch(err => toastError(err));
+                })
+            })
+        }).then(() => {
+            getParent({student_id: id}).then((resp) => {
+                const parents = resp.data.result
+                parents.map((parent) => {
+                    destroyParent(parent.id).then(() => {
+                        destroyUser(parent.user_id).then().catch(err => toastError(err));
+                    }).catch(err => toastError(err));
+                })
+            })
+        }).then(() => {
+            destroyStudent(id).then((resp) => {
+                const student = resp.data.result
+                destroyUser(student.user_id).then(() => {
+                    toastSuccess(resp.data.message);
+                    setLoadData(true);
+                }).catch(err => toastError(err));
+            }).catch(err => toastError(err));
         });
     }
 

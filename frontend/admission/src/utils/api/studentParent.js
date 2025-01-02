@@ -3,7 +3,7 @@ import {APICore} from './APICore'
 const api = new APICore()
 
 function get(params) {
-    const baseUrl = '/student'
+    const baseUrl = 'admission/student/parent'
     return api.get(baseUrl, params)
 }
 
@@ -32,7 +32,7 @@ function update(params: {
 }
 
 function destroy(params) {
-    const baseUrl = `/student/${params}`
+    const baseUrl = `admission/student/parent/${params}`
     return api.delete(baseUrl);
 }
 
