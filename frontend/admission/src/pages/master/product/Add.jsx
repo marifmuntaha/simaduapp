@@ -1,17 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
 import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
 import {useSetting} from "../../../layout/provider/Setting";
 import {useInstitution} from "../../../layout/provider/Institution";
-import {get as getPrograms} from "../../../utils/api/master/program";
-import {store as storeProduct} from "../../../utils/api/master/product";
+import {store as storeProgram} from "../../../utils/api/master/program";
 
 const Add = ({...props}) => {
     const setting = useSetting();
     const institution = useInstitution();
     const [loading, setLoading] = useState(false);
-    const [optionProgram, setOptionProgram] = useState([]);
     const onSubmit = async () => {
         setLoading(true);
         const params = {
@@ -19,11 +17,10 @@ const Add = ({...props}) => {
             year_id: setting.year_id,
             name: getValues('name'),
             alias: getValues('alias'),
-            price: getValues('price'),
-            gender: getValues('gender'),
-            program: getValues('program'),
+            description: getValues('description'),
+            boarding: getValues('boarding'),
         }
-        await storeProduct(params).then(resp => {
+        await storeProgram(params).then(resp => {
             toastSuccess(resp.data.message);
             setLoading(false);
             toggle();
@@ -46,16 +43,11 @@ const Add = ({...props}) => {
         props.setModal('');
         props.setLoadData(true);
     }
-    const optionGender = [
-        {value: 'L', label: 'Laki-laki'},
-        {value: 'P', label: 'Perempuan'},
+    const optionBoarding = [
+        {value: 1, label: 'Boarding'},
+        {value: 2, label: 'Opsional'},
     ]
 
-    useEffect(() => {
-        getPrograms({institution_id: institution.id, year_id: setting.year_id, type: 'select'}).then(resp => {
-            setOptionProgram(resp.data.result);
-        })
-    }, []);
     return (
         <>
             <Modal isOpen={props.modal === 'add'} toggle={toggle}>
@@ -65,7 +57,7 @@ const Add = ({...props}) => {
                         <Row className="gy-2">
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="fullname" className="form-label">Nama Item</Label>
+                                    <Label htmlFor="fullname" className="form-label">Nama</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
@@ -96,64 +88,39 @@ const Add = ({...props}) => {
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="price" className="form-label">Harga</Label>
+                                    <Label htmlFor="description" className="form-label">Diskripsi</Label>
                                     <div className="form-control-wrap">
                                         <input
                                             className="form-control"
                                             type="text"
-                                            id="price"
-                                            placeholder="Ex. 160.000"
-                                            {...register('price', {required: true})}
+                                            id="description"
+                                            placeholder="Ex. Program Tahfidz"
+                                            {...register('description', {required: true})}
                                         />
-                                        {errors.price && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        {errors.description && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
-                                    <Label htmlFor="gender" className="form-label">Jenis Kelamin</Label>
+                                    <Label htmlFor="boarding" className="form-label">Boarding</Label>
                                     <div className="form-control-wrap">
                                         <Controller
                                             control={control}
                                             className="form-control"
-                                            name="gender"
+                                            name="boarding"
                                             rules={{required: true}}
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
-                                                    isMulti
                                                     inputRef={ref}
-                                                    options={optionGender}
-                                                    value={optionGender !== undefined && optionGender.find((c) => c.value === value)}
+                                                    options={optionBoarding}
+                                                    value={optionBoarding !== undefined && optionBoarding.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Jenis Kelamin"
+                                                    placeholder="Pilih Boarding"
                                                 />
                                             )}/>
-                                        <input type="hidden" id="gender" className="form-control" />
-                                        {errors.gender && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col className="col-md-12">
-                                <div className="form-group">
-                                    <Label htmlFor="program" className="form-label">Program</Label>
-                                    <div className="form-control-wrap">
-                                        <Controller
-                                            control={control}
-                                            className="form-control"
-                                            name="program"
-                                            rules={{required: true}}
-                                            render={({field: {onChange, value, ref}}) => (
-                                                <RSelect
-                                                    isMulti
-                                                    inputRef={ref}
-                                                    options={optionProgram}
-                                                    value={optionProgram !== undefined && optionProgram.find((c) => c.value === value)}
-                                                    onChange={(val) => onChange(val.value)}
-                                                    placeholder="Pilih Program"
-                                                />
-                                            )}/>
-                                        <input type="hidden" id="program" className="form-control" />
-                                        {errors.program && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                        <input type="hidden" id="boarding" className="form-control" />
+                                        {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>

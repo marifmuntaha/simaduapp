@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admission\ProductController;
 use App\Http\Controllers\Admission\StudentAddressController;
 use App\Http\Controllers\Admission\StudentFileController;
 use App\Http\Controllers\Admission\StudentParentController;
@@ -20,3 +21,4 @@ Route::apiResource('student/program', StudentProgramController::class);
 Route::apiResource('student/school', StudentSchoolController::class);
 Route::apiResource('student/file', StudentFileController::class);
 Route::apiResource('student', StudentController::class);
+Route::apiResource('product', ProductController::class);

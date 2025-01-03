@@ -62,7 +62,6 @@ return new class extends Migration
             $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
-
         Schema::create('admission_student_parents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -93,13 +92,11 @@ return new class extends Migration
             $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
-
         Schema::create('admission_student_parent', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('parent_id');
         });
-
         Schema::create('admission_student_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
@@ -141,6 +138,18 @@ return new class extends Migration
             $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
+        Schema::create('admission_products', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('year_id');
+            $table->string('name');
+            $table->string('alias');
+            $table->string('gender');
+            $table->string('program');
+            $table->string('price')->nullable();
+            $table->unsignedBigInteger('creator');
+            $table->unsignedBigInteger('updater');
+        });
     }
 
     /**
@@ -158,5 +167,6 @@ return new class extends Migration
         Schema::dropIfExists('admission_student_programs');
         Schema::dropIfExists('admission_student_schools');
         Schema::dropIfExists('admission_student_files');
+        Schema::dropIfExists('admission_products');
     }
 };

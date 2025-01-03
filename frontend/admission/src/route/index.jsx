@@ -19,6 +19,7 @@ const MasterUser = React.lazy(() => import('../pages/master/user'));
 
 const AdministratorDashboard = React.lazy(() => import("../pages/dashboard"));
 const Ladder = React.lazy(() => import("../pages/administrator/master/ladder"));
+const Product = React.lazy(() => import("../pages/master/product"));
 
 const OperatorDashboard = React.lazy(() => import('../pages/operator/dashboard'));
 const OperatorSetting = React.lazy(() => import('../pages/operator/setting'));
@@ -28,6 +29,7 @@ const OperatorStudentAdd = React.lazy(() => import('../pages/operator/student/Ad
 const OperatorStudentEdit = React.lazy(() => import('../pages/operator/student/Edit'));
 const OperatorReport = React.lazy(() => import('../pages/operator/report'));
 
+const TreasurerDashboard = React.lazy(() => import('../pages/treasurer/dashboard'));
 
 const administratorRoute = [
     {
@@ -123,6 +125,20 @@ const operatorRoutes = [
         route: PrivateRoute,
     },
 ]
+const treasurerRoutes = [
+    {
+        path: '/bendahara',
+        name: 'Dashboard',
+        element: <TreasurerDashboard/>,
+        route: PrivateRoute,
+    },
+    {
+        path: 'bendahara/master/item-pembayaran',
+        name: 'Item Pembayaran',
+        element: <Product/>,
+        route: PrivateRoute,
+    },
+]
 
 const otherProtectedRoutes = [
     {
@@ -136,6 +152,7 @@ const otherProtectedRoutes = [
 export const protectedRoutes = [
     ...administratorRoute,
     ...operatorRoutes,
+    ...treasurerRoutes,
     ...otherProtectedRoutes
 ]
 export const publicRoutes = [

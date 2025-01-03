@@ -28,7 +28,9 @@ class AuthController extends Controller
                 }
                 else {
                     $institution = $user->institution()->first();
-                    if (in_array($request->ability, $ability) && in_array($user->role, $role) && ((int) $institution->id === (int) $request->institution)) {
+                    if (in_array($request->ability, $ability)
+                        && in_array($user->role, $role)
+                        && ((int) $institution->id === (int) $request->institution)) {
                         return response([
                             'status' => true,
                             'message' => 'Berhasil masuk, anda akan dialihkan dalam 2 detik',

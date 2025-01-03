@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
 import Head from "../../../layout/head";
-import Content from "../../../layout/content";
-import Add from "./Add";
-import Edit from "./Edit";
 import {
     BackTo,
     BlockBetween,
@@ -10,27 +7,26 @@ import {
     BlockHeadContent,
     BlockTitle,
     Icon,
-    PreviewCard,
-    ReactDataTable, toastError, toastSuccess
+    PreviewCard, ReactDataTable,
+    toastError, toastSuccess
 } from "../../../components";
-import {
-    Badge,
-    Button,
-    ButtonGroup,
-    Spinner
-} from "reactstrap";
-import {useInstitution} from "../../../layout/provider/Institution";
-import {get as getPrograms, destroy as destroyProgram} from "../../../utils/api/master/program";
+import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import YearDropdown from "../../../components/partials/YearDropdown";
+import Content from "../../../layout/content";
+import {useInstitution} from "../../../layout/provider/Institution";
+import Add from "../program/Add";
+import Edit from "../program/Edit";
+import {get as getProducts, destroy as destroyProduct} from "../../../utils/api/master/product";
 
-const Program = () => {
+
+const Product = () => {
     const institution = useInstitution();
     const [sm, updateSm] = useState(false);
     const [yearSelected, setYearSelected] = useState([]);
-    const [programs, setPrograms] = useState([]);
-    const [program, setProgram] = useState([]);
-    const [loadData, setLoadData] = useState(false);
+    const [loadData, setLoadData] = useState(true);
     const [modal, setModal] = useState('');
+    const [products, setProducts] = useState([]);
+    const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const Columns = [
         {
@@ -62,7 +58,7 @@ const Program = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            setProgram(row);
+                            setProduct(row);
                             setModal('edit')
                         }}>
                         <Icon name="edit"/>
@@ -71,7 +67,7 @@ const Program = () => {
                         color="outline-danger"
                         onClick={() => {
                             setLoading(row.id)
-                            destroyProgram(row.id).then(resp => {
+                            destroyProduct(row.id).then(resp => {
                                 toastSuccess(resp.data.message);
                                 setLoadData(true);
                                 setLoading(false);
@@ -86,15 +82,15 @@ const Program = () => {
                 </ButtonGroup>
             )
         },
-    ];
+    ]
 
     useEffect(() => {
-        loadData && yearSelected.id !== undefined && getPrograms({
+        loadData && yearSelected.id !== undefined && getProducts({
             institution_id: institution.id,
             year_id: yearSelected.id
         }).then(resp => {
-            setPrograms(resp.data.result);
             setLoadData(false);
+            setProducts(resp.data.result);
         }).catch(err => {
             toastError(err);
             setLoadData(false);
@@ -103,7 +99,7 @@ const Program = () => {
 
     return (
         <>
-            <Head title="Data Program"/>
+            <Head title="Item Pembayaran"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
@@ -150,12 +146,13 @@ const Program = () => {
                     </BlockBetween>
                 </BlockHead>
                 <PreviewCard>
-                    <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
+                    <ReactDataTable data={products} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
                 <Add modal={modal} setModal={setModal} setLoadData={setLoadData}/>
-                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={program}/>
+                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={product}/>
             </Content>
         </>
     )
 }
-export default Program;
+
+export default Product;
