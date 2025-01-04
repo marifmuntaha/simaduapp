@@ -5,14 +5,13 @@ import Head from "../../layout/head";
 import AuthFooter from "./AuthFooter";
 import {Block, BlockContent, BlockDes, BlockHead, BlockTitle, PreviewCard} from "../../components";
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {logoutUser} from "../../redux/auth/actions";
+import {APICore} from "../../utils/api/APICore";
 
 const Logout = () => {
-    const dispatch = useDispatch();
+    const api = new APICore()
     useEffect(() => {
-        dispatch(logoutUser())
-    }, [dispatch]);
+        api.setLoggedInUser('');
+    }, []);
     return (
         <>
             <Head title="Keluar"/>

@@ -14,38 +14,66 @@ import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import YearDropdown from "../../../components/partials/YearDropdown";
 import Content from "../../../layout/content";
 import {useInstitution} from "../../../layout/provider/Institution";
-import Add from "../program/Add";
-import Edit from "../program/Edit";
+import Add from "./Add";
+import Edit from "./Edit";
 import {get as getProducts, destroy as destroyProduct} from "../../../utils/api/master/product";
+import {get as getPrograms} from "../../../utils/api/master/program";
+import {Currency} from "../../../utils/Utils";
 
 
 const Product = () => {
     const institution = useInstitution();
     const [sm, updateSm] = useState(false);
     const [yearSelected, setYearSelected] = useState([]);
-    const [loadData, setLoadData] = useState(true);
+    const [loadData, setLoadData] = useState(false);
     const [modal, setModal] = useState('');
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [programs, setPrograms] = useState([]);
     const Columns = [
         {
-            name: "Nama Program",
+            name: "Nama Item",
             selector: (row) => row.name,
             sortable: false,
+            width: '300px',
         },
         {
             name: "Singkatan",
             selector: (row) => row.alias,
             sortable: false,
+            width: '150px',
         },
         {
-            name: "Boarding",
-            selector: (row) => row.boarding,
+            name: "Harga",
+            selector: (row) => Currency(row.price),
+            sortable: false,
+            width: '150px',
+        },
+        {
+            name: "Jenis Kelamin",
+            selector: (row) => row.gender,
+            sortable: false,
+            width: '150px',
+            cell: (row) => {
+                const gender = JSON.parse(row.gender);
+                return gender.map((item, idx) => (
+                    <Badge pill color={item === "L" ? 'info' : 'warning'} size="sm" key={idx} className="m-sm-1">{item}</Badge>
+                ))
+            }
+        },
+        {
+            name: "Program",
+            selector: (row) => row.program,
             sortable: false,
             cell: (row) => {
-                return row.boarding === '1' ? <Badge color="success" pill>Boarding</Badge> :
-                    <Badge color="warning" pill>Opsional</Badge>;
+                const program = JSON.parse(row.program);
+                return program.map((item, idx) => {
+                    let value = programs.filter((val) => {
+                        return val.id === item;
+                    })
+                    return <Badge pill color={color(idx)} size="sm" key={idx} className="m-sm-1">{value[0].name}</Badge>
+                })
             }
         },
         {
@@ -83,24 +111,43 @@ const Product = () => {
             )
         },
     ]
+    const color = (id) => {
+        switch (id) {
+            case 0:
+                return "danger"
+            case 1:
+                return "info"
+            case 2:
+                return "warning"
+            case 3:
+                return "danger"
+            default:
+                return "primary"
 
+        }
+    }
     useEffect(() => {
-        loadData && yearSelected.id !== undefined && getProducts({
-            institution_id: institution.id,
-            year_id: yearSelected.id
-        }).then(resp => {
-            setLoadData(false);
-            setProducts(resp.data.result);
-        }).catch(err => {
-            toastError(err);
-            setLoadData(false);
+        loadData && yearSelected && yearSelected.id !== undefined &&
+        getPrograms({ institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
+            setPrograms(resp.data.result);
+        }).then(() => {
+            getProducts({
+                institution_id: institution.id,
+                year_id: yearSelected.id
+            }).then(resp => {
+                setLoadData(false);
+                setProducts(resp.data.result);
+            }).catch(err => {
+                toastError(err);
+                setLoadData(false);
+            });
         });
     }, [loadData]);
 
     return (
         <>
             <Head title="Item Pembayaran"/>
-            <Content page="component">
+            <Content>
                 <BlockHead size="lg" wide="sm">
                     <BlockHeadContent>
                         <BackTo link="/" icon="arrow-left">
@@ -111,7 +158,7 @@ const Product = () => {
                 <BlockHead>
                     <BlockBetween>
                         <BlockHeadContent>
-                            <BlockTitle tag="h4">Data Program</BlockTitle>
+                            <BlockTitle tag="h4">Data Item</BlockTitle>
                             <p>
                                 Just import <code>ReactDataTable</code> from <code>components</code>, it is built in for
                                 react dashlite.
@@ -148,8 +195,8 @@ const Product = () => {
                 <PreviewCard>
                     <ReactDataTable data={products} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add modal={modal} setModal={setModal} setLoadData={setLoadData}/>
-                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={product}/>
+                <Add modal={modal} setModal={setModal} setLoadData={setLoadData} programs={programs}/>
+                <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} product={product} programs={programs}/>
             </Content>
         </>
     )

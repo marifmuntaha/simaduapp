@@ -1,28 +1,36 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../../components";
+import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
-import {addInstitution, storeInstitution} from "../../../redux/institution/actions";
+import {store as storeInstitution} from "../../../utils/api/institution";
+import {get as getUser} from "../../../utils/api/user";
+import {get as getLadder} from "../../../utils/api/master/ladder";
 
-const Add = () => {
-    const dispatch = useDispatch();
-    const {loading, modal, success} = useSelector((state) => state.institution);
-    const {users} = useSelector((state) => state.user);
-    const {ladders} = useSelector((state) => state.ladder);
-    const onSubmit = () => {
-        dispatch(storeInstitution({
-            formData: getValues([
-                'user',
-                'ladder',
-                'name',
-                'alias',
-                'nsm',
-                'npsn',
-                'headmaster',
-                'logo',
-            ])
-        }));
+const Add = ({...props}) => {
+    const [loading, setLoading] = useState(false);
+    const [optionUsers, setOptionUsers] = useState([]);
+    const [optionLadders, setOptionLadders] = useState([]);
+    const onSubmit = async () => {
+        setLoading(true);
+        const params = {
+            user: getValues('user'),
+            ladder: getValues('ladder'),
+            name: getValues('name'),
+            alias: getValues('alias'),
+            nsm: getValues('nsm'),
+            npsn: getValues('npsn'),
+            headmaster: getValues('headmaster'),
+            logo: getValues('logo'),
+        }
+        await storeInstitution(params).then(resp => {
+            toastSuccess(resp.data.message);
+            setLoading(false);
+            props.setLoadData(true);
+            toggle();
+        }).catch(err => {
+            toastError(err);
+            setLoading(false);
+        })
     }
     const {
         register,
@@ -34,16 +42,25 @@ const Add = () => {
     } = useForm();
     const toggle = () => {
         reset();
-        dispatch(addInstitution(false));
+        props.setModal(false);
     }
+
     useEffect(() => {
-        success &&
-        dispatch(addInstitution(false));
-        reset();
-    }, [success, reset, dispatch]);
+        getUser({role: '5', type: 'select'}).then(resp => {
+            setOptionUsers(resp.data.result);
+        }).catch(e => {
+            toastError(e);
+        });
+        getLadder({type: 'select'}).then(resp => {
+            setOptionLadders(resp.data.result);
+        }).catch(e => {
+            toastError(e);
+        })
+    }, []);
+
     return (
         <>
-            <Modal isOpen={modal.add} toggle={toggle}>
+            <Modal isOpen={props.modal === 'add'} toggle={toggle}>
                 <ModalHeader>TAMBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
@@ -63,8 +80,8 @@ const Add = () => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={users}
-                                                    value={users.find((c) => c.value === value)}
+                                                    options={optionUsers}
+                                                    value={optionUsers.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Pengguna"
                                                 />
@@ -88,8 +105,8 @@ const Add = () => {
                                             render={({field: {onChange, value, ref}}) => (
                                                 <RSelect
                                                     inputRef={ref}
-                                                    options={ladders}
-                                                    value={ladders.find((c) => c.value === value)}
+                                                    options={optionLadders}
+                                                    value={optionLadders.find((c) => c.value === value)}
                                                     onChange={(val) => onChange(val.value)}
                                                     placeholder="Pilih Jenjang"
                                                 />

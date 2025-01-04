@@ -138,6 +138,12 @@ const treasurerRoutes = [
         element: <Product/>,
         route: PrivateRoute,
     },
+    {
+        path: 'bendahara/pendaftar',
+        name: 'Data Pendaftar',
+        element: <OperatorStudent/>,
+        route: PrivateRoute,
+    },
 ]
 
 const otherProtectedRoutes = [

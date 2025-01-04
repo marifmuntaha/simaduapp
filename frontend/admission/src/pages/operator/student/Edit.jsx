@@ -65,13 +65,13 @@ const Edit = () => {
                         <Parent parent={parent} studentID={id}/>
                     </TabPane>
                     <TabPane tabId="3">
-                        <Address address={address}/>
+                        <Address address={address} studentID={id}/>
                     </TabPane>
                     <TabPane tabId="4">
-                        <Program program={program}/>
+                        <Program program={program} studentID={id}/>
                     </TabPane>
                     <TabPane tabId="5">
-                        <School school={school}/>
+                        <School school={school} studentID={id}/>
                     </TabPane>
                     <TabPane tabId="6">
                         <File studentID={id}/>

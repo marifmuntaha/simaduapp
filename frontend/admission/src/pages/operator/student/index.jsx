@@ -139,6 +139,7 @@ const Student = () => {
     const destroyStudentSubmit = async (id) => {
         await getFile({student_id: id}).then((resp) => {
             const files = resp.data.result;
+            // eslint-disable-next-line array-callback-return
             files.map((file) => {
                 destroyFile(file.id).then().catch(err => toastError(err));
             })
@@ -147,6 +148,7 @@ const Student = () => {
         }).then(() => {
             getSchool({student_id: id}).then((resp) => {
                 const schools = resp.data.result;
+                // eslint-disable-next-line array-callback-return
                 schools.map((school) => {
                     destroySchool(school.id).then().catch(err => toastError(err));
                 })
@@ -154,6 +156,7 @@ const Student = () => {
         }).then(() => {
             getProgram({student_id: id}).then((resp) => {
                 const programs = resp.data.result;
+                // eslint-disable-next-line array-callback-return
                 programs.map((program) => {
                     destroyProgram(program.id).then().catch(err => toastError(err));
                 })
@@ -161,6 +164,7 @@ const Student = () => {
         }).then(() => {
             getAddress({student_id: id}).then((resp) => {
                 const address = resp.data.result;
+                // eslint-disable-next-line array-callback-return
                 address.map((address) => {
                     destroyAddress(address.id).then().catch(err => toastError(err));
                 })
@@ -168,6 +172,7 @@ const Student = () => {
         }).then(() => {
             getParent({student_id: id}).then((resp) => {
                 const parents = resp.data.result
+                // eslint-disable-next-line array-callback-return
                 parents.map((parent) => {
                     destroyParent(parent.id).then(() => {
                         destroyUser(parent.user_id).then().catch(err => toastError(err));
@@ -186,10 +191,17 @@ const Student = () => {
     }
 
     useEffect(() => {
-        loadData && getStudents({institution_id: institution.id, year_id: yearSelected.id, with: 'parent,address,program'}).then(resp => {
-            setStudents(resp.data.result);
-            setLoadData(false);
-        })
+        if (loadData && institution.id !== undefined && yearSelected.id !== undefined) {
+            getStudents({
+                institution_id: institution.id,
+                year_id: yearSelected.id,
+                with: 'parent,address,program'
+            }).then(resp => {
+                setStudents(resp.data.result);
+                setLoadData(false);
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadData])
     return (
         <Suspense fallback={<div>Loading...</div>}>

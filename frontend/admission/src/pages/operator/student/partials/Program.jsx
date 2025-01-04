@@ -49,19 +49,21 @@ const Program = ({program, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true)
-        program !== undefined ? await updateSubmit() : await storeSubmit();
+        program !== null ? await updateSubmit() : await storeSubmit();
     }
 
     useEffect(() => {
         program && setValue('id', program.id);
         program && setValue('program_id', program.program_id);
         program && setValue('boarding', program.boarding);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [program]);
 
     useEffect(() => {
         getPrograms({institution_id: institution && institution.id, year_id: setting.year_id}).then(resp => {
             setPrograms(resp.data.result)
-        })
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -80,6 +82,7 @@ const Program = ({program, studentID}) => {
         } else {
             setLockBoarding(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [watch('program_id')])
 
     return (

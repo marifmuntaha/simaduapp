@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {getSetting} from "../../redux/setting/actions";
+import {get as getSetting} from "../../utils/api/setting";
+import {toastError} from "../../components";
 
 const SettingContext = createContext();
 export function useSetting() {
@@ -8,17 +8,16 @@ export function useSetting() {
 }
 
 const SettingProvider = ({...props}) => {
-    const dispatch = useDispatch();
-    const {settings} = useSelector((state) => state.setting);
     const [setting, setSetting] = useState([]);
 
     useEffect(() => {
-        dispatch(getSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION}))
-    }, [])
-
-    useEffect(() => {
-        setSetting(settings && settings[0]);
-    }, [settings]);
+        getSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION})
+            .then(resp => {
+                setSetting(resp.data.result[0])
+            }).catch(err => {
+                toastError(err)
+        }
+    )}, []);
 
     return (
         <SettingContext.Provider value={setting}>

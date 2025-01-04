@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import Add from "./Add";
@@ -83,14 +83,19 @@ const Year = () => {
     ];
 
     useEffect(() => {
-        loadData === true && getYears({institution_id: institution.id, order: 'DESC'}).then(resp => {
-            setYears(resp.data.result);
-            setLoadData(false);
-        });
-    }, [loading, loadData, institution]);
+        if (loadData && institution.id !== undefined) {
+            getYears({institution_id: institution.id, order: 'DESC'}).then(resp => {
+                setYears(resp.data.result);
+                setLoadData(false);
+            }).catch(error => {
+                toastError(error);
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadData]);
 
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
             <Head title="Tahun Pelajaran"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
@@ -140,7 +145,7 @@ const Year = () => {
                 <Add modal={modal} setModal={setModal} setLoadData={setLoadData} />
                 <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} year={year} setYear={setYear}/>
             </Content>
-        </>
+        </Suspense>
     )
 }
 export default Year;

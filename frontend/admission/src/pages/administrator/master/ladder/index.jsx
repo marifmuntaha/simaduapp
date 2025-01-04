@@ -6,19 +6,21 @@ import {
     BlockHeadContent,
     BlockTitle,
     Icon, PreviewCard,
-    ReactDataTable
+    ReactDataTable, toastError, toastSuccess
 } from "../../../../components";
 import React, {useEffect, useState} from "react";
 import Content from "../../../../layout/content";
 import {Button, ButtonGroup, Spinner} from "reactstrap";
-import {useDispatch, useSelector} from "react-redux";
-import {destroyLadder, getLadders, setLadder} from "../../../../redux/master/ladder/actions";
+import {get as getLadder, destroy as destroyLadder} from "../../../../utils/api/master/ladder"
 
 
 const Ladder = () => {
-    const dispatch = useDispatch();
-    const {ladders, loading, success, error} = useSelector((state) => state.ladder)
     const [sm, updateSm] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loadData, setLoadData] = useState(true);
+    const [ladders, setLadders] = useState([]);
+    const [ladder, setLadder] = useState([]);
+    const [modal, setModal] = useState(false);
     const Columns = [
         {
             name: "Nama",
@@ -46,14 +48,23 @@ const Ladder = () => {
                     <Button
                         color="outline-warning"
                         onClick={() => {
-                            dispatch(setLadder(row, true));
+                            setLadder(row);
+                            setModal('edit');
                         }}>
                         <Icon name="edit"/>
                     </Button>
                     <Button
                         color="outline-danger"
                         onClick={() => {
-                            dispatch(destroyLadder(row.id));
+                            setLoading(row.id);
+                            destroyLadder(row.id).then(resp => {
+                                toastSuccess(resp.data.message);
+                                setLoading(false);
+                                setLoadData(true);
+                            }).catch(err => {
+                                toastError(err);
+                                setLoading(false);
+                            });
                         }}
                         disabled={row.id === loading}>
                         {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
@@ -63,8 +74,14 @@ const Ladder = () => {
         },
     ];
     useEffect(() => {
-        dispatch(getLadders());
-    }, []);
+        loadData && getLadder().then(resp => {
+            setLadders(resp.data.result);
+            setLoadData(false);
+        }).catch(err => {
+            toastError(err);
+            setLoadData(false);
+        })
+    }, [loadData]);
     return (
         <>
             <Head title="Data Jenjang"/>

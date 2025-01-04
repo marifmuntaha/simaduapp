@@ -15,6 +15,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $product = new Product();
+        $product = $request->has('institution_id') ? $product->whereInstitutionId($request->input('institution_id')) : $product;
+        $product = $request->has('year_id') ? $product->whereYearId($request->input('year_id')) : $product;
         return response([
             'success' => true,
             'message' => null,
@@ -36,7 +38,7 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => $exception->getMessage(),
                 'result' => null
-            ], $exception->getCode());
+            ], 422);
         }
     }
 

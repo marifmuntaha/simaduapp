@@ -47,7 +47,7 @@ const Address = ({address, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        address !== undefined ? await updateSubmit() : await storeSubmit();
+        address !== null ? await updateSubmit() : await storeSubmit();
     }
     useEffect(() => {
         address && setValue('id', address.id);
@@ -56,6 +56,7 @@ const Address = ({address, studentID}) => {
         address && setValue('subdistrict_id', String(address.subdistrict_id));
         address && setValue('village_id', String(address.village_id));
         address && setValue('address', address.address);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address]);
     useEffect(() => {
         fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json").then(response => response.json())
@@ -77,6 +78,7 @@ const Address = ({address, studentID}) => {
                 })
                 setDistrictOptions(regencies);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [watch('province_id')]);
     useEffect(() => {
         getValues('province_id') !== undefined && getValues('province_id') !== 'undefined' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${getValues('district_id')}.json`)
@@ -87,6 +89,7 @@ const Address = ({address, studentID}) => {
                 })
                 setSubDistrictOptions(districts);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [watch('district_id')]);
     useEffect(() => {
         getValues('province_id') !== undefined && getValues('province_id') !== 'undefined' && fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${getValues('subdistrict_id')}.json`)
@@ -97,6 +100,7 @@ const Address = ({address, studentID}) => {
                 })
                 setVillageOptions(villages);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [watch('subdistrict_id')]);
     return <>
         <PreviewCard>

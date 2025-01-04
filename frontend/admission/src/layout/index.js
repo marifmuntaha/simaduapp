@@ -9,7 +9,7 @@ import Sidebar from "./sidebar";
 
 const Layout = ({title, ...props}) => {
     return (
-        <Suspense fallback={<div/>}>
+        <Suspense fallback={<div>Loading...</div>}>
             <Head title={!title && 'Memuat...'}/>
             <AppRoot>
                 <AppMain>

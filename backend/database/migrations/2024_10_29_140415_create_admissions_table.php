@@ -149,6 +149,7 @@ return new class extends Migration
             $table->string('price')->nullable();
             $table->unsignedBigInteger('creator');
             $table->unsignedBigInteger('updater');
+            $table->timestamps();
         });
     }
 

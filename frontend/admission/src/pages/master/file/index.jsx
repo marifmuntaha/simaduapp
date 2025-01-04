@@ -89,13 +89,16 @@ const File = () => {
     ];
 
     useEffect(() => {
-        yearSelected.id !== undefined && loadData && getFiles({institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
-            setFiles(resp.data.result);
-            setLoadData(false)
-        }).catch(error => {
-            toastError(error);
-            setLoadData(false);
-        })
+        if (yearSelected.id !== undefined && loadData && institution.id !== undefined) {
+            getFiles({institution_id: institution.id, year_id: yearSelected.id}).then(resp => {
+                setFiles(resp.data.result);
+                setLoadData(false)
+            }).catch(error => {
+                toastError(error);
+                setLoadData(false);
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadData]);
     return (
         <>

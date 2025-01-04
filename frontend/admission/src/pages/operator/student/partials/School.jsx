@@ -40,7 +40,7 @@ const School = ({school, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        school !== undefined ? await updateSubmit() : await storeSubmit();
+        school !== null ? await updateSubmit() : await storeSubmit();
     }
 
     useEffect(() => {
@@ -48,6 +48,7 @@ const School = ({school, studentID}) => {
         school && setValue('npsn', school.npsn);
         school && setValue('name', school.name);
         school && setValue('address', school.address);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [school])
 
     return (

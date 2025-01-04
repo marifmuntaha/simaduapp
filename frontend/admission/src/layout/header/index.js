@@ -21,7 +21,7 @@ const Header = ({fixed, className}) => {
         [`${className}`]: className,
     });
     return (
-        <Suspense fallback={<div/>}>
+        <Suspense fallback={<div>Loading...</div>}>
             <div className={headerClass}>
                 <div className="container-fluid">
                     <div className="nk-header-wrap">

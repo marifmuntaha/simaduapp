@@ -29,7 +29,7 @@ const Sidebar = ({fixed, className}) => {
     });
 
     return (
-        <Suspense fallback={<div/>}>
+        <>
             <div className={classes}>
                 <div className="nk-sidebar-element nk-sidebar-head">
                     <div className="nk-sidebar-brand">
@@ -56,7 +56,7 @@ const Sidebar = ({fixed, className}) => {
             {theme.sidebarVisibility && <div
                 onClick={themeUpdate.sidebarVisibility}
                 className="nk-sidebar-overlay"></div>}
-        </Suspense>
+        </>
     );
 };
 export default Sidebar;

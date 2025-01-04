@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
 import Add from "./Add";
@@ -89,20 +89,23 @@ const Program = () => {
     ];
 
     useEffect(() => {
-        loadData && yearSelected.id !== undefined && getPrograms({
-            institution_id: institution.id,
-            year_id: yearSelected.id
-        }).then(resp => {
-            setPrograms(resp.data.result);
-            setLoadData(false);
-        }).catch(err => {
-            toastError(err);
-            setLoadData(false);
-        });
+        if (loadData && yearSelected.id !== undefined && institution.id !== undefined) {
+            getPrograms({
+                institution_id: institution.id,
+                year_id: yearSelected.id
+            }).then(resp => {
+                setPrograms(resp.data.result);
+                setLoadData(false);
+            }).catch(err => {
+                toastError(err);
+                setLoadData(false);
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loadData]);
 
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
             <Head title="Data Program"/>
             <Content page="component">
                 <BlockHead size="lg" wide="sm">
@@ -155,7 +158,7 @@ const Program = () => {
                 <Add modal={modal} setModal={setModal} setLoadData={setLoadData}/>
                 <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={program}/>
             </Content>
-        </>
+        </Suspense>
     )
 }
 export default Program;

@@ -1,32 +1,32 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Label, Modal, ModalBody, ModalHeader, Spinner} from "reactstrap";
-import {Col, Row, RSelect} from "../../../components";
-import {useDispatch, useSelector} from "react-redux";
+import {Col, Row, RSelect, toastError, toastSuccess} from "../../../components";
 import {Controller, useForm} from "react-hook-form";
-import {setInstitution, updateInstitution} from "../../../redux/institution/actions";
+import {update as updateInstitution} from "../../../utils/api/institution";
 
-const Edit = ({user}) => {
-    const dispatch = useDispatch();
-    const institutionSelector = useSelector((state) => state.institution);
-    const { loading, modal, institution, success } = institutionSelector;
-    const userSelector = useSelector((state) => state.user)
-    const { users } = userSelector;
-    const ladderSelector = useSelector((state) => state.ladder)
-    const {ladders} = ladderSelector;
-    const onSubmit = () => {
-        dispatch(updateInstitution({
-            formData: getValues([
-                'id',
-                'user',
-                'ladder',
-                'name',
-                'alias',
-                'nsm',
-                'npsn',
-                'headmaster',
-                'logo',
-            ])
-        }));
+const Edit = ({...props}) => {
+    const [loading, setLoading] = useState(false);
+    const onSubmit = async () => {
+        setLoading(true);
+        const params = {
+            id: getValues('id'),
+            user: getValues('user'),
+            ladder: getValues('ladder'),
+            name: getValues('name'),
+            alias: getValues('alias'),
+            nsm: getValues('nsm'),
+            npsn: getValues('npsn'),
+            headmaster: getValues('headmaster'),
+            logo: getValues('logo'),
+        }
+        updateInstitution(params).then(resp => {
+            setLoading(false);
+            toastSuccess(resp.data.message);
+            props.setLoadData(true);
+        }).catch(err => {
+            toastError(err)
+            setLoading(false);
+        });
     }
     const {
         register,
@@ -39,83 +39,74 @@ const Edit = ({user}) => {
     } = useForm();
     const toggle = () => {
         reset();
-        dispatch(setInstitution({}, false));
+        props.setModal(false);
     }
-    useEffect(() => {
-        success &&
-        dispatch(setInstitution({}, false));
-        reset();
-    }, [success, reset, dispatch])
 
     useEffect(() => {
-        institution && Object.entries(institution).map((institution) => {
+        props.institution && Object.entries(props.institution).map((institution) => {
             return setValue(institution[0], institution[1])
         });
-        institution && setValue('user', institution.user && institution.user.id);
-        institution && setValue('ladder', institution.ladder && institution.ladder.id);
-    }, [institution, setValue]);
+        props.institution && setValue('user', props.institution.user && props.institution.user.id);
+        props.institution && setValue('ladder', props.institution.ladder && props.institution.ladder.id);
+    }, [props.institution, setValue]);
 
     return (
         <>
-            <Modal isOpen={modal.edit} toggle={toggle}>
+            <Modal isOpen={props.modal === 'edit'} toggle={toggle}>
                 <ModalHeader>UBAH</ModalHeader>
                 <ModalBody>
                     <form className="form-validate is-alter" onSubmit={handleSubmit(onSubmit)}>
                         <Row className="gy-2">
-                            {user.role === '1' && (
-                                <>
-                                    <Col className="col-md-6">
-                                        <div className="form-group">
-                                            <label className="form-label" htmlFor="user">
-                                                Operator
-                                            </label>
-                                            <div className="form-control-wrap">
-                                                <input type="hidden" className="form-control"/>
-                                                <Controller
-                                                    control={control}
-                                                    className="form-control"
-                                                    name="user"
-                                                    rules={{required: true}}
-                                                    render={({field: {onChange, value, ref}}) => (
-                                                        <RSelect
-                                                            inputRef={ref}
-                                                            options={users}
-                                                            value={users.find((c) => c.value === value)}
-                                                            onChange={(val) => onChange(val.value)}
-                                                            placeholder="Pilih Pengguna"
-                                                        />
-                                                    )}/>
-                                                {errors.user && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                            </div>
-                                        </div>
-                                    </Col>
-                                    <Col className="col-md-6">
-                                        <div className="form-group">
-                                            <label className="form-label" htmlFor="ladder">
-                                                Jenjang
-                                            </label>
-                                            <div className="form-control-wrap">
-                                                <input type="hidden" className="form-control"/>
-                                                <Controller
-                                                    control={control}
-                                                    className="form-control"
-                                                    name="ladder"
-                                                    rules={{required: true}}
-                                                    render={({field: {onChange, value, ref}}) => (
-                                                        <RSelect
-                                                            inputRef={ref}
-                                                            options={ladders}
-                                                            value={ladders.find((c) => c.value === value)}
-                                                            onChange={(val) => onChange(val.value)}
-                                                            placeholder="Pilih Jenjang"
-                                                        />
-                                                    )}/>
-                                                {errors.ladder && <span className="invalid">Kolom tidak boleh kosong.</span>}
-                                            </div>
-                                        </div>
-                                    </Col>
-                                </>
-                            )}
+                            <Col className="col-md-6">
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="user">
+                                        Operator
+                                    </label>
+                                    <div className="form-control-wrap">
+                                        <input type="hidden" className="form-control"/>
+                                        <Controller
+                                            control={control}
+                                            className="form-control"
+                                            name="user"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={props.users}
+                                                    value={props.users.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Pengguna"
+                                                />
+                                            )}/>
+                                        {errors.user && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col className="col-md-6">
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="ladder">
+                                        Jenjang
+                                    </label>
+                                    <div className="form-control-wrap">
+                                        <input type="hidden" className="form-control"/>
+                                        <Controller
+                                            control={control}
+                                            className="form-control"
+                                            name="ladder"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={props.ladders}
+                                                    value={props.ladders.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Jenjang"
+                                                />
+                                            )}/>
+                                        {errors.ladder && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    </div>
+                                </div>
+                            </Col>
                             <Col className="col-md-12">
                                 <div className="form-group">
                                     <Label htmlFor="name" className="form-label">Nama Institusi</Label>

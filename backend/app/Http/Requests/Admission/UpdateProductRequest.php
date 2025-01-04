@@ -12,7 +12,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +24,6 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'id' => 'required|int',
-            'institution_id' => 'required',
-            'year_id' => 'required',
             'name' => 'required',
             'alias' => 'required',
             'gender' => 'required',
@@ -38,8 +36,6 @@ class UpdateProductRequest extends FormRequest
     {
         return [
             'id' => 'ID Item',
-            'institution_id' => 'ID Institusi',
-            'year_id' => 'ID Tahun',
             'name' => 'Nama Item',
             'alias' => 'Singkatan',
             'gender' => 'Jenis Kelamin',

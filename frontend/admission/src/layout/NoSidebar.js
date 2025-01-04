@@ -4,7 +4,7 @@ import Head from "./head";
 const Layout = ({title, ...props}) => {
 
     return (
-        <Suspense fallback={<div/>}>
+        <Suspense fallback={<div>Loading...</div>}>
             <Head title={!title && 'Loading'}/>
             <div className="nk-app-root">
                 <div className="nk-wrap nk-wrap-nosidebar">

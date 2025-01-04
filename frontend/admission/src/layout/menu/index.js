@@ -291,7 +291,7 @@ const Menu = ({sidebarToggle, mobileView}) => {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <Suspense fallback={<div/>}>
+        <>
             <ul className="nk-menu">
                 {data.map((item, index) =>
                     item.heading ? (
@@ -325,7 +325,7 @@ const Menu = ({sidebarToggle, mobileView}) => {
                     )
                 )}
             </ul>
-        </Suspense>
+        </>
     );
 };
 
