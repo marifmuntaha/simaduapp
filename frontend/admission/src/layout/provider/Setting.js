@@ -8,12 +8,14 @@ export function useSetting() {
 }
 
 const SettingProvider = ({...props}) => {
-    const [setting, setSetting] = useState([]);
+    const [setting, setSetting] = useState({});
 
     useEffect(() => {
         getSetting({institution_id: process.env.REACT_APP_SERVICE_INSTITUTION})
             .then(resp => {
-                setSetting(resp.data.result[0])
+                const setting = resp.data.result[0];
+                setting.year_id === undefined && alert('Silahkan mengatur tahun pelajaran terlebih dahulu.')
+                setSetting(setting);
             }).catch(err => {
                 toastError(err)
         }

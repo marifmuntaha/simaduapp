@@ -151,6 +151,15 @@ return new class extends Migration
             $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
+        Schema::create('admission_invoices', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('student_id');
+            $table->string('number')->nullable();
+            $table->string('amount')->nullable();
+            $table->string('item');
+            $table->enum('status', ['1', '2', '3'])->comment('1. Complete, 2. Pending, 3. Cancel');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -169,5 +178,6 @@ return new class extends Migration
         Schema::dropIfExists('admission_student_schools');
         Schema::dropIfExists('admission_student_files');
         Schema::dropIfExists('admission_products');
+        Schema::dropIfExists('admission_invoices');
     }
 };

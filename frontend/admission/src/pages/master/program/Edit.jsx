@@ -11,6 +11,7 @@ const Edit = ({...props}) => {
         {value: '2', label: "Opsional"},
     ]
     const onSubmit = async () => {
+        setLoading(true);
         const params = {
             id: getValues('id'),
             institution_id: getValues('institution_id'),

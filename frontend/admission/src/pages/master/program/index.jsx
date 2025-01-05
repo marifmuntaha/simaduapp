@@ -1,6 +1,7 @@
 import React, {Suspense, useEffect, useState} from "react";
 import Head from "../../../layout/head";
 import Content from "../../../layout/content";
+import YearDropdown from "../../../components/partials/YearDropdown";
 import Add from "./Add";
 import Edit from "./Edit";
 import {
@@ -20,13 +21,14 @@ import {
     Spinner
 } from "reactstrap";
 import {useInstitution} from "../../../layout/provider/Institution";
+import {useSetting} from "../../../layout/provider/Setting";
 import {get as getPrograms, destroy as destroyProgram} from "../../../utils/api/master/program";
-import YearDropdown from "../../../components/partials/YearDropdown";
 
 const Program = () => {
     const institution = useInstitution();
+    const setting = useSetting();
     const [sm, updateSm] = useState(false);
-    const [yearSelected, setYearSelected] = useState([]);
+    const [yearSelected, setYearSelected] = useState({});
     const [programs, setPrograms] = useState([]);
     const [program, setProgram] = useState([]);
     const [loadData, setLoadData] = useState(false);
@@ -155,7 +157,7 @@ const Program = () => {
                 <PreviewCard>
                     <ReactDataTable data={programs} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
-                <Add modal={modal} setModal={setModal} setLoadData={setLoadData}/>
+                <Add modal={modal} setModal={setModal} setLoadData={setLoadData} institution={institution} setting={setting}/>
                 <Edit modal={modal} setModal={setModal} setLoadData={setLoadData} program={program}/>
             </Content>
         </Suspense>

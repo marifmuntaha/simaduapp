@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect, useState} from "react";
-import {DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from "reactstrap";
-import {Icon} from "../../index";
+import {DropdownItem, DropdownMenu, DropdownToggle, Spinner, UncontrolledDropdown} from "reactstrap";
+import {Icon, toastError} from "../../index";
 import {get as getYears} from "../../../utils/api/master/year";
 import {useInstitution} from "../../../layout/provider/Institution";
 import {useSetting} from "../../../layout/provider/Setting";
@@ -9,20 +9,26 @@ const YearDropdown = ({...params}) => {
     const institution = useInstitution();
     const setting = useSetting();
     const [years, setYears] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (institution.id !== undefined && setting.year_id !== undefined) {
+        setLoading(true);
+        if (institution !== undefined && setting !== undefined) {
             getYears({institution_id: institution.id}).then(resp => {
                 let year = resp.data.result.filter((year) => {
                     return year.id === setting.year_id
-                })
+                });
+                setLoading(false);
                 setYears(resp.data.result);
                 params.setYearSelected(year[0]);
                 params.setLoadData(true);
+            }).catch(err => {
+                toastError(err);
+                setLoading(false);
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [institution]);
+    }, [institution, setting]);
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -30,9 +36,13 @@ const YearDropdown = ({...params}) => {
                 <DropdownToggle
                     tag="a"
                     className="dropdown-toggle btn btn-white btn-dim btn-outline-light">
-                    <Icon className="d-none d-sm-inline" name="calender-date"/>
-                    <span><span className="d-none d-md-inline">TP </span> {params.yearSelected && params.yearSelected.name}</span>
-                    <Icon className="dd-indc" name="chevron-right"/>
+                    {loading ? <Spinner size="sm"/> : (
+                        <>
+                            <Icon name="calendar-alt"/>
+                            <span>TP {params.yearSelected && params.yearSelected.name}</span>
+                            <Icon className="dd-indc" name="chevron-right"/>
+                        </>
+                    )}
                 </DropdownToggle>
                 <DropdownMenu end>
                     <ul className="link-list-opt no-bdr">

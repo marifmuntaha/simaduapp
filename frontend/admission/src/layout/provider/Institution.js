@@ -8,7 +8,7 @@ export function useInstitution() {
 }
 
 const InstitutionProvider = ({ ...props }) => {
-    const [institution, setInstitution] = useState([]);
+    const [institution, setInstitution] = useState(undefined);
 
     useEffect(() => {
         showInstitution({id: process.env.REACT_APP_SERVICE_INSTITUTION}).then(resp => {

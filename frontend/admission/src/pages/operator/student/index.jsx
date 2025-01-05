@@ -28,12 +28,15 @@ import {get as getAddress, destroy as destroyAddress} from "../../../utils/api/s
 import {get as getParent, destroy as destroyParent} from "../../../utils/api/studentParent";
 import {destroy as destroyUser} from "../../../utils/api/user";
 import "moment/locale/id"
+import {APICore} from "../../../utils/api/APICore";
 
 const Student = () => {
+    const api = new APICore();
+    const user = api.getLoggedInUser();
     const institution = useInstitution();
     const [sm, updateSm] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [yearSelected, setYearSelected] = useState([]);
+    const [yearSelected, setYearSelected] = useState({id: undefined, label: undefined});
     const [students, setStudents] = useState([]);
     const [loadData, setLoadData] = useState(false);
     const navigate = useNavigate();
@@ -111,26 +114,30 @@ const Student = () => {
                     <Button
                         color="outline-info"
                         onClick={() => {
-                            navigate(`/operator/pendaftar/${row.id}/detail`);
+                            navigate(`/${user.role === 5 ? 'operator' : 'bendahara'}/pendaftar/${row.id}/detail`);
                         }}>
                         <Icon name="eye"/>
                     </Button>
-                    <Button
-                        color="outline-warning"
-                        onClick={() => {
-                            navigate(`/operator/pendaftar/${row.id}/ubah`);
-                        }}>
-                        <Icon name="edit"/>
-                    </Button>
-                    <Button
-                        color="outline-danger"
-                        onClick={() => {
-                            setLoadData(row.id);
-                            destroyStudentSubmit(row.id).then(setLoading(false));
-                        }}
-                        disabled={row.id === loading}>
-                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
-                    </Button>
+                    {user.role === 5 && (
+                        <>
+                            <Button
+                                color="outline-warning"
+                                onClick={() => {
+                                    navigate(`/operator/pendaftar/${row.id}/ubah`);
+                                }}>
+                                <Icon name="edit"/>
+                            </Button>
+                            <Button
+                                color="outline-danger"
+                                onClick={() => {
+                                    setLoadData(row.id);
+                                    destroyStudentSubmit(row.id).then(setLoading(false));
+                                }}
+                                disabled={row.id === loading}>
+                                {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
+                            </Button>
+                        </>
+                    )}
                 </ButtonGroup>
             )
         },
@@ -191,7 +198,7 @@ const Student = () => {
     }
 
     useEffect(() => {
-        if (loadData && institution.id !== undefined && yearSelected.id !== undefined) {
+        if (loadData && institution !== undefined && yearSelected !== undefined) {
             getStudents({
                 institution_id: institution.id,
                 year_id: yearSelected.id,

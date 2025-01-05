@@ -30,6 +30,9 @@ const OperatorStudentEdit = React.lazy(() => import('../pages/operator/student/E
 const OperatorReport = React.lazy(() => import('../pages/operator/report'));
 
 const TreasurerDashboard = React.lazy(() => import('../pages/treasurer/dashboard'));
+const TreasurerStudentView = React.lazy(() => import('../pages/operator/student/view'));
+const TreasurerInvoice = React.lazy(() => import('../pages/treasurer/invoice'));
+
 
 const administratorRoute = [
     {
@@ -142,6 +145,18 @@ const treasurerRoutes = [
         path: 'bendahara/pendaftar',
         name: 'Data Pendaftar',
         element: <OperatorStudent/>,
+        route: PrivateRoute,
+    },
+    {
+        path: '/bendahara/pendaftar/:id/detail',
+        name: 'Detail Pendaftar',
+        element: <TreasurerStudentView/>,
+        route: PrivateRoute,
+    },
+    {
+        path: 'bendahara/tagihan',
+        name: 'Data Tagihan',
+        element: <TreasurerInvoice/>,
         route: PrivateRoute,
     },
 ]
