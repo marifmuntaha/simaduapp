@@ -11,6 +11,10 @@ const Edit = ({...props}) => {
         {value: 'L', label: "Laki-laki"},
         {value: 'P', label: "Perempuan"},
     ]
+    const optionBoarding = [
+        {value: '1', label: 'Boarding'},
+        {value: '2', label: 'Non Boarding'},
+    ]
     const onSubmit = async () => {
         setLoading(true);
         const params = {
@@ -20,6 +24,7 @@ const Edit = ({...props}) => {
             price: getValues('price'),
             gender: JSON.stringify(getValues('gender')),
             program: JSON.stringify(getValues('program')),
+            boarding: getValues('boarding')
         }
         await updateProduct(params).then(resp => {
             toastSuccess(resp.data.message);
@@ -52,6 +57,7 @@ const Edit = ({...props}) => {
         setValue('price', product ? product.price : null);
         setValue('gender', product.gender !== undefined ? JSON.parse(product.gender) : []);
         setValue('program', product.program !== undefined ? JSON.parse(product.program) : []);
+        setValue('boarding', product ? product.boarding : null);
     }, [props.product, setValue]);
 
     useEffect(() => {
@@ -174,6 +180,29 @@ const Edit = ({...props}) => {
                                             )}/>
                                         <input type="hidden" id="program" className="form-control" />
                                         {errors.program && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col className="col-md-12">
+                                <div className="form-group">
+                                    <Label htmlFor="boarding" className="form-label">Boarding</Label>
+                                    <div className="form-control-wrap">
+                                        <Controller
+                                            control={control}
+                                            className="form-control"
+                                            name="boarding"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={optionBoarding}
+                                                    value={optionBoarding.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Boarding"
+                                                />
+                                            )}/>
+                                        <input type="hidden" id="boarding" className="form-control" />
+                                        {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>

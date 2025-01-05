@@ -9,6 +9,21 @@ import {useInstitution} from "../../../../layout/provider/Institution";
 
 const Parent = ({parent, studentID}) => {
     const institution = useInstitution();
+    const {control,formState: {errors}, register, handleSubmit, watch, setValue, getValues} = useForm();
+    const [loading, setLoading] = useState();
+    const [fatherStatus, setFatherStatus] = useState(true);
+    const [motherStatus, setMotherStatus] = useState(true);
+    const [guardStatus, setGuardStatus] = useState(0);
+    const parentStatusOption = [
+        {value: '1', label: 'Masih Hidup'},
+        {value: '2', label: 'Meninggal'},
+        {value: '3', label: 'Tidak Diketahui'},
+    ];
+    const guardStatusOption = [
+        {value: '1', label: 'Sama dengan Ayah Kandung'},
+        {value: '2', label: 'Sama dengan Ibu Kandung'},
+        {value: '3', label: 'Lainnya'}
+    ];
     const storeSubmit = async () => {
         const userParentParam = {
             institution_id: institution.id,
@@ -99,23 +114,8 @@ const Parent = ({parent, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        parent.id !== undefined ? await updateSubmit() : await storeSubmit();
+        parent !== undefined ? await updateSubmit() : await storeSubmit();
     }
-    const {control,formState: {errors}, register, handleSubmit, watch, setValue, getValues} = useForm();
-    const [loading, setLoading] = useState();
-    const [fatherStatus, setFatherStatus] = useState(true);
-    const [motherStatus, setMotherStatus] = useState(true);
-    const [guardStatus, setGuardStatus] = useState(0);
-    const parentStatusOption = [
-        {value: '1', label: 'Masih Hidup'},
-        {value: '2', label: 'Meninggal'},
-        {value: '3', label: 'Tidak Diketahui'},
-    ];
-    const guardStatusOption = [
-        {value: '1', label: 'Sama dengan Ayah Kandung'},
-        {value: '2', label: 'Sama dengan Ibu Kandung'},
-        {value: '3', label: 'Lainnya'}
-    ];
     useEffect(() => {
         parent && setValue('id', parent.id)
         parent && setValue('number_kk', parent.number_kk);
@@ -177,7 +177,6 @@ const Parent = ({parent, studentID}) => {
         })
         return () => subscription.unsubscribe()
     }, [watch]);
-
     return <>
         <PreviewCard>
             <Row className="gy-2">

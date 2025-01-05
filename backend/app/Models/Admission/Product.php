@@ -19,6 +19,7 @@ class Product extends Model
         'gender',
         'program',
         'price',
+        'boarding',
         'creator',
         'updater'
     ];

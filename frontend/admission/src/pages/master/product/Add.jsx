@@ -11,6 +11,10 @@ const Add = ({...props}) => {
     const institution = useInstitution();
     const [loading, setLoading] = useState(false);
     const [optionPrograms, setOptionPrograms] = useState([]);
+    const optionBoarding = [
+        {value: '1', label: 'Boarding'},
+        {value: '2', label: 'Non Boarding'},
+    ]
     const onSubmit = async () => {
         setLoading(true);
         const params = {
@@ -21,6 +25,7 @@ const Add = ({...props}) => {
             price: getValues('price'),
             gender: JSON.stringify(getValues('gender')),
             program: JSON.stringify(getValues('program')),
+            boarding: getValues('boarding')
         }
         await storeProduct(params).then(resp => {
             toastSuccess(resp.data.message);
@@ -169,6 +174,29 @@ const Add = ({...props}) => {
                                             )}/>
                                         <input type="hidden" id="program" className="form-control" />
                                         {errors.program && <span className="invalid">Kolom tidak boleh kosong.</span>}
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col className="col-md-12">
+                                <div className="form-group">
+                                    <Label htmlFor="boarding" className="form-label">Boarding</Label>
+                                    <div className="form-control-wrap">
+                                        <Controller
+                                            control={control}
+                                            className="form-control"
+                                            name="boarding"
+                                            rules={{required: true}}
+                                            render={({field: {onChange, value, ref}}) => (
+                                                <RSelect
+                                                    inputRef={ref}
+                                                    options={optionBoarding}
+                                                    value={optionBoarding.find((c) => c.value === value)}
+                                                    onChange={(val) => onChange(val.value)}
+                                                    placeholder="Pilih Boarding"
+                                                />
+                                            )}/>
+                                        <input type="hidden" id="boarding" className="form-control" />
+                                        {errors.boarding && <span className="invalid">Kolom tidak boleh kosong.</span>}
                                     </div>
                                 </div>
                             </Col>

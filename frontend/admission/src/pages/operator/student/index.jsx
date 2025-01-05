@@ -118,7 +118,7 @@ const Student = () => {
                         }}>
                         <Icon name="eye"/>
                     </Button>
-                    {user.role === 5 && (
+                    {user.role === '5' && (
                         <>
                             <Button
                                 color="outline-warning"
@@ -209,7 +209,8 @@ const Student = () => {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loadData])
+    }, [loadData]);
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Head title="Data Pendaftar"/>

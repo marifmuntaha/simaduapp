@@ -29,6 +29,7 @@ class UpdateProductRequest extends FormRequest
             'gender' => 'required',
             'program' => 'required',
             'price' => 'required',
+            'boarding' => 'required'
         ];
     }
 
@@ -41,6 +42,7 @@ class UpdateProductRequest extends FormRequest
             'gender' => 'Jenis Kelamin',
             'program' => 'Jenis Program',
             'price' => 'Harga',
+            'boarding' => 'Boarding'
         ];
     }
 

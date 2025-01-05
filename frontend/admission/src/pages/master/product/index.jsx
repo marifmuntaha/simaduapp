@@ -77,6 +77,16 @@ const Product = () => {
             }
         },
         {
+            name: "Boarding",
+            selector: (row) => row.boarding,
+            sortable: false,
+            width: '150px',
+            cell: (row) => {
+                return row.boarding === '1'
+                    ? <Icon name="check" className="text-success fw-bold" /> : <Icon name="cross" className="text-danger fw-bold"/>
+            }
+        },
+        {
             name: "Aksi",
             selector: (row) => row.id,
             sortable: false,

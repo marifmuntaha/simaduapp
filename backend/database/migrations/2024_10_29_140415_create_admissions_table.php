@@ -147,17 +147,25 @@ return new class extends Migration
             $table->string('gender');
             $table->string('program');
             $table->string('price')->nullable();
+            $table->enum('boarding',['1', '2']);
             $table->unsignedBigInteger('creator');
             $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
         Schema::create('admission_invoices', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('institution_id');
+            $table->unsignedBigInteger('year_id');
             $table->unsignedBigInteger('student_id');
             $table->string('number')->nullable();
             $table->string('amount')->nullable();
-            $table->string('item');
-            $table->enum('status', ['1', '2', '3'])->comment('1. Complete, 2. Pending, 3. Cancel');
+            $table->string('discount')->nullable();
+            $table->string('discount_description')->nullable();
+            $table->string('total');
+            $table->text('item');
+            $table->enum('status', ['1', '2', '3'])->comment('1. Lunas, 2. Belum Lunas, 3. Dibatalkan');
+            $table->unsignedBigInteger('creator');
+            $table->unsignedBigInteger('updater');
             $table->timestamps();
         });
     }

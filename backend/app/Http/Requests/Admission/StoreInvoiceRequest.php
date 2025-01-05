@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class StoreInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +25,14 @@ class StoreProductRequest extends FormRequest
         return [
             'institution_id' => 'required',
             'year_id' => 'required',
-            'name' => 'required',
-            'alias' => 'required',
-            'gender' => 'required',
-            'program' => 'required',
-            'price' => 'required',
-            'boarding' => 'required'
+            'student_id' => 'required',
+            'number' => 'required',
+            'amount' => 'required',
+            'discount' => 'nullable',
+            'discount_description' => 'nullable',
+            'total' => 'required',
+            'item' => 'required',
+            'status' => 'required',
         ];
     }
 
@@ -39,12 +41,14 @@ class StoreProductRequest extends FormRequest
         return [
             'institution_id' => 'ID Institusi',
             'year_id' => 'ID Tahun',
-            'name' => 'Nama Item',
-            'alias' => 'Singkatan',
-            'gender' => 'Jenis Kelamin',
-            'program' => 'Jenis Program',
-            'price' => 'Harga',
-            'boarding' => 'Boarding'
+            'student_id' => 'ID Siswa',
+            'number' => 'Nomor Tagihan',
+            'amount' => 'Total Tagihan',
+            'discount' => 'Diskon',
+            'discount_description' => 'Diskripsi Diskon',
+            'total' => 'Total',
+            'item' => 'Item Tagihan',
+            'status' => 'Status',
         ];
     }
 

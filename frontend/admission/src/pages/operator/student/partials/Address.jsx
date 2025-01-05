@@ -47,7 +47,7 @@ const Address = ({address, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true);
-        address !== null ? await updateSubmit() : await storeSubmit();
+        address !== undefined ? await updateSubmit() : await storeSubmit();
     }
     useEffect(() => {
         address && setValue('id', address.id);

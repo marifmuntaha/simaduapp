@@ -60,4 +60,9 @@ class Student extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function invoice(): object
+    {
+        return $this->hasMany(Invoice::class, 'student_id', 'id');
+    }
 }

@@ -49,7 +49,7 @@ const Program = ({program, studentID}) => {
     }
     const handleSubmitForm = async () => {
         setLoading(true)
-        program !== null ? await updateSubmit() : await storeSubmit();
+        program !== undefined ? await updateSubmit() : await storeSubmit();
     }
 
     useEffect(() => {
