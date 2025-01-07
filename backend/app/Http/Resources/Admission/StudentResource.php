@@ -53,6 +53,9 @@ class StudentResource extends JsonResource
             if (in_array('school', $with)){
                 $resource = Arr::add($resource, 'school', new StudentSchoolResource($this->school));
             }
+            if (in_array('invoice', $with)){
+                $resource = Arr::add($resource, 'invoice', new InvoiceResource($this->invoice->first()));
+            }
             if (in_array('user', $with)){
                 $resource = Arr::add($resource, 'user', new UserResource($this->user));
             }

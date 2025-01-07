@@ -13,62 +13,124 @@ import {
 import Content from "../../../layout/content";
 import moment from "moment/moment";
 import YearDropdown from "../../../components/partials/YearDropdown";
-import {Button} from "reactstrap";
+import {Badge, Button, ButtonGroup, Spinner} from "reactstrap";
 import {get as getStudents} from '../../../utils/api/student';
-import {get as getInvoices, store as storeInvoice} from '../../../utils/api/invoice';
+import {get as getInvoices, store as storeInvoice, destroy as destroyInvoice} from '../../../utils/api/invoice';
 import {get as getProducts} from '../../../utils/api/master/product';
 import {useInstitution} from "../../../layout/provider/Institution";
 import {Currency} from "../../../utils/Utils";
+import Add from "./Add";
 
 const Invoice = () => {
     const institution = useInstitution();
     const [sm, updateSm] = useState(false);
-    const [modal, setModal] = useState('initState');
+    const [modal, setModal] = useState('');
     const [yearSelected, setYearSelected] = useState({});
     const [loadData, setLoadData] = useState(true);
     const [products, setProducts] = useState([]);
-    const [students, setStudents] = useState([]);
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState([]);
+    const [loading, setLoading] = useState(false)
     const Columns = [
         {
             name: "Nomor",
             selector: (row) => row.number,
             sortable: false,
-            width: '200px',
+            width: '180px',
         },
         {
             name: "Nama Lengkap",
             selector: (row) => row.student.name,
             sortable: false,
+            width: '300px',
         },
         {
             name: "Tanggal",
             selector: (row) => moment(new Date(row.created_at)).format('DD-MM-YYYY hh:mm'),
             sortable: false,
+            width: '200px',
         },
         {
             name: "Jumlah",
             selector: (row) => Currency(row.amount),
             sortable: false,
-            width: '180px',
+            width: '170px',
+        },
+        {
+            name: "Potongan",
+            selector: (row) => Currency(row.discount),
+            sortable: false,
+            width: '170px',
+        },
+        {
+            name: "Total",
+            selector: (row) => Currency(row.total),
+            sortable: false,
+            width: '170px',
         },
         {
             name: "Status",
             selector: (row) => row.status,
             sortable: false,
-            width: '90px',
-            cell: row => (
-                row.status && row.status === "1"
-                    ? <span className="text-success"><Icon name="check-thick"/></span>
-                    : <span className="text-danger"><Icon name="cross"/></span>
+            cell: (row) => {
+                switch (row.status) {
+                    case '1':
+                        return <Badge className="badge-dot" color="success">Paid</Badge>
+                    case '2':
+                        return <Badge className="badge-dot" color="warning">Unpaid</Badge>
+                    case '3':
+                        return <Badge className="badge-dot" color="danger">Cancel</Badge>
+                    default:
+                        return <Badge className="badge-dot"></Badge>
+                }
+            }
+        },
+        {
+            name: "Aksi",
+            selector: (row) => row.id,
+            sortable: false,
+            cell: (row) => (
+                <ButtonGroup size="sm">
+                    <Button
+                        color="outline-info"
+                        onClick={() => {
+                            setModal('add');
+                            setInvoice(row);
+                        }}>
+                        <Icon name="plus"/>
+                    </Button>
+                    <Button
+                        color="outline-warning"
+                        onClick={() => {
+                        }}>
+                        <Icon name="edit"/>
+                    </Button>
+                    <Button
+                        color="outline-danger"
+                        onClick={() => {
+                            setLoading(row.id);
+                            destroyInvoice(row.id).then((resp) => {
+                                toastSuccess(resp.data.message);
+                                setLoadData(true);
+                                setLoading(false);
+                            }).catch((err) => {
+                                toastError(err);
+                                setLoading(false);
+                            })
+                        }}
+                        disabled={row.id === loading}>
+                        {row.id === loading ? <Spinner size="sm" color="danger"/> : <Icon name="trash"/>}
+                    </Button>
+                </ButtonGroup>
             )
-        }
+        },
     ];
     const generateInvoice = async () => {
-        await getStudents({institution_id: institution.id, year_id: yearSelected.id, with: 'program'}).then(resp => {
+        setLoading(true);
+        await getStudents({institution_id: institution.id, year_id: yearSelected.id, with: 'program,invoice'}).then(resp => {
             const students = resp.data.result;
-            students.map((student, idx) => {
+            // eslint-disable-next-line array-callback-return
+            students.map((student) => {
                 const data = products.map((value) => {
                     let product;
                     const gender = JSON.parse(value.gender);
@@ -101,12 +163,14 @@ const Invoice = () => {
                     item: JSON.stringify(item),
                     status: '2',
                 }
-                storeInvoice(param).then(resp => {
-                    toastSuccess(resp.data.result)
-                }).catch(err => {
-                    toastError(err)
-                })
+                // if (student.invoice === undefined) {
+                //     storeInvoice(param).then().catch(err => {
+                //         toastError(err)
+                //     });
+                // }
+                console.log(student.invoice)
             })
+            setLoading(false);
         }).catch(err => {
             toastError(err);
         });
@@ -125,6 +189,7 @@ const Invoice = () => {
             })
         }
         setLoadData(false);
+        // eslint-disable-next-line
     }, [loadData]);
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -168,8 +233,7 @@ const Invoice = () => {
                                             }}
                                         >
                                             <Button color="danger">
-                                                <Icon name="reload-alt"/>
-                                                <span>Generate</span>
+                                                {loading === true ? <Spinner size="sm"/> : <><Icon name="reload-alt"/><span>Generate</span></>}
                                             </Button>
                                         </li>
                                     </ul>
@@ -182,6 +246,7 @@ const Invoice = () => {
                     <ReactDataTable data={invoices} columns={Columns} pagination className="nk-tb-list"/>
                 </PreviewCard>
             </Content>
+            <Add modal={modal} setModal={setModal} setLoadData={setLoadData} invoice={invoice} institution={institution} yearSelected={yearSelected}/>
         </Suspense>
     )
 }
